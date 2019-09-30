@@ -227,13 +227,18 @@ class MySceneGraph {
      * @param {view block element} viewsNode
      */
     parseView(viewsNode) {
-        this.onXMLMinorError("To do: Parse views and create cameras.");
+        //this.onXMLMinorError("To do: Parse views and create cameras.");
         var children = viewsNode.children;
 
         this.defaultView = this.reader.getString(viewsNode, 'default');
         if (this.defaultView == null){
-            this.onXMLError("no default view degfined!");
+            this.onXMLError("no default view defined!");
             return "no default view defined!";
+        }
+
+        if (children.length == 0){
+            this.onXMLError("no views defined!");
+            return "no views defined!";
         }
 
         this.views = [];
@@ -246,8 +251,128 @@ class MySceneGraph {
         for (var i = 0; i < children.length; i++) {
 
             //Storing view information
+            var child = children[i];
 
+            //Checking tag validity
+            if(child.nodeName != 'perspective' && child.nodeName != 'ortho'){
+                this.onXMLMinorError("Tag missmatch, expecting either \'perspective\' or \'ortho\', got <" + child.nodeName + ">");
+                continue;
+            }
+
+            // Get id of the current view.
+            var viewId = this.reader.getString(child, 'id');
+            if (viewId == null)
+                return "no ID defined for view";
+
+            // Checks for repeated IDs.
+            if (this.views[viewId] != null)
+                return "ID must be unique for each view (conflict: ID = " + viewId + ")";
+
+            grandChildren = child.children;
+            for (var j = 0; j < grandChildren.length; j++){
+                nodeNames.push(grandChildren[j].nodeName);
+            }
+
+            //Reading near component
+            var near = this.reader.getFloat(child, 'near');
+            if (near == null || isNaN(near)){
+                return "Can't read near component of view " + viewId;
+            }
+
+            //Reading far component
+            var far = this.reader.getFloat(child, 'far');
+            if (far == null || isNaN(far)){
+                return "Can't read far component of view " + viewId;
+            }
+
+            var toIndex = nodeNames.indexOf("to");
+
+            // Retrieves the view to component.
+            var toView = [];
+            if (toIndex != -1) {
+                var aux = this.parseCoordinates3D(grandChildren[toIndex], "to view for ID " + viewId);
+                if (!Array.isArray(aux))
+                    return aux;
+                toView = aux;
+            }
+            else
+                return "view to undefined for ID = " + viewId;
+
+            var fromIndex = nodeNames.indexOf("from");
+
+            // Retrieves the view from component.
+            var fromView = [];
+            if (fromIndex != -1) {
+                var aux = this.parseCoordinates3D(grandChildren[fromIndex], "from view for ID " + viewId);
+                if (!Array.isArray(aux))
+                    return aux;
+                fromView = aux;
+            }
+            else
+                return "view from undefined for ID = " + viewId;
+            
+            //getting perspective specific attributes
+            if (child.nodeName == 'perspective'){
+
+                var angle = this.reader.getFloat(child, 'angle');
+                if (angle == null || isNaN(angle)){
+                    return "Couldn't read angle value for view " + viewId;
+                }
+
+                var thisView = new CGFcamera(angle, near, far, vec3.fromValues(fromView[0], fromView[1], fromView[2]), vec3.fromValues(toView[0], toView[1], toView[2]));
+                this.views[viewId] = thisView;
+
+                if (grandChildren.length != 2) {
+                    this.onXMLMinorError("Wrong number of attributes for perspective view " + viewId);
+                }
+            } else {
+                //getting ortho specific attributes
+                var left = this.reader.getFloat(child, 'left');
+                var right = this.reader.getFloat(child, 'right');
+                var top = this.reader.getFloat(child, 'top');
+                var bottom = this.reader.getFloat(child, 'bottom');
+
+                if (left == null || isNaN(left)){
+                    return "Couldn't read left value for view " + viewId;
+                }
+                if (right == null || isNaN(right)){
+                    return "Couldn't read right value for view " + viewId;
+                }
+                if (top == null || isNaN(top)){
+                    return "Couldn't read top value for view " + viewId;
+                }
+                if (bottom == null || isNaN(bottom)){
+                    return "Couldn't read bottom value for view " + viewId;
+                }
+
+                var up = [0, 1, 0];
+                var upIndex = nodeNames.indexOf("up");
+
+                if(upIndex == -1){
+                    this.onXMLMinorError("No up given for ortho view " + viewId + "; assuming (0, 1, 0)");
+                } else {
+                    up = this.parseCoordinates3D(upIndex, "up component of view with ID " + viewId);
+                }
+
+                var thisView = new CGFcameraOrtho(left, right, bottom, top, near, far, vec3.fromValues(fromView[0], fromView[1], fromView[2]), vec3.fromValues(toView[0], toView[1], toView[2]), vec3.fromValues(up[0], up[1], up[2]));
+                this.views[viewId] = thisView;
+
+                if ((upIndex == -1 && grandChildren.length != 2) || (upIndex != -1 && grandChildren.length != 3)){
+                    this.onXMLMinorError("Wrong number of attributes for perspective view " + viewId);
+                }
+            }
+            numViews++;
         }
+
+        if(numViews == 0){
+            return "No views defined!";
+        }
+
+        if(this.views[this.defaultView] == null){
+            return "Default view " + this.defaultView + " not defined!";
+        }
+
+        this.log("Parsed views");
 
         return null;
     }
