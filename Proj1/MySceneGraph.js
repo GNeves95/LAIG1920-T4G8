@@ -538,7 +538,62 @@ class MySceneGraph {
     parseTextures(texturesNode) {
 
         //For each texture in textures block, check ID and file URL
-        this.onXMLMinorError("To do: Parse textures.");
+        //this.onXMLMinorError("To do: Parse textures.");
+
+        var children = texturesNode.children;
+
+        this.textures = [];
+
+        var grandChildren = [];
+        var nodeNames = [];
+
+        if (children.length == 0){
+            return "at least one texture must be defined!";
+        }
+
+        var numTextures = 0;
+
+        // Any number of textures.
+        for (var i = 0; i < children.length; i++){
+            var child = children[i];
+
+            if (child.nodeName != "texture"){
+                this.onXMLMinorError("unkown tag <" + child.nodeName + ">");
+                continue
+            }
+
+            // get Texture id
+            var textureID = this.reader.getString(child, 'id');
+            if (textureID == null)
+                return "You must define an ID for the texture";
+            
+            if (this.textures[textureID] != null)
+                return "ID must be unique for each texture (conflict: ID = " + textureID + ")";
+            
+            //get image relative path
+            var file = this.reader.getString(child, 'file');
+            if (file == null){
+                this.onXMLMinorError("You must define a file for texture " + textureID);
+                continue;
+            }
+            
+            var fileExtension = file.split('.');
+            if (fileExtension[fileExtension.length - 1] != "jpg" && fileExtension[fileExtension.length - 1] != "png"){
+                this.onXMLMinorError("File extension for texture " + textureID + " is not a recognized image type.");
+                continue;
+            }
+
+            var texture = new CGFtexture(this.scene, file);
+            this.textures[textureID] = texture;
+                
+            numTextures++;
+        }
+
+        if (numTextures == 0){
+            return "at least one texture must be defined!";
+        }
+
+        this.log("Parsed textures");
         return null;
     }
 
