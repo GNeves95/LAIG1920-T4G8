@@ -645,6 +645,8 @@ class MySceneGraph {
 
         var grandChildren = [];
 
+        var numTransformations = 0;
+
         // Any number of transformations.
         for (var i = 0; i < children.length; i++) {
 
@@ -677,15 +679,35 @@ class MySceneGraph {
                         transfMatrix = mat4.translate(transfMatrix, transfMatrix, coordinates);
                         break;
                     case 'scale':                        
-                        this.onXMLMinorError("To do: Parse scale transformations.");
+                        //this.onXMLMinorError("To do: Parse scale transformations.");
+                        var coordinates = this.parseCoordinates3D(grandChildren[j], "scale transformation for ID " + transformationID);
+                        if (!Array.isArray(coordinates))
+                            return coordinates;
+
+                        transfMatrix = mat4.scale(transfMatrix, transfMatrix, coordinates);
                         break;
                     case 'rotate':
                         // angle
-                        this.onXMLMinorError("To do: Parse rotate transformations.");
+                        //this.onXMLMinorError("To do: Parse rotate transformations.");
+                        var angle = this.reader.getFloat(grandChildren[j], 'angle');
+                        var axis = this.reader.getString(grandChildren[j], 'axis');
+
+                        if(axis == null || angle == null || isNaN(angle))
+                            return "Missing attribute for transformation " + transformationID;
+
+                        if (axis != 'x' && axis != 'y' && axis != 'z' && axis != 'X' && axis != 'Y' && axis != 'Z')
+                            return "Axis component for transformation " + transformationID + "must be either x, y or z";
+
+                        transfMatrix = mat4.rotate(transfMatrix, transfMatrix, DEGREE_TO_RAD*angle, axis);
                         break;
                 }
             }
             this.transformations[transformationID] = transfMatrix;
+            numTransformations++;
+        }
+
+        if (numTransformations == 0){
+            return "at least one transformation must be defined";
         }
 
         this.log("Parsed transformations");
