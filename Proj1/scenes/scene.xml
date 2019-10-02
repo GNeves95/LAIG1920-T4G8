@@ -1,0 +1,9 @@
+<lxs>
+    <scene root="scene" axis_length="1.0" />
+
+    <views default="frente">
+        <perspective id="frente" near="0.1" far="750" angle="0">
+            
+        </perspective>
+    </views>
+</lxs>

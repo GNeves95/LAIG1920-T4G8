@@ -633,7 +633,7 @@ class MySceneGraph {
             // Get shininess for current material
             var shininess = this.reader.getFloat(child, 'shininess');
             if (shininess == null){
-                return "No shininess value for "
+                return "No shininess value for " + materialID;
             }
 
             grandChildren = child.children;
@@ -889,9 +889,54 @@ class MySceneGraph {
             this.onXMLMinorError("To do: Parse components.");
             // Transformations
             grandgrandChildren = grandChildren[transformationIndex].children;
-            
+            if (grandgrandChildren.length == 0){
+                transfMatrix = mat4.create();
+            } else if (grandgrandChildren[0].nodeName == "transformationref") {
+                var transformationID = this.reader.getString(grandgrandChildren[0], 'id');
+                var transfMatrix = this.transformations[transformationID];
+                if(transfMatrix == null)
+                    return "Transformation " + transformationID + " not defined for component " + componentID;
+            } else {
+                var transfMatrix = mat4.create();
+                for (var j = 0; j < grandgrandChildren.length; j++) {
+                    switch (grandgrandChildren[j].nodeName) {
+                        case 'translate':
+                            var coordinates = this.parseCoordinates3D(grandgrandChildren[j], "translate transformation for ID " + transformationID);
+                            if (!Array.isArray(coordinates))
+                                return coordinates;
+    
+                            transfMatrix = mat4.translate(transfMatrix, transfMatrix, coordinates);
+                            break;
+                        case 'scale':                        
+                            //this.onXMLMinorError("To do: Parse scale transformations.");
+                            var coordinates = this.parseCoordinates3D(grandgrandChildren[j], "scale transformation for ID " + transformationID);
+                            if (!Array.isArray(coordinates))
+                                return coordinates;
+    
+                            transfMatrix = mat4.scale(transfMatrix, transfMatrix, coordinates);
+                            break;
+                        case 'rotate':
+                            // angle
+                            //this.onXMLMinorError("To do: Parse rotate transformations.");
+                            var angle = this.reader.getFloat(grandgrandChildren[j], 'angle');
+                            var axis = this.reader.getString(grandgrandChildren[j], 'axis');
+    
+                            if(axis == null || angle == null || isNaN(angle))
+                                return "Missing attribute for transformation " + transformationID;
+    
+                            if (axis != 'x' && axis != 'y' && axis != 'z' && axis != 'X' && axis != 'Y' && axis != 'Z')
+                                return "Axis component for transformation " + transformationID + "must be either x, y or z";
+    
+                            transfMatrix = mat4.rotate(transfMatrix, transfMatrix, DEGREE_TO_RAD*angle, axis);
+                            break;
+                    }
+                }
+            }
 
             // Materials
+            var materials = [];
+            grandgrandChildren = grandChildren[materialsIndex].children;
+
 
             // Texture
 
