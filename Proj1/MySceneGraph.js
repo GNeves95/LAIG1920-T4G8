@@ -3,7 +3,7 @@ var DEGREE_TO_RAD = Math.PI / 180;
 // Order of the groups in the XML document.
 var SCENE_INDEX = 0;
 var VIEWS_INDEX = 1;
-var AMBIENT_INDEX = 2;
+var GLOBALS_INDEX = 2;
 var LIGHTS_INDEX = 3;
 var TEXTURES_INDEX = 4;
 var MATERIALS_INDEX = 5;
@@ -112,15 +112,15 @@ class MySceneGraph {
                 return error;
         }
 
-        // <ambient>
-        if ((index = nodeNames.indexOf("ambient")) == -1)
-            return "tag <ambient> missing";
+        // <globals>
+        if ((index = nodeNames.indexOf("globals")) == -1)
+            return "tag <globals> missing";
         else {
-            if (index != AMBIENT_INDEX)
-                this.onXMLMinorError("tag <ambient> out of order");
+            if (index != GLOBALS_INDEX)
+                this.onXMLMinorError("tag <globals> out of order");
 
-            //Parse ambient block
-            if ((error = this.parseAmbient(nodes[index])) != null)
+            //Parse globals block
+            if ((error = this.parseGlobals(nodes[index])) != null)
                 return error;
         }
 
@@ -381,9 +381,9 @@ class MySceneGraph {
      * Parses the <ambient> node.
      * @param {ambient block element} ambientsNode
      */
-    parseAmbient(ambientsNode) {
+    parseGlobals(globalsNode) {
 
-        var children = ambientsNode.children;
+        var children = globalsNode.children;
 
         this.ambient = [];
         this.background = [];
@@ -408,7 +408,7 @@ class MySceneGraph {
         else
             this.background = color;
 
-        this.log("Parsed ambient");
+        this.log("Parsed globals");
 
         return null;
     }
@@ -886,18 +886,18 @@ class MySceneGraph {
             var textureIndex = nodeNames.indexOf("texture");
             var childrenIndex = nodeNames.indexOf("children");
 
-            this.onXMLMinorError("To do: Parse components.");
+            //this.onXMLMinorError("To do: Parse components.");
             // Transformations
             grandgrandChildren = grandChildren[transformationIndex].children;
+            var transfMatrix = mat4.create();
             if (grandgrandChildren.length == 0){
                 transfMatrix = mat4.create();
             } else if (grandgrandChildren[0].nodeName == "transformationref") {
                 var transformationID = this.reader.getString(grandgrandChildren[0], 'id');
-                var transfMatrix = this.transformations[transformationID];
+                transfMatrix = this.transformations[transformationID];
                 if(transfMatrix == null)
                     return "Transformation " + transformationID + " not defined for component " + componentID;
             } else {
-                var transfMatrix = mat4.create();
                 for (var j = 0; j < grandgrandChildren.length; j++) {
                     switch (grandgrandChildren[j].nodeName) {
                         case 'translate':
@@ -937,10 +937,51 @@ class MySceneGraph {
             var materials = [];
             grandgrandChildren = grandChildren[materialsIndex].children;
 
+            for (var j = 0; j < grandgrandChildren.length; j++) {
+                materials.push(this.reader.getString(grandgrandChildren[j], "id"));
+            }
 
             // Texture
+            var texture = this.reader.getString(grandChildren[textureIndex], "id");
+            var length_s = 1;
+            var length_t = 1;
+            if (this.reader.hasAttribute(grandChildren[textureIndex], "length_s"))
+                length_s = this.reader.getFloat(grandChildren[textureIndex], "length_s");
+            if (this.reader.hasAttribute(grandChildren[textureIndex], "length_t"))
+                length_t = this.reader.getFloat(grandChildren[textureIndex], "length_t");
+
+            if (length_s == null || isNaN(length_s))
+                length_s = 1;
+                
+            if (length_t == null || isNaN(length_t))
+                length_t = 1;
 
             // Children
+            var childPrimList = [];
+            var childCompList = [];
+
+            var numChildren = 0;
+            grandgrandChildren = grandChildren[childrenIndex].children;
+            for (var j = 0; j < grandgrandChildren.length; j++) {
+                var child = grandgrandChildren[j];
+                var childId = this.reader.getString(child, "id");
+
+                if (child.nodeName == "componentref"){
+                    childCompList.push(childId);
+                } else if (child.nodeName == "primitiveref"){
+                    childPrimList.push(childId);
+                } else {
+                    this.onXMLMinorError("Attribute " + child.nodeName + " isn't a primitive or a component, in component " + componentID);
+                    continue;
+                }
+                numChildren++;
+
+            }
+            if (numChildren == 0){
+                return "at least one transformation must be defined";
+            }
+
+            this.onXMLMinorError("To do: Save components.");
         }
     }
 
@@ -1063,6 +1104,6 @@ class MySceneGraph {
         //To do: Create display loop for transversing the scene graph
 
         //To test the parsing/creation of the primitives, call the display function directly
-        this.primitives['demoRectangle'].display();
+        this.primitives['boxFace'].display();
     }
 }
