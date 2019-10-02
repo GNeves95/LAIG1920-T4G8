@@ -609,6 +609,8 @@ class MySceneGraph {
         var grandChildren = [];
         var nodeNames = [];
 
+        var numMaterials = 0;
+
         // Any number of materials.
         for (var i = 0; i < children.length; i++) {
 
@@ -617,20 +619,72 @@ class MySceneGraph {
                 continue;
             }
 
+            var child = children[i];
+
             // Get id of the current material.
-            var materialID = this.reader.getString(children[i], 'id');
+            var materialID = this.reader.getString(child, 'id');
             if (materialID == null)
                 return "no ID defined for material";
 
             // Checks for repeated IDs.
             if (this.materials[materialID] != null)
                 return "ID must be unique for each light (conflict: ID = " + materialID + ")";
+            
+            // Get shininess for current material
+            var shininess = this.reader.getFloat(child, 'shininess');
+            if (shininess == null){
+                return "No shininess value for "
+            }
+
+            grandChildren = child.children;
+
+            for (var j = 0; j < grandChildren.length; j++) {
+                nodeNames.push(grandChildren[j].nodeName);
+            }
+
+            // Verify if every attribute exists
+            var emissionIndex = nodeNames.indexOf("emission");
+            var ambientIndex = nodeNames.indexOf("ambient");
+            var diffuseIndex = nodeNames.indexOf("diffuse");
+            var specularIndex = nodeNames.indexOf("specular");
+
+            if (emissionIndex == -1) {
+                return "Missing emission values for material " + materialID;
+            }
+            if (ambientIndex == -1) {
+                return "Missing ambient values for material " + materialID;
+            }
+            if (diffuseIndex == -1) {
+                return "Missing diffuse values for material " + materialID;
+            }
+            if (specularIndex == -1) {
+                return "Missing specular values for material " + materialID;
+            }
+
+            var emission = this.parseColor(grandChildren[emissionIndex], "emission attribute for material " + materialID);
+            var ambient = this.parseColor(grandChildren[ambientIndex], "ambient attribute for material " + materialID);
+            var diffuse = this.parseColor(grandChildren[diffuseIndex], "diffuse attribute for material " + materialID);
+            var specular = this.parseColor(grandChildren[specularIndex], "specular attribute for material " + materialID);
+
+            var material = new CGFappearance(this.scene);
+            material.setShininess(shininess);
+            material.setEmission(emission);
+            material.setDiffuse(diffuse);
+            material.setAmbient(ambient);
+            material.setSpecular(specular);
+
+            this.materials[materialID] = material;
+            numMaterials++;
 
             //Continue here
-            this.onXMLMinorError("To do: Parse materials.");
+            //this.onXMLMinorError("To do: Parse materials.");
         }
 
-        //this.log("Parsed materials");
+        if (numMaterials == 0){
+            return "at least one material must be defined!";
+        }
+
+        this.log("Parsed materials");
         return null;
     }
 
@@ -834,6 +888,8 @@ class MySceneGraph {
 
             this.onXMLMinorError("To do: Parse components.");
             // Transformations
+            grandgrandChildren = grandChildren[transformationIndex].children;
+            
 
             // Materials
 
