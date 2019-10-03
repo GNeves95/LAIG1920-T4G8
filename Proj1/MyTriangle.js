@@ -69,11 +69,24 @@ class MyTriangle extends CGFobject {
         t
         */
 
+        //auxiliary calculus
+        var a, b, c, cosa, sinb;
+
+        a = Math.sqrt((x1-x3)*(x1-x3)+(y1-y3)*(y1-y3)+(z1-z3)*(z1-z3));
+        b = Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1)+(z2-z1)*(z2-z1));
+        c = Math.sqrt((x3-x2)*(x3-x2)+(y3-y2)*(y3-y2)+(z3-z2)*(z3-z2));
+
+        //cosa = (-(a*a) + b*b + c*c)/(2*b*c);
+        cosb = ((a*a) - b*b + c*c)/(2*a*c);
+       //cosy = ((a*a) + b*b - c*c)/(2*a*b);
+
+       sinb = Math.sqrt(1-(cosb * cosb));
+
+
 		this.texCoords = [
+			c-a*cosb, 1-a*sinb, 
 			0, 1,
-			1, 1,
-			0, 0,
-			1, 0
+			c, 1
 		]
 		this.primitiveType = this.scene.gl.TRIANGLES;
 		this.initGLBuffers();
