@@ -834,8 +834,17 @@ class MySceneGraph {
                 var rect = new MyRectangle(this.scene, primitiveId, x1, x2, y1, y2);
 
                 this.primitives[primitiveId] = rect;
+            } else if (primitiveType == 'cylinder'){
+
+            } else if (primitiveType == 'triangle'){
+                
+            } else if (primitiveType == 'sphere'){
+                
+            } else if (primitiveType == 'torus'){
+                
             }
             else {
+                this.onXMLMinorError()
                 console.warn("To do: Parse other primitives.");
             }
         }
@@ -1104,6 +1113,10 @@ class MySceneGraph {
         //To do: Create display loop for transversing the scene graph
 
         //To test the parsing/creation of the primitives, call the display function directly
-        this.primitives['boxFace'].display();
+        //this.primitives['boxFace'].display();
+
+        for (const key in this.primitives) {
+            this.primitives[key].display();
+        }
     }
 }

@@ -15,13 +15,20 @@
 
     <lights>
         <spot id="testLight" enabled="1" angle="90" exponent="3">
-            <location x="0" y="0" z="10" w="54" />
+            <location x="10" y="0" z="10" w="54" />
             <target x="0" y="0" z="0" />
             <ambient r="0" g="0" b="0" a="1.0" />
             <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
             <specular r="1.0" g="1.0" b="1.0" a="1.0" />
             <attenuation constant="1" linear="0" quadratic="0" />
         </spot>
+
+        <omni id="demoLight" enabled="1">
+            <location x="9.8" y="11.9" z="10" w="1.0" />
+            <ambient r="0" g="0" b="0" a="1.0" />
+            <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+            <specular r="1.0" g="1.0" b="1.0" a="1.0" />
+        </omni>
     </lights>
 
     <textures>
@@ -32,8 +39,8 @@
         <material id="tree" shininess="10">
             <emission r="0.0" g="0.0" b="0.0" a="1.0" />
             <ambient r="1.0" g="1.0" b="1.0" a="1.0" />
-            <diffuse r="0.4" g="0.2" b="0.7" a="1.0" />
-            <specular r="0.3" g="0.3" b="0.6" a="1.0" />
+            <diffuse r="0.8" g="0.9" b="0.7" a="1.0" />
+            <specular r="0.8" g="0.7" b="0.6" a="1.0" />
         </material>
     </materials>
 
@@ -58,6 +65,18 @@
     <primitives>
         <primitive id="boxFace">
             <rectangle x1="-0.5" y1="-1" x2="0.5" y2="1" />
+        </primitive>
+        <primitive id="box1">
+            <rectangle x1="1.5" y1="-1" x2="2.5" y2="1" />
+        </primitive>
+        <primitive id="box2">
+            <rectangle x1="-2.5" y1="-1" x2="-1.5" y2="1" />
+        </primitive>
+        <primitive id="box3">
+            <rectangle x1="-0.5" y1="-3" x2="0.5" y2="2" />
+        </primitive>
+        <primitive id="box4">
+            <rectangle x1="-0.5" y1="2" x2="0.5" y2="3" />
         </primitive>
     </primitives>
 
