@@ -60,22 +60,51 @@ class MySphere extends CGFobject {
 
         this.vertices.push(0,0,-this.r);
         this.normals.push(0,0,-1);
-        
-        //Need to fix indices calculation
-		for (i = 0; i < this.slices*(this.stacks-1) ; i++) {
-			this.indices.push(i, i+1, i+1+this.slices);
-			this.indices.push(i+1+this.slices, i+this.slices, i);
-        }
-        
-		for (i = 0; i < this.slices*(this.stacks-1) ; i++) {
-            var aux1 = this.slices*this.stacks + i;
-            var aux2 = this.slices*this.stacks + i + 1;
-            var aux3 = this.slices*this.stacks + i + 1 + this.slices;
-            var aux4 = this.slices*this.stacks + i + this.slices;
-			this.indices.push(aux3, aux2, aux1);
-			this.indices.push(aux1, aux4, aux3);
-		}
 
+        for (i = 0; i < this.stacks - 1; i++) {
+            for (j = 0; j < this.slices - 1; j++) {
+                this.indices.push(i*this.slices + j, i*this.slices + j + 1, (i + 1)*this.slices + j + 1);
+                this.indices.push((i + 1)*this.slices + j + 1, (i + 1)*this.slices + j, i*this.slices + j);
+            }
+            this.indices.push((i + 1)*this.slices - 1, i*this.slices, (i+1)*this.slices);
+            this.indices.push((i + 1)*this.slices, (i + 2)*this.slices - 1, (i + 1)*this.slices - 1);
+        }
+
+        for (i = 0; i < this.slices - 1; i++) {
+            this.indices.push(this.slices*(this.stacks - 1) + i, this.slices*(this.stacks - 1) + i + 1, this.slices*this.stacks);
+        }
+
+        this.indices.push(this.slices*this.stacks - 1, this.slices*(this.stacks - 1), this.slices*this.stacks);
+
+        var base = this.slices*this.stacks + 1;
+
+        for (i = 0; i < this.slices - 1; i++) {
+            this.indices.push(i + 1, i, base + i);
+            this.indices.push(base + i, base + i + 1, i + 1);
+        }
+        this.indices.push(0, this.slices - 1, base + this.slices - 1);
+        this.indices.push(base + this.slices - 1, base, 0);
+
+        for (i = 0; i < this.stacks - 2; i++) {
+            for (j = 0; j < this.slices - 1; j++) {
+                this.indices.push(base + ((i + 1)*this.slices + j + 1), base + (i*this.slices + j + 1), (i*this.slices + j) + base);
+                this.indices.push(base + (i*this.slices + j), base + ((i + 1)*this.slices + j), base + ((i + 1)*this.slices + j + 1));
+            }
+            this.indices.push(((i+1)*this.slices) + base, (i*this.slices) + base, ((i + 1)*this.slices - 1) + base);
+            this.indices.push(((i + 1)*this.slices - 1) + base, ((i + 2)*this.slices - 1) + base, ((i + 1)*this.slices) + base);
+        }
+
+        for (i = 0; i < this.slices - 1; i++) {
+            this.indices.push((this.slices*(this.stacks - 1)) + base, (this.slices*(this.stacks - 2) + i + 1) + base, (this.slices*(this.stacks - 2) + i) + base);
+        }
+
+        this.indices.push((this.vertices.length/3) - 1, (this.vertices.length/3) - this.slices - 1, (this.vertices.length/3) - 2);
+
+        this.texCoords = [
+			c-a*cosb, 1-a*sinb, 
+			0, 1,
+			c, 1
+		]
 
 		this.primitiveType = this.scene.gl.TRIANGLES;
 		this.initGLBuffers();

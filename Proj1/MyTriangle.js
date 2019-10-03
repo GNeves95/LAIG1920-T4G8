@@ -72,12 +72,12 @@ class MyTriangle extends CGFobject {
         //auxiliary calculus
         var a, b, c, cosa, sinb;
 
-        a = Math.sqrt((x1-x3)*(x1-x3)+(y1-y3)*(y1-y3)+(z1-z3)*(z1-z3));
-        b = Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1)+(z2-z1)*(z2-z1));
-        c = Math.sqrt((x3-x2)*(x3-x2)+(y3-y2)*(y3-y2)+(z3-z2)*(z3-z2));
+        a = Math.sqrt((this.x1-this.x3)*(this.x1-this.x3)+(this.y1-this.y3)*(this.y1-this.y3)+(this.z1-this.z3)*(this.z1-this.z3));
+        b = Math.sqrt((this.x2-this.x1)*(this.x2-this.x1)+(this.y2-this.y1)*(this.y2-this.y1)+(this.z2-this.z1)*(this.z2-this.z1));
+        c = Math.sqrt((this.x3-this.x2)*(this.x3-this.x2)+(this.y3-this.y2)*(this.y3-this.y2)+(this.z3-this.z2)*(this.z3-this.z2));
 
         //cosa = (-(a*a) + b*b + c*c)/(2*b*c);
-        cosb = ((a*a) - b*b + c*c)/(2*a*c);
+        var cosb = ((a*a) - b*b + c*c)/(2*a*c);
        //cosy = ((a*a) + b*b - c*c)/(2*a*b);
 
        sinb = Math.sqrt(1-(cosb * cosb));
