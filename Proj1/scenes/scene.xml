@@ -82,6 +82,12 @@
         <primitive id="cylinder">
             <cylinder base="1" top="0.5" height="10" slices="20" stacks="100" />
         </primitive>
+        
+        <primitive id="triangle">
+            <triangle x1="0" y1="0" z1="0"
+                      x2="10" y2="0" z2="0"
+                      x3="0" y3="10" z3="0" />
+        </primitive>
     </primitives>
 
     <components>
