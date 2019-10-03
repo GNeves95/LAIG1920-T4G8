@@ -32,13 +32,13 @@ class MyCylinder extends CGFobject {
 		var z = 0;
         var z2 = 0;
         
-        var diffGirth = (r1 - r2)/this.stacks;
+        var diffGirth = (this.r1 - this.r2)/this.stacks;
 
 		for (var j = 0; j < this.stacks + 1 ; j++) {
 
 			z = mainZ * j;
             z2 = z + mainZ;
-            var currGirth = this.r1(diffGirth*j);
+            var currGirth = this.r1-(diffGirth*j);
 
 			for (var i = 0; i < this.slices ; i++) {
 

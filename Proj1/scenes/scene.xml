@@ -78,6 +78,10 @@
         <primitive id="box4">
             <rectangle x1="-0.5" y1="2" x2="0.5" y2="3" />
         </primitive>
+        
+        <primitive id="cylinder">
+            <cylinder base="1" top="0.5" height="10" slices="20" stacks="100" />
+        </primitive>
     </primitives>
 
     <components>

@@ -835,7 +835,29 @@ class MySceneGraph {
 
                 this.primitives[primitiveId] = rect;
             } else if (primitiveType == 'cylinder'){
-
+                var base = this.reader.getFloat(grandChildren[0], 'base');
+                if(!(base != null && !isNaN(base)))
+                    return "unable to parse base of the primitive for ID = " + primitiveId;
+                
+                var top = this.reader.getFloat(grandChildren[0], 'top');
+                if(!(top != null && !isNaN(top)))
+                    return "unable to parse top of the primitive for ID = " + primitiveId;
+                
+                var height = this.reader.getFloat(grandChildren[0], 'height');
+                    if(!(height != null && !isNaN(height)))
+                    return "unable to parse height of the primitive for ID = " + primitiveId;
+                
+                var slices = this.reader.getInteger(grandChildren[0], 'slices');
+                if(!(slices != null && !isNaN(slices)))
+                    return "unable to parse slices of the primitive for ID = " + primitiveId;
+                 
+                var stacks = this.reader.getInteger(grandChildren[0], 'stacks');
+                if(!(stacks != null && !isNaN(stacks)))
+                    return "unable to parse stacks of the primitive for ID = " + primitiveId;
+                
+                var cyl = new MyCylinder(this.scene, primitiveId, slices, stacks, height, base, top);
+                
+                this.primitives[primitiveId] = cyl;
             } else if (primitiveType == 'triangle'){
                 
             } else if (primitiveType == 'sphere'){
@@ -844,7 +866,7 @@ class MySceneGraph {
                 
             }
             else {
-                this.onXMLMinorError()
+                this.onXMLMinorError(primitiveType + " is not a valid primitive type, for ID = " + primitiveId);
                 console.warn("To do: Parse other primitives.");
             }
         }
