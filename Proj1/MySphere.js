@@ -20,6 +20,7 @@ class MySphere extends CGFobject {
 		this.vertices = [];
 		this.indices = [];
         this.normals = [];
+        this.texCoords = [];
         
         // x = r.cos(theta).cos(phi)
         // y = r.cos(theta).sin(phi)
@@ -32,6 +33,8 @@ class MySphere extends CGFobject {
 		
         var phi = (2*Math.PI)/this.slices;
         var theta = Math.PI/(2*this.stacks);
+        var deltaX = 1/this.stacks;
+        var deltaY = 1/this.slices;
 
         for (var i = 0; i < this.stacks; i++){
             var currTheta = theta*i;
@@ -45,6 +48,7 @@ class MySphere extends CGFobject {
                 var x = this.r*nx;
                 var y = this.r*ny;
                 var z = this.r*nz;
+                this.texCoords.push(0.5+(i*deltaX), j*deltaY);
 
                 this.vertices.push(x,y,z);
                 this.normals.push(nx,ny,nz);
@@ -52,14 +56,18 @@ class MySphere extends CGFobject {
         }
         this.vertices.push(0,0,this.r);
         this.normals.push(0,0,1);
+        this.texCoords.push(1, 1);
 
         for (var i = this.slices; i < this.stacks*this.slices; i++){
             this.vertices.push(this.vertices[3*i],this.vertices[3*i + 1], -this.vertices[3*i + 2]);
             this.normals.push(this.normals[3*i],this.normals[3*i + 1], -this.normals[3*i + 2]);
+            
+            this.texCoords.push(0.5-(i*deltaX), j*deltaY);
         }
 
         this.vertices.push(0,0,-this.r);
         this.normals.push(0,0,-1);
+        this.texCoords.push(0,0);
 
         for (i = 0; i < this.stacks - 1; i++) {
             for (j = 0; j < this.slices - 1; j++) {
@@ -100,11 +108,9 @@ class MySphere extends CGFobject {
 
         this.indices.push((this.vertices.length/3) - 1, (this.vertices.length/3) - this.slices - 1, (this.vertices.length/3) - 2);
 
-        this.texCoords = [
-			c-a*cosb, 1-a*sinb, 
-			0, 1,
-			c, 1
-		]
+        // Calculate texture from half of the image up, then down
+
+        //this.texCoords = [];
 
 		this.primitiveType = this.scene.gl.TRIANGLES;
 		this.initGLBuffers();

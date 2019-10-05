@@ -92,6 +92,10 @@
         <primitive id="sphere">
             <sphere radius="1" slices="200" stacks="100" />
         </primitive>
+
+        <primitive id="torus">
+            <torus inner="0.5" outer="2" slices="10" loops="10" />
+        </primitive>
     </primitives>
 
     <components>
