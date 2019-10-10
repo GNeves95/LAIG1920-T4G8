@@ -60,10 +60,53 @@ class MySceneGraph {
             return;
         }
 
+        error = this.updateNode(this.components[this.idRoot]);
+
+        if (error != null) {
+            this.onXMLError(error);
+            return;
+        }
+
         this.loadedOk = true;
 
         // As the graph loaded ok, signal the scene so that any additional initialization depending on the graph can take place
         this.scene.onGraphLoaded();
+    }
+
+    /**
+     * Turns component and primitive IDs into refferences
+     * @param {Node to update} currNode
+     */
+    updateNode(currNode) {
+        if (currNode.visited) {
+            return "ERROR: There is a loop with component " + currNode.id;
+        }
+        var compChildren = currNode.childCompList;
+        var primChildren = currNode.childPrimList;
+
+        currNode.visited = true;
+
+        for (var i = 0; i < compChildren.length; i++) {
+            var currChild = this.components[compChildren[i]];
+            if (currChild == null){
+                return "ERROR: No child component with ID " + compChildren[i] + " for component " + currNode.id;
+            }
+            currNode.childCompList[i] = currChild;
+            var err = this.updateNode(currChild);
+            if (err != null)
+                return err;
+        }
+
+        for (var i = 0; i < primChildren.length; i++) {
+            var currChild = this.primitives[primChildren[i]];
+            if (currChild == null){
+                return "ERROR: No child primitive with ID " + primChildren[i] + " for component " + currNode.id;
+            }
+            currNode.childPrimList[i] = currChild;
+        }
+
+        currNode.visited = false;
+        return ;
     }
 
     /**
@@ -970,6 +1013,9 @@ class MySceneGraph {
         var grandgrandChildren = [];
         var nodeNames = [];
 
+        var Material = null;
+        var Texture = null;
+
         // Any number of components.
         for (var i = 0; i < children.length; i++) {
 
@@ -1051,11 +1097,34 @@ class MySceneGraph {
             grandgrandChildren = grandChildren[materialsIndex].children;
 
             for (var j = 0; j < grandgrandChildren.length; j++) {
-                materials.push(this.reader.getString(grandgrandChildren[j], "id"));
+                if(this.reader.getString(grandgrandChildren[j], "id") == "inherit"){
+                    if(Material == null){
+                        return "No material defined for parent component " + componentID;
+                    }
+                    materials.push(Material);
+                    continue;
+                }
+                var aux = this.materials[this.reader.getString(grandgrandChildren[j], "id")];
+                if(aux == null){
+                    this.onXMLMinorError("No material " + this.reader.getString(grandgrandChildren[j], "id") + " defined!");
+                    continue;
+                }
+                Material = aux;
+                materials.push(aux);
             }
 
             // Texture
             var texture = this.reader.getString(grandChildren[textureIndex], "id");
+            if (texture == "inherit"){
+                texture = Texture;
+            }
+            else if (texture == "none"){
+                texture = null;
+            }
+            else {
+                texture = this.textures[texture];
+            }
+            Texture = texture;
             var length_s = 1;
             var length_t = 1;
             if (this.reader.hasAttribute(grandChildren[textureIndex], "length_s"))
@@ -1091,10 +1160,14 @@ class MySceneGraph {
 
             }
             if (numChildren == 0){
-                return "at least one transformation must be defined";
+                return "at least one child must be defined";
             }
 
-            this.onXMLMinorError("To do: Save components.");
+            var comp = new MyComponent(this.scene, componentID, transfMatrix, materials, texture, childCompList, childPrimList, length_s, length_t);
+
+            this.components[componentID] = comp;
+
+            //this.onXMLMinorError("To do: Save components.");
         }
     }
 
@@ -1211,6 +1284,29 @@ class MySceneGraph {
     }
 
     /**
+     * Traverses the scene graph processing nodes and displaying primitives
+     * @param {Current node to be processed} component 
+     */
+    processNode(component) {
+
+        this.scene.multMatrix(component.transfMat);
+
+        for (var i = 0; i < component.childCompList.length; i++) {
+            //component.getCurrentMaterial().apply();
+            this.scene.pushMatrix();
+            this.processNode(component.childCompList[i]);
+            this.scene.popMatrix();
+        }
+
+        for (var i = 0; i < component.childPrimList.length; i++) {
+            //component.getCurrentMaterial().apply();
+            this.scene.pushMatrix();
+            component.childPrimList[i].display();
+            this.scene.popMatrix();
+        }
+    }
+
+    /**
      * Displays the scene, processing each node, starting in the root node.
      */
     displayScene() {
@@ -1219,8 +1315,10 @@ class MySceneGraph {
         //To test the parsing/creation of the primitives, call the display function directly
         //this.primitives['boxFace'].display();
 
-        for (const key in this.primitives) {
+        this.processNode(this.components[this.idRoot]);
+
+        /*for (const key in this.primitives) {
             this.primitives[key].display();
-        }
+        }*/
     }
 }
