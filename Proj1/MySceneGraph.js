@@ -795,7 +795,21 @@ class MySceneGraph {
                         if (axis != 'x' && axis != 'y' && axis != 'z' && axis != 'X' && axis != 'Y' && axis != 'Z')
                             return "Axis component for transformation " + transformationID + "must be either x, y or z";
 
-                        transfMatrix = mat4.rotate(transfMatrix, transfMatrix, DEGREE_TO_RAD*angle, axis);
+                        switch(axis){
+                            case 'x':
+                            case 'X':
+                                transfMatrix = mat4.rotateX(transfMatrix, transfMatrix, DEGREE_TO_RAD*angle);
+                                break;
+                            case 'y':
+                            case 'Y':
+                                transfMatrix = mat4.rotateY(transfMatrix, transfMatrix, DEGREE_TO_RAD*angle);
+                                break;
+                            case 'z':
+                            case 'Z':
+                                transfMatrix = mat4.rotateZ(transfMatrix, transfMatrix, DEGREE_TO_RAD*angle);
+                                break;
+                        }
+                        //transfMatrix = mat4.rotate(transfMatrix, transfMatrix, DEGREE_TO_RAD*angle, axis);
                         break;
                 }
             }
@@ -1086,7 +1100,22 @@ class MySceneGraph {
                             if (axis != 'x' && axis != 'y' && axis != 'z' && axis != 'X' && axis != 'Y' && axis != 'Z')
                                 return "Axis component for transformation " + transformationID + "must be either x, y or z";
     
-                            transfMatrix = mat4.rotate(transfMatrix, transfMatrix, DEGREE_TO_RAD*angle, axis);
+                            //transfMatrix = mat4.rotate(transfMatrix, transfMatrix, DEGREE_TO_RAD*angle, axis);
+
+                            switch(axis){
+                                case 'x':
+                                case 'X':
+                                    transfMatrix = mat4.rotateX(transfMatrix, transfMatrix, DEGREE_TO_RAD*angle);
+                                    break;
+                                case 'y':
+                                case 'Y':
+                                    transfMatrix = mat4.rotateY(transfMatrix, transfMatrix, DEGREE_TO_RAD*angle);
+                                    break;
+                                case 'z':
+                                case 'Z':
+                                    transfMatrix = mat4.rotateZ(transfMatrix, transfMatrix, DEGREE_TO_RAD*angle);
+                                    break;
+                            }
                             break;
                     }
                 }
