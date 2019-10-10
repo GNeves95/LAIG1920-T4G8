@@ -711,10 +711,10 @@ class MySceneGraph {
 
             var material = new CGFappearance(this.scene);
             material.setShininess(shininess);
-            material.setEmission(emission);
-            material.setDiffuse(diffuse);
-            material.setAmbient(ambient);
-            material.setSpecular(specular);
+            material.setEmission(...emission);
+            material.setDiffuse(...diffuse);
+            material.setAmbient(...ambient);
+            material.setSpecular(...specular);
 
             this.materials[materialID] = material;
             numMaterials++;
@@ -1321,14 +1321,14 @@ class MySceneGraph {
         this.scene.multMatrix(component.transfMat);
 
         for (var i = 0; i < component.childCompList.length; i++) {
-            //component.getCurrentMaterial().apply();
+            component.getCurrentMaterial().apply();
             this.scene.pushMatrix();
             this.processNode(component.childCompList[i]);
             this.scene.popMatrix();
         }
 
         for (var i = 0; i < component.childPrimList.length; i++) {
-            //component.getCurrentMaterial().apply();
+            component.getCurrentMaterial().apply();
             this.scene.pushMatrix();
             component.childPrimList[i].display();
             this.scene.popMatrix();
