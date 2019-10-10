@@ -1322,6 +1322,7 @@ class MySceneGraph {
 
         for (var i = 0; i < component.childCompList.length; i++) {
             component.getCurrentMaterial().apply();
+            if (component.texture) component.texture.bind();
             this.scene.pushMatrix();
             this.processNode(component.childCompList[i]);
             this.scene.popMatrix();
@@ -1329,6 +1330,7 @@ class MySceneGraph {
 
         for (var i = 0; i < component.childPrimList.length; i++) {
             component.getCurrentMaterial().apply();
+            if (component.texture) component.texture.bind();
             this.scene.pushMatrix();
             component.childPrimList[i].display();
             this.scene.popMatrix();

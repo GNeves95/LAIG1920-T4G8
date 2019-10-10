@@ -24,8 +24,8 @@ class MyTorus extends CGFobject {
         this.normals = [];
         this.texCoords = [];
 		
-        var phi = (2*Math.PI)/this.loops;
-        var theta = (2*Math.PI)/this.slices;
+        var phi = (2*Math.PI)/this.slices;
+        var theta = (2*Math.PI)/this.loops;
         var deltaX = 1/this.loops;
         var deltaY = 1/this.slices;
 
