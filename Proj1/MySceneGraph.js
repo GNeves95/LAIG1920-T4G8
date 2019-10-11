@@ -67,6 +67,13 @@ class MySceneGraph {
             return;
         }
 
+        error = this.updateMatTexNode(this.components[this.idRoot], null, null);
+
+        if (error != null) {
+            this.onXMLError(error);
+            return;
+        }
+
         this.loadedOk = true;
 
         // As the graph loaded ok, signal the scene so that any additional initialization depending on the graph can take place
@@ -74,7 +81,52 @@ class MySceneGraph {
     }
 
     /**
-     * Turns component and primitive IDs into refferences
+     * Turns material and texture IDs into references
+     * @param {Node to process} currNode 
+     * @param {Parent Material} mat 
+     * @param {Parent Texture} tex 
+     */
+    updateMatTexNode(currNode, mat, tex){
+        var materials = mat;
+        var texture = tex;
+        if (!currNode.processed){
+            currNode.processed = true;
+            if (currNode.getCurrentMaterial() == "inherit") {
+                if (mat == null) {
+                    return "Can't inherit empty material, in component " + currNode.id;
+                }
+                currNode.materials = mat;
+            } else {
+                materials = [];
+                for (var i = 0; i < currNode.materials.length; i++){
+                    var auxMat = this.materials[currNode.materials[i]];
+                    if (auxMat == null) {
+                        return "Material " + currNode.materials[i] + " in component " + currNode.id + " doesn't exist";
+                    }
+                    materials.push(auxMat);
+                }
+                currNode.materials = materials;
+            }
+            if (currNode.texture == "inherit"){
+                currNode.texture = texture;
+            } else {
+                texture = this.textures[currNode.texture];
+                currNode.texture = texture;
+            }
+        }
+
+        for (var j = 0; j < currNode.childCompList.length; j++){
+            var err = this.updateMatTexNode(currNode.childCompList[j], materials, texture);
+            if (err != null){
+                return err;
+            }
+        }
+
+        return ;
+    }
+
+    /**
+     * Turns component and primitive IDs into references
      * @param {Node to update} currNode
      */
     updateNode(currNode) {
@@ -86,23 +138,26 @@ class MySceneGraph {
 
         currNode.visited = true;
 
-        for (var i = 0; i < compChildren.length; i++) {
-            var currChild = this.components[compChildren[i]];
-            if (currChild == null){
-                return "ERROR: No child component with ID " + compChildren[i] + " for component " + currNode.id;
+        if (!currNode.updated) {
+            currNode.updated = true;
+            for (var i = 0; i < compChildren.length; i++) {
+                var currChild = this.components[compChildren[i]];
+                if (currChild == null){
+                    return "ERROR: No child component with ID " + compChildren[i] + " for component " + currNode.id;
+                }
+                currNode.childCompList[i] = currChild;
+                var err = this.updateNode(currChild);
+                if (err != null)
+                    return err;
             }
-            currNode.childCompList[i] = currChild;
-            var err = this.updateNode(currChild);
-            if (err != null)
-                return err;
-        }
 
-        for (var i = 0; i < primChildren.length; i++) {
-            var currChild = this.primitives[primChildren[i]];
-            if (currChild == null){
-                return "ERROR: No child primitive with ID " + primChildren[i] + " for component " + currNode.id;
+            for (var i = 0; i < primChildren.length; i++) {
+                var currChild = this.primitives[primChildren[i]];
+                if (currChild == null){
+                    return "ERROR: No child primitive with ID " + primChildren[i] + " for component " + currNode.id;
+                }
+                currNode.childPrimList[i] = currChild;
             }
-            currNode.childPrimList[i] = currChild;
         }
 
         currNode.visited = false;
@@ -1126,34 +1181,16 @@ class MySceneGraph {
             grandgrandChildren = grandChildren[materialsIndex].children;
 
             for (var j = 0; j < grandgrandChildren.length; j++) {
-                if(this.reader.getString(grandgrandChildren[j], "id") == "inherit"){
-                    if(Material == null){
-                        return "No material defined for parent component " + componentID;
-                    }
-                    materials.push(Material);
-                    continue;
-                }
-                var aux = this.materials[this.reader.getString(grandgrandChildren[j], "id")];
+                var aux = this.reader.getString(grandgrandChildren[j], "id");
                 if(aux == null){
                     this.onXMLMinorError("No material " + this.reader.getString(grandgrandChildren[j], "id") + " defined!");
                     continue;
                 }
-                Material = aux;
                 materials.push(aux);
             }
 
             // Texture
             var texture = this.reader.getString(grandChildren[textureIndex], "id");
-            if (texture == "inherit"){
-                texture = Texture;
-            }
-            else if (texture == "none"){
-                texture = null;
-            }
-            else {
-                texture = this.textures[texture];
-            }
-            Texture = texture;
             var length_s = 1;
             var length_t = 1;
             if (this.reader.hasAttribute(grandChildren[textureIndex], "length_s"))
