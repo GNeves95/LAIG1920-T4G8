@@ -27,6 +27,8 @@ class XMLscene extends CGFscene {
 
         this.enableTextures(true);
 
+        this.mPressed = false;
+
         this.gl.clearDepth(100.0);
         this.gl.enable(this.gl.DEPTH_TEST);
         this.gl.enable(this.gl.CULL_FACE);
@@ -132,6 +134,20 @@ class XMLscene extends CGFscene {
             this.setDefaultAppearance();
 
             // Displays the scene (MySceneGraph function).
+
+            if (this.interface.isKeyPressed('KeyM') && this.mPressed == false) {
+                this.mPressed = true;
+                console.log("Key M Pressed!");
+                for (const key in this.graph.components) {
+                    this.graph.components[key].changeMaterial();
+                }
+            }
+
+            if (this.interface.isKeyPressed('KeyM') == false && this.mPressed) {
+                this.mPressed = false;
+                console.log("Key M no longer Pressed!");
+            }
+
             this.graph.displayScene();
         }
 
