@@ -68,8 +68,8 @@ class MyInterface extends CGFinterface {
             //group.add(parent.graph.views[key], ).name(key);
         }
 
-        var defaultView = {value:""};
+        var defaultView = {value:parent.defaultView};
 
-        group.add(defaultView, "value", ids).onChange(this.setActiveCamera(parent.graph.views[defaultView.value])).name("View");
+        group.add(defaultView, "value", ids).onChange(function(){parent.camera = parent.graph.views[defaultView.value]; parent.interface.setActiveCamera(parent.camera); console.log("View changed")}).name("View");
     }
 }

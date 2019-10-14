@@ -101,6 +101,12 @@ class XMLscene extends CGFscene {
 
         this.initLights();
         
+        this.defaultView = this.graph.defaultView;
+
+        this.camera = this.graph.views[this.defaultView];
+
+        this.interface.setActiveCamera(this.camera);
+        
         this.interface.addLightsGroup(this);
         this.interface.addViewsGroup(this);
 
