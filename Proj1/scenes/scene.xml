@@ -6,6 +6,10 @@
             <from x="50" y="0" z="0" />
             <to x="0" y="0" z="0" />
         </perspective>
+        <perspective id="tras" near="0.1" far="750" angle="0">
+            <from x="-50" y="0" z="0" />
+            <to x="0" y="0" z="0" />
+        </perspective>
     </views>
 
     <globals>

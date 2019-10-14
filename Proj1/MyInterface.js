@@ -47,4 +47,29 @@ class MyInterface extends CGFinterface {
     isKeyPressed(keyCode) {
         return this.activeKeys[keyCode] || false;
     }
+
+    addLightsGroup(parent) {
+        var group = this.gui.addFolder("Lights");
+        group.open();
+
+        for (const key in parent.graph.lights) {
+            group.add(parent.graph.lights[key], "0").name(key);
+        }
+    }
+
+    addViewsGroup(parent) {
+        var group = this.gui.addFolder("Views");
+
+        group.open();
+        var ids = [];
+
+        for (const key in parent.graph.views) {
+            ids.push(key);
+            //group.add(parent.graph.views[key], ).name(key);
+        }
+
+        var defaultView = {value:""};
+
+        group.add(defaultView, "value", ids).onChange(this.setActiveCamera(parent.graph.views[defaultView.value])).name("View");
+    }
 }
