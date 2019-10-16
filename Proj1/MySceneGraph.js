@@ -449,7 +449,7 @@ class MySceneGraph {
                 if(upIndex == -1){
                     this.onXMLMinorError("No up given for ortho view " + viewId + "; assuming (0, 1, 0)");
                 } else {
-                    up = this.parseCoordinates3D(upIndex, "up component of view with ID " + viewId);
+                    up = this.parseCoordinates3D(grandChildren[upIndex], "up component of view with ID " + viewId);
                 }
 
                 var thisView = new CGFcameraOrtho(left, right, bottom, top, near, far, vec3.fromValues(fromView[0], fromView[1], fromView[2]), vec3.fromValues(toView[0], toView[1], toView[2]), vec3.fromValues(up[0], up[1], up[2]));
