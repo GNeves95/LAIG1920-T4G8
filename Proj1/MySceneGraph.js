@@ -343,10 +343,10 @@ class MySceneGraph {
         var numViews = 0;
 
         var grandChildren = [];
-        var nodeNames = [];
 
         //Any number of views.
         for (var i = 0; i < children.length; i++) {
+            var nodeNames = [];
 
             //Storing view information
             var child = children[i];
@@ -417,7 +417,7 @@ class MySceneGraph {
                     return "Couldn't read angle value for view " + viewId;
                 }
 
-                var thisView = new CGFcamera(angle, near, far, vec3.fromValues(fromView[0], fromView[1], fromView[2]), vec3.fromValues(toView[0], toView[1], toView[2]));
+                var thisView = new CGFcamera(DEGREE_TO_RAD * angle, near, far, vec3.fromValues(fromView[0], fromView[1], fromView[2]), vec3.fromValues(toView[0], toView[1], toView[2]));
                 this.views[viewId] = thisView;
 
                 if (grandChildren.length != 2) {
@@ -443,16 +443,16 @@ class MySceneGraph {
                     return "Couldn't read bottom value for view " + viewId;
                 }
 
-                var up = [0, 1, 0];
+                var upView = [0, 1, 0];
                 var upIndex = nodeNames.indexOf("up");
 
                 if(upIndex == -1){
                     this.onXMLMinorError("No up given for ortho view " + viewId + "; assuming (0, 1, 0)");
                 } else {
-                    up = this.parseCoordinates3D(grandChildren[upIndex], "up component of view with ID " + viewId);
+                    upView = this.parseCoordinates3D(grandChildren[upIndex], "up component of view with ID " + viewId);
                 }
 
-                var thisView = new CGFcameraOrtho(left, right, bottom, top, near, far, vec3.fromValues(fromView[0], fromView[1], fromView[2]), vec3.fromValues(toView[0], toView[1], toView[2]), vec3.fromValues(up[0], up[1], up[2]));
+                var thisView = new CGFcameraOrtho(left, right, bottom, top, near, far, vec3.fromValues(fromView[0], fromView[1], fromView[2]), vec3.fromValues(toView[0], toView[1], toView[2]), vec3.fromValues(upView[0], upView[1], upView[2]));
                 this.views[viewId] = thisView;
 
                 if ((upIndex == -1 && grandChildren.length != 2) || (upIndex != -1 && grandChildren.length != 3)){
