@@ -23,7 +23,7 @@
 
     <lights>
         <spot id="testLight" enabled="1" angle="90" exponent="3">
-            <location x="10" y="0" z="10" w="54" />
+            <location x="10" y="0" z="10" w="0" />
             <target x="0" y="0" z="0" />
             <ambient r="0" g="0" b="0" a="1.0" />
             <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
