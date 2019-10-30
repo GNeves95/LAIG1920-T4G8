@@ -1,0 +1,261 @@
+<lxs>
+    <scene root="sceneroot" axis_length="1" />
+
+    <views default="frente">
+        <perspective id="frente" near="0.1" far="750" angle="45">
+            <from x="5" y="5" z="5" />
+            <to x="0" y="0" z="0" />
+        </perspective>
+        <perspective id="tras" near="0.1" far="750" angle="45">
+            <from x="-5" y="-5" z="-5" />
+            <to x="0" y="0" z="0" />
+        </perspective>
+        <perspective id="defaultCamera" near="0.1" far="500" angle="45">
+            <from x="30" y="15" z="30" />
+            <to x="0" y="-2" z="0" />
+        </perspective>
+    </views>
+
+    <globals>
+        <ambient r="0.2" g="0.2" b="0.2" a="1.0" />
+        <background r="0.0" g="0.0" b="0.0" a="1.0" />
+    </globals>
+
+    <lights>
+        <spot id="testLight" enabled="1" angle="90" exponent="3">
+            <location x="10" y="0" z="10" w="0" />
+            <target x="0" y="0" z="0" />
+            <ambient r="0" g="0" b="0" a="1.0" />
+            <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+            <specular r="1.0" g="1.0" b="1.0" a="1.0" />
+            <attenuation constant="1" linear="0" quadratic="0" />
+        </spot>
+
+        <omni id="demoLight" enabled="1">
+            <location x="9.8" y="11.9" z="10" w="1.0" />
+            <ambient r="0" g="0" b="0" a="1.0" />
+            <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+            <specular r="1.0" g="1.0" b="1.0" a="1.0" />
+        </omni>
+    </lights>
+
+    <textures>
+        <texture id="tree" file="scenes/images/trunk-image.jpg" />
+    </textures>
+
+    <materials>
+        <material id="tree" shininess="10">
+            <emission r="0.0" g="0.0" b="0.0" a="1.0" />
+            <ambient r="1.0" g="1.0" b="1.0" a="1.0" />
+            <diffuse r="0.8" g="0.9" b="0.7" a="1.0" />
+            <specular r="0.8" g="0.7" b="0.6" a="1.0" />
+        </material>
+        
+        <material id="tree2" shininess="10">
+            <emission r="0.5" g="0.5" b="0.5" a="1.0" />
+            <ambient r="0.5" g="0.5" b="0.5" a="1.0" />
+            <diffuse r="0.5" g="0.5" b="0.5" a="1.0" />
+            <specular r="0.5" g="0.5" b="0.5" a="1.0" />
+        </material>
+    </materials>
+
+    <transformations>
+        <transformation id="tran1">
+            <translate x="0" y="0" z="0.5" />
+        </transformation>
+        <transformation id="tran2">
+            <translate x="0.5" y="0" z="0" />
+            <rotate axis="y" angle="90" />
+        </transformation>
+        <transformation id="tran3">
+            <translate x="-0.5" y="0" z="0" />
+            <rotate axis="y" angle="270" />
+        </transformation>
+        <transformation id="tran4">
+            <translate x="0" y="0" z="-0.5" />
+            <rotate axis="y" angle="180" />
+        </transformation>
+        <transformation id="tran5">
+            <translate x="0" y="-0.5" z="0" />
+            <rotate axis="x" angle="90" />
+        </transformation>
+        <transformation id="tran6">
+            <translate x="0" y="0.5" z="0" />
+            <rotate axis="x" angle="-90" />
+        </transformation>
+    </transformations>
+
+    <primitives>
+        <primitive id="boxFace">
+            <rectangle x1="-0.5" y1="-0.5" x2="0.5" y2="0.5" />
+        </primitive>
+        <primitive id="box1">
+            <rectangle x1="1.5" y1="-1" x2="2.5" y2="1" />
+        </primitive>
+        <primitive id="box2">
+            <rectangle x1="-2.5" y1="-1" x2="-1.5" y2="1" />
+        </primitive>
+        <primitive id="box3">
+            <rectangle x1="-0.5" y1="-3" x2="0.5" y2="2" />
+        </primitive>
+        <primitive id="box4">
+            <rectangle x1="-0.5" y1="2" x2="0.5" y2="3" />
+        </primitive>
+        
+        <primitive id="cylinder">
+            <cylinder base="0.5" top="0.5" height="1" slices="20" stacks="100" />
+        </primitive>
+        
+        <primitive id="triangle">
+            <triangle x1="0" y1="0" z1="0"
+                      x2="1" y2="0" z2="0"
+                      x3="0" y3="1" z3="0" />
+        </primitive>
+        
+        <primitive id="sphere">
+            <sphere radius="0.5" slices="200" stacks="100" />
+        </primitive>
+
+        <primitive id="torus">
+            <torus inner="0.125" outer="1" slices="100" loops="100" />
+        </primitive>
+    </primitives>
+
+    <components>
+
+        <component id="box">
+            <transformation>
+            </transformation>
+
+            <materials>
+                <material id="tree" />
+            </materials>
+
+            <texture id="tree" />
+
+            <children>
+                <componentref id="boxface1" />
+                <componentref id="boxface2" />
+                <componentref id="boxface3" />
+                <componentref id="boxface4" />
+                <componentref id="boxface5" />
+                <componentref id="boxface6" />
+            </children>
+        </component>
+        <component id="sceneroot">
+            <transformation>
+            </transformation>
+
+            <materials>
+                <material id="tree" />
+            </materials>
+
+            <texture id="none" />
+
+            <children>
+                <componentref id="box" />
+            </children>
+        </component>
+
+        <component id="boxface1">
+            <transformation>
+                <transformationref id="tran1" />
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <primitiveref id="boxFace" />
+            </children>
+        </component>
+
+        <component id="boxface2">
+            <transformation>
+                <transformationref id="tran2" />
+            </transformation>
+
+            <materials>
+                <material id="tree" />
+                <material id="tree2" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <primitiveref id="boxFace" />
+                <primitiveref id="triangle" />
+            </children>
+        </component>
+
+        <component id="boxface3">
+            <transformation>
+                <transformationref id="tran3" />
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <primitiveref id="boxFace" />
+                <primitiveref id="cylinder" />
+            </children>
+        </component>
+
+        <component id="boxface4">
+            <transformation>
+                <transformationref id="tran4" />
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <primitiveref id="boxFace" />
+                <primitiveref id="sphere" />
+            </children>
+        </component>
+
+        <component id="boxface5">
+            <transformation>
+                <transformationref id="tran5" />
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <primitiveref id="boxFace" />
+            </children>
+        </component>
+
+        <component id="boxface6">
+            <transformation>
+                <transformationref id="tran6" />
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="inherit" />
+
+            <children>
+                <primitiveref id="boxFace" />
+                <primitiveref id="torus" />
+            </children>
+        </component>
+    </components>
+</lxs>
