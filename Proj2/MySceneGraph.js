@@ -8,8 +8,9 @@ var LIGHTS_INDEX = 3;
 var TEXTURES_INDEX = 4;
 var MATERIALS_INDEX = 5;
 var TRANSFORMATIONS_INDEX = 6;
-var PRIMITIVES_INDEX = 7;
-var COMPONENTS_INDEX = 8;
+var ANIMATIONS_INDEX = 7;
+var PRIMITIVES_INDEX = 8;
+var COMPONENTS_INDEX = 9;
 
 /**
  * MySceneGraph class, representing the scene graph.
@@ -266,6 +267,18 @@ class MySceneGraph {
 
             //Parse transformations block
             if ((error = this.parseTransformations(nodes[index])) != null)
+                return error;
+        }
+
+        // <animations>
+        if ((index = nodeNames.indexOf("animations")) == -1)
+            return "tag <animations> missing";
+        else {
+            if (index != ANIMATIONS_INDEX)
+                this.onXMLMinorError("tag <animations> out of order");
+
+            //Parse transformations block
+            if ((error = this.parseAnimations(nodes[index])) != null)
                 return error;
         }
 
@@ -881,6 +894,95 @@ class MySceneGraph {
     }
 
     /**
+     * Parses the <animations> block
+     * @param {animations block element} animationsNode 
+     */
+    parseAnimations(animationsNode) {
+        //TO DO
+        var children = animationsNode.children;
+
+        this.animations = [];
+
+        var grandChildren = [];
+
+        // Any number of animations.
+        for (var i = 0; i < children.length; i++) {
+
+            if (children[i].nodeName != "animation") {
+                this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
+                continue;
+            }
+
+            // Get id of  the current animation.
+            var animationId = this.reader.getString(children[i], 'id');
+            if (animationId == null)
+                return "no ID defined for animation";
+            
+            // Checks for repeated IDs.
+            if (this.animations[animationId] != null)
+                return "ID must be unique for each animation (conflict: ID = " + animationId + ")";
+            
+            grandChildren = children[i].children;
+
+            // Checks if at least one keyframe is declared for each animation
+            if (grandChildren.length < 1) {
+                this.onXMLMinorError("At least one keyframe must be declared for animation <animation id='" + animationId + "'>");
+                continue;
+            }
+
+            var keyframes = [];
+
+            for (var j = 0; j < grandChildren.length; j++) {
+                var currGrandChild = grandChildren[j];
+
+                var currentKeyframe = [];
+                var instant = this.reader.getFloat(currGrandChild, "instant");
+                if (instant == null || isNaN(instant)){
+                    this.onXMLMinorError("No instant defined for the keyframe " + j + " on animation with ID= " + animationId);
+                    continue
+                }
+
+                currentKeyframe["instant"] = instant;
+                
+                var transfMatrix = mat4.create();
+
+                if (currGrandChild.children.length != 3 || (currGrandChild.children[0].nodeName != "translate" || currGrandChild.children[1].nodeName != "rotate" || currGrandChild.children[2].nodeName != "scale")) {
+                    this.onXMLMinorError("Each keyframe must have one translation, one rotation and one scaling in this order!");
+                    continue
+                }
+
+                var coordinates = this.parseCoordinates3D(currGrandChild.children[0], "translate animation for ID " + animationId);
+
+                if (!Array.isArray(coordinates))
+                    return coordinates;
+                    
+                transfMatrix = mat4.translate(transfMatrix, transfMatrix, coordinates);
+
+                var angleX = this.reader.getFloat(currGrandChild.children[1], "angle_x");
+                var angleY = this.reader.getFloat(currGrandChild.children[1], "angle_y");
+                var angleZ = this.reader.getFloat(currGrandChild.children[1], "angle_z");
+
+                if (angleX == null || isNaN(angleX) || angleY == null || isNaN(angleY) || angleZ == null || isNaN(angleZ)) {
+                    this.onXMLMinorError("Wrong value inputed for rotation on a keyframe of animation with ID = " + animationId);
+                }
+
+                transfMatrix = mat4.rotateX(transfMatrix, transfMatrix, DEGREE_TO_RAD*angleX);
+                transfMatrix = mat4.rotateY(transfMatrix, transfMatrix, DEGREE_TO_RAD*angleY);
+                transfMatrix = mat4.rotateZ(transfMatrix, transfMatrix, DEGREE_TO_RAD*angleZ);
+
+                coordinates = this.parseCoordinates3D(currGrandChild.children[2], "scale animation for ID " + animationId);
+
+                transfMatrix = mat4.scale(transfMatrix, transfMatrix, coordinates);
+
+                currentKeyframe["transformation"] = transfMatrix;
+
+                //To Do: create animation object and insert animation in animations array
+
+            }
+        }
+    }
+
+    /**
      * Parses the <primitives> block.
      * @param {primitives block element} primitivesNode
      */
@@ -902,7 +1004,7 @@ class MySceneGraph {
             // Get id of the current primitive.
             var primitiveId = this.reader.getString(children[i], 'id');
             if (primitiveId == null)
-                return "no ID defined for texture";
+                return "no ID defined for primitive";
 
             // Checks for repeated IDs.
             if (this.primitives[primitiveId] != null)
@@ -1058,6 +1160,21 @@ class MySceneGraph {
                 var torus = new MyTorus(this.scene, primitiveId, inner, outer, slices, loops);
 
                 this.primitives[primitiveId] = torus;
+            } else if (primitiveType == 'plane'){
+                //<plane npartsU=“ii” npartsV=“ii”
+                var npartsU = this.reader.getInteger(grandChildren[0], 'npartsU');
+                if(!(npartsU != null && !isNaN(npartsU)))
+                    return "unable to parse npartsU of the primitive " + primitiveId;
+                
+                var npartsV = this.reader.getFloat(grandChildren[0], 'npartsV');
+                if(!(npartsV != null && !isNaN(npartsV)))
+                    return "unable to parse npartsV of the primitive " + primitiveId;
+                
+                // To Do: Create Plane primitive, and add primitive to primitives array
+
+                //var plane = new Plane(this.scene, npartsU, npartsV, 0, 0, 0);
+                //
+                //this.primitives[primitiveId] = plane;
             }
             else {
                 this.onXMLMinorError(primitiveType + " is not a valid primitive type, for ID = " + primitiveId);

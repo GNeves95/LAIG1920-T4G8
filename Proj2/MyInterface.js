@@ -1,38 +1,75 @@
+/**
+* MyInterface class, creating a GUI interface.
+*/
+class MyInterface extends CGFinterface {
+    /**
+     * @constructor
+     */
+    constructor() {
+        super();
+    }
 
-class MyInterface extends CGFinterface
-{
+    /**
+     * Initializes the interface.
+     * @param {CGFapplication} application
+     */
+    init(application) {
+        super.init(application);
+        // init GUI. For more information on the methods, check:
+        //  http://workshop.chromeexperiments.com/examples/gui
 
-	/**
-	* MyInterface
-	* @constructor
-	*/
-	constructor()
-	{
-		//call CGFinterface constructor 
-		super();
-		
-	};
-	/**
-	* init
-	* @param {CGFapplication} application
-	*/
-	init(application) 
-	{
-		// call CGFinterface init
-		super.init(application);
-		
-		// init GUI. For more information on the methods, check:
-		// http://workshop.chromeexperiments.com/examples/gui
-		this.gui = new dat.GUI();
+        this.gui = new dat.GUI();
 
-		this.gui.add(this.scene, 'selectedObject', this.scene.objectList).onChange(this.scene.onSelectedObjectChanged.bind(this.scene)).name('Object Type');
-		this.gui.add(this.scene, 'wireframe').onChange(this.scene.onWireframeChanged.bind(this.scene));
+        // add a group of controls (and open/expand by defult)
 
-		this.gui.add(this.scene, 'selectedExampleShader', this.scene.shadersList).name('Shader examples').onChange(this.scene.onSelectedShaderChanged.bind(this.scene));
-		this.gui.add(this.scene, 'showShaderCode').name('Show Shader Code').onChange(this.scene.onShaderCodeVizChanged.bind(this.scene));
+        this.initKeys();
 
-		this.gui.add(this.scene, 'scaleFactor',-50,50).onChange(this.scene.onScaleFactorChanged.bind(this.scene));
+        return true;
+    }
 
-		return true;
-	};
+    /**
+     * initKeys
+     */
+    initKeys() {
+        this.scene.gui=this;
+        this.processKeyboard=function(){};
+        this.activeKeys={};
+    }
+
+    processKeyDown(event) {
+        this.activeKeys[event.code]=true;
+    };
+
+    processKeyUp(event) {
+        this.activeKeys[event.code]=false;
+    };
+
+    isKeyPressed(keyCode) {
+        return this.activeKeys[keyCode] || false;
+    }
+
+    addLightsGroup(parent) {
+        var group = this.gui.addFolder("Lights");
+        group.open();
+
+        for (const key in parent.graph.lights) {
+            group.add(parent.graph.lights[key], "0").name(key);
+        }
+    }
+
+    addViewsGroup(parent) {
+        var group = this.gui.addFolder("Views");
+
+        group.open();
+        var ids = [];
+
+        for (const key in parent.graph.views) {
+            ids.push(key);
+            //group.add(parent.graph.views[key], ).name(key);
+        }
+
+        var defaultView = {value:parent.defaultView};
+
+        group.add(defaultView, "value", ids).onChange(function(){parent.camera = parent.graph.views[defaultView.value]; parent.interface.setActiveCamera(parent.camera); console.log("View changed")}).name("View");
+    }
 }
