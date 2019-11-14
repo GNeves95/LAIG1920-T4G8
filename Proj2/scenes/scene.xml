@@ -131,6 +131,10 @@
         <primitive id="Cyl2">
             <cylinder2 base="1" top="1" height="2" slices="20" stacks="20" />
         </primitive>
+
+        <primitive id="plane1">
+            <plane npartsU="10" npartsV="20" />
+        </primitive>
     </primitives>
 
     <components>
@@ -149,9 +153,9 @@
                 <!--<componentref id="boxface1" />
                 <componentref id="boxface2" />
                 <componentref id="boxface3" />
-                <componentref id="boxface4" />-->
-                <componentref id="boxface5" />
-                <!--<componentref id="boxface6" />-->
+                <componentref id="boxface4" />
+                <componentref id="boxface5" />-->
+                <componentref id="boxface6" />
             </children>
         </component>
         <component id="sceneroot">
@@ -255,7 +259,7 @@
 
         <component id="boxface6">
             <transformation>
-                <transformationref id="tran6" />
+                <!--<transformationref id="tran6" />-->
             </transformation>
 
             <materials>
@@ -265,8 +269,7 @@
             <texture id="inherit" />
 
             <children>
-                <primitiveref id="boxFace" />
-                <primitiveref id="torus" />
+                <primitiveref id="plane1" />
             </children>
         </component>
     </components>

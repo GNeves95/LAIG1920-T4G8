@@ -113,6 +113,19 @@ class XMLscene extends CGFscene {
         this.sceneInited = true;
     }
 
+    update(t) {
+        if (this.last > 0){
+            this.delta = (t - this.last)/1000;
+
+            for(const key in this.graph.animations){
+                this.graph.animations[key].update(this.delta);
+            }
+
+        }
+
+        this.last = t;
+    }
+
     /**
      * Displays the scene.
      */

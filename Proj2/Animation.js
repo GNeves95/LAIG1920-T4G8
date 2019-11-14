@@ -1,10 +1,9 @@
 class Animation {
-    constructor(scene, id) {
-        super(scene);
-        this.id = id;
+    constructor(scene) {
+        this.scene = scene;
     }
 
-    update() {
+    update(delta) {
 
     }
 
