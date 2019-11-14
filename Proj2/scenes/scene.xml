@@ -88,7 +88,9 @@
     <animations>
         <animation id="testAnimation">
             <keyframe instant="10">
-                <translate x="0" y="0" z="0"/>
+                <translate x="0" y="0" z="5"/>
+                <rotate angle_x="0" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
             </keyframe>
         </animation>
     </animations>
@@ -261,6 +263,8 @@
             <transformation>
                 <!--<transformationref id="tran6" />-->
             </transformation>
+
+            <animationref id="testAnimation" />
 
             <materials>
                 <material id="inherit" />

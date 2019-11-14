@@ -10,10 +10,11 @@
  * @param childPrimList - primitive children of the component
  * @param ls - scale of the s parameter of the texture
  * @param lt - scale of the t parameter of the texture
+ * @param animation - animation to aply
  */
 
 class MyComponent extends CGFobject{
-    constructor(scene, id, matrix, materials, texture, childCompList, childPrimList, ls, lt) {
+    constructor(scene, id, matrix, materials, texture, childCompList, childPrimList, ls, lt, animation) {
         super(scene);
         this.id = id;
         this.transfMat = matrix;
@@ -25,6 +26,8 @@ class MyComponent extends CGFobject{
         this.lengthT = lt;
 
         this.currMaterial = 0;
+
+        this.animation = animation;
     }
 
     changeMaterial(){

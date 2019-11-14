@@ -943,8 +943,6 @@ class MySceneGraph {
                 }
 
                 currentKeyframe["instant"] = instant;
-                
-                var transfMatrix = mat4.create();
 
                 if (currGrandChild.children.length != 3 || (currGrandChild.children[0].nodeName != "translate" || currGrandChild.children[1].nodeName != "rotate" || currGrandChild.children[2].nodeName != "scale")) {
                     this.onXMLMinorError("Each keyframe must have one translation, one rotation and one scaling in this order!");
@@ -955,8 +953,8 @@ class MySceneGraph {
 
                 if (!Array.isArray(coordinates))
                     return coordinates;
-                    
-                transfMatrix = mat4.translate(transfMatrix, transfMatrix, coordinates);
+                
+                currentKeyframe["P"] = coordinates;
 
                 var angleX = this.reader.getFloat(currGrandChild.children[1], "angle_x");
                 var angleY = this.reader.getFloat(currGrandChild.children[1], "angle_y");
@@ -966,18 +964,18 @@ class MySceneGraph {
                     this.onXMLMinorError("Wrong value inputed for rotation on a keyframe of animation with ID = " + animationId);
                 }
 
-                transfMatrix = mat4.rotateX(transfMatrix, transfMatrix, DEGREE_TO_RAD*angleX);
-                transfMatrix = mat4.rotateY(transfMatrix, transfMatrix, DEGREE_TO_RAD*angleY);
-                transfMatrix = mat4.rotateZ(transfMatrix, transfMatrix, DEGREE_TO_RAD*angleZ);
+                currentKeyframe["O"] = [angleX, angleY, angleZ];
 
                 coordinates = this.parseCoordinates3D(currGrandChild.children[2], "scale animation for ID " + animationId);
 
-                transfMatrix = mat4.scale(transfMatrix, transfMatrix, coordinates);
+                currentKeyframe["S"] = coordinates;
 
-                currentKeyframe["transformation"] = transfMatrix;
-
-                this.onXMLMinorError("To do: create animation object and insert animation in animations array.");
-
+                //this.onXMLMinorError("To do: create animation object and insert animation in animations array.");
+                keyframes.push(currentKeyframe);
+            }
+            if (keyframes.length != 0){
+                var animation = new KeyframeAnimation(this.scene, keyframes);
+                this.animations[animationId] = animation;
             }
         }
     }
@@ -1267,6 +1265,7 @@ class MySceneGraph {
             var materialsIndex = nodeNames.indexOf("materials");
             var textureIndex = nodeNames.indexOf("texture");
             var childrenIndex = nodeNames.indexOf("children");
+            var animationIndex = nodeNames.indexOf("animationref");
 
             //this.onXMLMinorError("To do: Parse components.");
             // Transformations
@@ -1330,6 +1329,8 @@ class MySceneGraph {
                 }
             }
 
+
+
             // Materials
             var materials = [];
             grandgrandChildren = grandChildren[materialsIndex].children;
@@ -1383,7 +1384,17 @@ class MySceneGraph {
                 return "at least one child must be defined";
             }
 
-            var comp = new MyComponent(this.scene, componentID, transfMatrix, materials, texture, childCompList, childPrimList, length_s, length_t);
+            var animation = null;
+
+            if (animationIndex != -1){
+                var animationRef = this.reader.getString(grandChildren[animationIndex], "id");
+                animation = this.animations[animationRef];
+                if (animation == null){
+                    this.onXMLMinorError("Animation " + animationRef + " is not defined for component " + componentID + "!");
+                }
+            }
+
+            var comp = new MyComponent(this.scene, componentID, transfMatrix, materials, texture, childCompList, childPrimList, length_s, length_t, animation);
 
             this.components[componentID] = comp;
 
@@ -1523,6 +1534,10 @@ class MySceneGraph {
             component.getCurrentMaterial().apply();
             if (component.texture) component.texture.bind();
             this.scene.pushMatrix();
+            if (component.animation) {
+                component.animation.apply();
+                this.scene.multMatrix(component.animation.Ma);
+            }
             component.childPrimList[i].display();
             this.scene.popMatrix();
         }
