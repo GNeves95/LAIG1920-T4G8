@@ -976,7 +976,7 @@ class MySceneGraph {
 
                 currentKeyframe["transformation"] = transfMatrix;
 
-                //To Do: create animation object and insert animation in animations array
+                this.onXMLMinorError("To do: create animation object and insert animation in animations array.");
 
             }
         }
@@ -1016,7 +1016,8 @@ class MySceneGraph {
             if (grandChildren.length != 1 ||
                 (grandChildren[0].nodeName != 'rectangle' && grandChildren[0].nodeName != 'triangle' &&
                     grandChildren[0].nodeName != 'cylinder' && grandChildren[0].nodeName != 'sphere' &&
-                    grandChildren[0].nodeName != 'torus')) {
+                    grandChildren[0].nodeName != 'torus' && grandChildren[0].nodeName != 'cylinder2' &&
+                    grandChildren[0].nodeName != 'plane' && grandChildren[0].nodeName != 'patch')) {
                 return "There must be exactly 1 primitive type (rectangle, triangle, cylinder, sphere or torus)"
             }
 
@@ -1170,11 +1171,47 @@ class MySceneGraph {
                 if(!(npartsV != null && !isNaN(npartsV)))
                     return "unable to parse npartsV of the primitive " + primitiveId;
                 
+                //this.onXMLMinorError("To do: Create Plane primitive, and add primitive to primitives array.");
+                
                 // To Do: Create Plane primitive, and add primitive to primitives array
 
-                //var plane = new Plane(this.scene, npartsU, npartsV, 0, 0, 0);
-                //
-                //this.primitives[primitiveId] = plane;
+                var plane = new Plane(this.scene, npartsU, npartsV);
+                
+                this.primitives[primitiveId] = plane;
+            } else if (primitiveType == 'patch'){
+                
+                this.onXMLMinorError("To do: Create Patch primitive, and add primitive to primitives array.");
+                
+                // To Do: Create Patch primitive, and add primitive to primitives array
+            } else if (primitiveType == 'cylinder2'){
+                //<cylinder2 base=“ff” top=“ff” height=“ff” slices=“ii” stacks=“ii” />
+                var baseC = this.reader.getFloat(grandChildren[0], "base");
+                if(!(baseC != null && !isNaN(baseC)))
+                    return "unable to parse base of the primitive " + primitiveId;
+
+                var topC = this.reader.getFloat(grandChildren[0], "top");
+                if(!(topC != null && !isNaN(topC)))
+                    return "unable to parse top of the primitive " + primitiveId;
+
+                var heightC = this.reader.getFloat(grandChildren[0], "height");
+                if(!(heightC != null && !isNaN(heightC)))
+                    return "unable to parse height of the primitive " + primitiveId;
+
+                var slicesC = this.reader.getFloat(grandChildren[0], "slices");
+                if(!(slicesC != null && !isNaN(slicesC)))
+                    return "unable to parse slices of the primitive " + primitiveId;
+
+                var stacksC = this.reader.getFloat(grandChildren[0], "stacks");
+                if(!(stacksC != null && !isNaN(stacksC)))
+                    return "unable to parse stacks of the primitive " + primitiveId;
+                
+                //this.onXMLMinorError("To do: Create cylinder2 primitive, and add primitive to primitives array.");
+                
+                // To Do: Create cylinder2 primitive, and add primitive to primitives array
+
+                var cyl2 = new MyCylinder2(this.scene, baseC, topC, heightC, slicesC, stacksC);
+
+                this.primitives[primitiveId] = cyl2;
             }
             else {
                 this.onXMLMinorError(primitiveType + " is not a valid primitive type, for ID = " + primitiveId);
