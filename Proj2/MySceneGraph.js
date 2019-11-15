@@ -956,9 +956,9 @@ class MySceneGraph {
                 
                 currentKeyframe["P"] = coordinates;
 
-                var angleX = this.reader.getFloat(currGrandChild.children[1], "angle_x");
-                var angleY = this.reader.getFloat(currGrandChild.children[1], "angle_y");
-                var angleZ = this.reader.getFloat(currGrandChild.children[1], "angle_z");
+                var angleX = this.reader.getFloat(currGrandChild.children[1], "angle_x")*DEGREE_TO_RAD;
+                var angleY = this.reader.getFloat(currGrandChild.children[1], "angle_y")*DEGREE_TO_RAD;
+                var angleZ = this.reader.getFloat(currGrandChild.children[1], "angle_z")*DEGREE_TO_RAD;
 
                 if (angleX == null || isNaN(angleX) || angleY == null || isNaN(angleY) || angleZ == null || isNaN(angleZ)) {
                     this.onXMLMinorError("Wrong value inputed for rotation on a keyframe of animation with ID = " + animationId);
