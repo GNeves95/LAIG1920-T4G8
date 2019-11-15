@@ -1177,8 +1177,44 @@ class MySceneGraph {
                 
                 this.primitives[primitiveId] = plane;
             } else if (primitiveType == 'patch'){
+                var npointsU = this.reader.getInteger(grandChildren[0], 'npointsU');
+                if(!(npointsU != null && !isNaN(npointsU)))
+                    return "unable to parse npointsU of the primitive " + primitiveId;
                 
-                this.onXMLMinorError("To do: Create Patch primitive, and add primitive to primitives array.");
+                var npointsV = this.reader.getFloat(grandChildren[0], 'npointsV');
+                if(!(npointsV != null && !isNaN(npointsV)))
+                    return "unable to parse npointsV of the primitive " + primitiveId;
+
+                var npartsU = this.reader.getInteger(grandChildren[0], 'npartsU');
+                if(!(npartsU != null && !isNaN(npartsU)))
+                    return "unable to parse npartsU of the primitive " + primitiveId;
+                
+                var npartsV = this.reader.getFloat(grandChildren[0], 'npartsV');
+                if(!(npartsV != null && !isNaN(npartsV)))
+                    return "unable to parse npartsV of the primitive " + primitiveId;
+                
+                if(npointsV*npointsU != grandChildren[0].children.length){
+                    this.onXMLMinorError("Number of control points and parameters mistmatch for primitive " + primitiveId);
+                    continue ;
+                }
+
+                var points = [];
+
+                for(var j = 0; j < grandChildren[0].children.length; j++) {
+                    var aux = grandChildren[0].children[j];
+
+                    var coordinates = this.parseDCoordinates3D(aux, "control points for ID " + primitiveId);
+                    coordinates.push(1);
+
+                    points.push(coordinates);
+
+                    //todopatch
+                }
+                
+                //this.onXMLMinorError("To do: Create Patch primitive, and add primitive to primitives array.");
+
+                var patch = new Patch(this.scene, npointsU, npointsV, npartsU, npartsV, points);
+                this.primitives[primitiveId] = patch;
                 
                 // To Do: Create Patch primitive, and add primitive to primitives array
             } else if (primitiveType == 'cylinder2'){
@@ -1430,6 +1466,35 @@ class MySceneGraph {
 
         return position;
     }
+
+    /**
+     * Parse the coordinates from a node with ID = id
+     * @param {block element} node
+     * @param {message to be displayed in case of error} messageError
+     */
+    parseDCoordinates3D(node, messageError) {
+        var position = [];
+
+        // x
+        var x = this.reader.getFloat(node, 'xx');
+        if (!(x != null && !isNaN(x)))
+            return "unable to parse x-coordinate of the " + messageError;
+
+        // y
+        var y = this.reader.getFloat(node, 'yy');
+        if (!(y != null && !isNaN(y)))
+            return "unable to parse y-coordinate of the " + messageError;
+
+        // z
+        var z = this.reader.getFloat(node, 'zz');
+        if (!(z != null && !isNaN(z)))
+            return "unable to parse z-coordinate of the " + messageError;
+
+        position.push(...[x, y, z]);
+
+        return position;
+    }
+
 
     /**
      * Parse the coordinates from a node with ID = id

@@ -22,8 +22,8 @@
     </globals>
 
     <lights>
-        <spot id="testLight" enabled="1" angle="90" exponent="3">
-            <location x="10" y="0" z="10" w="0" />
+        <spot id="testLight" enabled="1" angle="0" exponent="3">
+            <location x="10" y="10" z="0" w="0" />
             <target x="0" y="0" z="0" />
             <ambient r="0" g="0" b="0" a="1.0" />
             <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
@@ -141,6 +141,23 @@
 
         <primitive id="plane1">
             <plane npartsU="10" npartsV="20" />
+        </primitive>
+
+        <primitive id="patch1">
+            <patch npointsU="3" npointsV="4" npartsU="10" npartsV="20">
+                <controlpoint xx="-1.5" yy="-1.5" zz="0" />
+                <controlpoint xx="-2" yy="-2" zz="2" />
+                <controlpoint xx="-2" yy="2" zz="2" />
+                <controlpoint xx="-1.5" yy="1.5" zz="0" />
+                <controlpoint xx="0" yy="0" zz="3" />
+                <controlpoint xx="0" yy="-2" zz="3" />
+                <controlpoint xx="0" yy="2" zz="3" />
+                <controlpoint xx="0" yy="0" zz="3" />
+                <controlpoint xx="1.5" yy="-1.5" zz="0" />
+                <controlpoint xx="2" yy="-2" zz="2" />
+                <controlpoint xx="2" yy="2" zz="2" />
+                <controlpoint xx="1.5" yy="1.5" zz="0" />
+            </patch>
         </primitive>
     </primitives>
 
@@ -279,6 +296,7 @@
 
             <children>
                 <primitiveref id="plane1" />
+                <primitiveref id="patch1" />
             </children>
         </component>
     </components>
