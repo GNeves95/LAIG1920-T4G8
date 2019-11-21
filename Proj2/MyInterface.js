@@ -7,6 +7,8 @@ class MyInterface extends CGFinterface {
      */
     constructor() {
         super();
+        this.cam = "";
+        this.camSec = "";
     }
 
     /**
@@ -70,6 +72,36 @@ class MyInterface extends CGFinterface {
 
         var defaultView = {value:parent.defaultView};
 
-        group.add(defaultView, "value", ids).onChange(function(){parent.camera = parent.graph.views[defaultView.value]; parent.interface.setActiveCamera(parent.camera); console.log("View changed")}).name("View");
+        group.add(defaultView, "value", ids).onChange(function(){
+                //parent.camera = parent.graph.views[defaultView.value]; /*parent.interface.setActiveCamera(parent.camera);*/
+                parent.cam = defaultView.value;
+                console.log("View changed")
+            }).name("View");
+
+        group.add(defaultView, "value", ids).onChange(function(){
+                //parent.cameraSec = parent.graph.views[defaultView.value]; /*parent.interface.setActiveCamera(parent.camera);*/
+                parent.camSec = defaultView.value;
+                console.log("security camera changed")
+            }).name("Security Camera");
+    }
+
+    addSecViewsGroup(parent) {
+        var group = this.gui.addFolder("Security Camera View");
+
+        group.open();
+        var ids = [];
+
+        for (const key in parent.graph.views) {
+            ids.push(key);
+        }
+
+        var defView = {value:parent.defaultView};
+
+        group.add(defView, "value", ids).onChange(function(){
+                parent.cameraSec = parent.graph.views[defView.value];
+                this.camSec = defView.value;
+                parent.interface.setActiveCamera(parent.cameraSec);
+                console.log("Security camera changed")
+            }).name("Security Camera");
     }
 }

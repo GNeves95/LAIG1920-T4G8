@@ -12,6 +12,9 @@ class XMLscene extends CGFscene {
         super();
 
         this.interface = myinterface;
+        this.cam = "";
+        this.camSec = "";
+        this.defaultView = "";
     }
 
     /**
@@ -45,6 +48,7 @@ class XMLscene extends CGFscene {
      */
     initCameras() {
         this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
+        this.cameraSec = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
     }
     /**
      * Initializes the scene lights with the values read from the XML file.
@@ -107,10 +111,12 @@ class XMLscene extends CGFscene {
 
         this.camera = this.graph.views[this.defaultView];
 
+        this.interface.setActiveCamera(this.cameraSec);
         this.interface.setActiveCamera(this.camera);
         
         this.interface.addLightsGroup(this);
         this.interface.addViewsGroup(this);
+        //this.interface.addSecViewsGroup(this);
 
         this.sceneInited = true;
     }
@@ -151,6 +157,20 @@ class XMLscene extends CGFscene {
         // Initialize Model-View matrix as identity (no transformation
         this.updateProjectionMatrix();
         this.loadIdentity();
+
+        if(isRTT){
+            if(this.camSec != "")
+                this.camera = this.graph.views[this.camSec];
+            else
+                this.camera = this.graph.views[this.defaultView];
+        } else {
+            if(this.cam != "")
+                this.camera = this.graph.views[this.cam];
+            else
+                this.camera = this.graph.views[this.defaultView];
+        }
+
+        this.interface.setActiveCamera(this.camera);
 
         // Apply transformations corresponding to the camera position relative to the origin
         this.applyViewMatrix();
