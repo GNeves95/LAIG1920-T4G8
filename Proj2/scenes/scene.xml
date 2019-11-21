@@ -177,8 +177,8 @@
                 <!--<componentref id="boxface1" />
                 <componentref id="boxface2" />
                 <componentref id="boxface3" />
-                <componentref id="boxface4" />
-                <componentref id="boxface5" />-->
+                <componentref id="boxface4" />-->
+                <componentref id="boxface5" />
                 <componentref id="boxface6" />
             </children>
         </component>

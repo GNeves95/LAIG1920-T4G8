@@ -20,6 +20,8 @@ class XMLscene extends CGFscene {
      */
     init(application) {
         super.init(application);
+        this.textureCam = new CGFtextureRTT(this, this.gl.canvas.width, this.gl.canvas.height);
+        this.secCam = new MySecurityCamera(this, this.textureCam);
 
         this.sceneInited = false;
 
@@ -126,10 +128,23 @@ class XMLscene extends CGFscene {
         this.last = t;
     }
 
+    display(){
+        this.textureCam.attachToFrameBuffer();
+        this.render();
+        this.textureCam.detachFromFrameBuffer();
+        
+        this.render();
+
+        this.gl.disable(this.gl.DEPTH_TEST);
+        this.secCam.display();
+        this.gl.enable(this.gl.DEPTH_TEST);
+
+    }
+
     /**
      * Displays the scene.
      */
-    display() {
+    render() {
         // ---- BEGIN Background, camera and axis setup
 
         // Clear image and depth buffer everytime we update the scene
@@ -178,6 +193,7 @@ class XMLscene extends CGFscene {
             }
 
             this.graph.displayScene();
+            //this.secCam.display();
         }
 
         this.popMatrix();
