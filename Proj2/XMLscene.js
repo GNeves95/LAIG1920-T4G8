@@ -20,9 +20,6 @@ class XMLscene extends CGFscene {
      */
     init(application) {
         super.init(application);
-        this.textureCam = new CGFtextureRTT(this, this.gl.canvas.width, this.gl.canvas.height);
-        this.secCam = new MySecurityCamera(this, this.textureCam);
-
         this.sceneInited = false;
 
         this.initCameras();
@@ -37,6 +34,9 @@ class XMLscene extends CGFscene {
         this.gl.depthFunc(this.gl.LEQUAL);
 
         this.axis = new CGFaxis(this);
+        this.textureCam = new CGFtextureRTT(this, this.gl.canvas.width, this.gl.canvas.height);
+        this.secCam = new MySecurityCamera(this, this.textureCam);
+
         this.setUpdatePeriod(100);
     }
 
@@ -130,21 +130,18 @@ class XMLscene extends CGFscene {
 
     display(){
         this.textureCam.attachToFrameBuffer();
-        this.render();
+        this.render(true);
         this.textureCam.detachFromFrameBuffer();
         
-        this.render();
 
-        this.gl.disable(this.gl.DEPTH_TEST);
-        this.secCam.display();
-        this.gl.enable(this.gl.DEPTH_TEST);
+        this.render(false);
 
     }
 
     /**
      * Displays the scene.
      */
-    render() {
+    render(isRTT) {
         // ---- BEGIN Background, camera and axis setup
 
         // Clear image and depth buffer everytime we update the scene
@@ -197,6 +194,12 @@ class XMLscene extends CGFscene {
         }
 
         this.popMatrix();
+
+        if(!isRTT){
+            this.gl.disable(this.gl.DEPTH_TEST);
+            this.secCam.display();
+            this.gl.enable(this.gl.DEPTH_TEST);
+        }
         // ---- END Background, camera and axis setup
     }
 }

@@ -5,11 +5,11 @@ precision highp float;
 varying vec2 vTextureCoord;
 uniform sampler2D uSampler;
 
+varying vec3 vertex;
+
 void main() {
 
-	//vec4 color = texture2D(uSampler, vTextureCoord);
-    
-    //color = vec4(0.0,0.0,1.0,1.0);
+	vec4 texture = texture2D(uSampler, vTextureCoord);
 
-	gl_FragColor = vec4(0.0,0.0,1.0,1.0);
+	gl_FragColor = texture;
 }
