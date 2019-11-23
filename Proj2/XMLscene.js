@@ -132,6 +132,8 @@ class XMLscene extends CGFscene {
         }
 
         this.last = t;
+
+        this.secCam.update((t/100)%1000);
     }
 
     display(){
