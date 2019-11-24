@@ -31,6 +31,15 @@
             <attenuation constant="1" linear="0" quadratic="0" />
         </spot>
 
+        <spot id="super" enabled="1" angle="90" exponent="3">
+            <location x="-4" y="4" z="0" w="0" />
+            <target x="0" y="0" z="0" />
+            <ambient r="0" g="0" b="0" a="1.0" />
+            <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+            <specular r="1.0" g="1.0" b="1.0" a="1.0" />
+            <attenuation constant="1" linear="0" quadratic="0" />
+        </spot>
+
         <omni id="demoLight" enabled="1">
             <location x="9.8" y="11.9" z="10" w="1.0" />
             <ambient r="0" g="0" b="0" a="1.0" />
@@ -46,7 +55,8 @@
         <texture id="supertower" file="scenes/images/supertower.jpg" />
         <texture id="superstar" file="scenes/images/superstar.jpg" />
         <texture id="superalternativetower" file="scenes/images/superalternativetower.jpg" />
-
+        <texture id="shield" file="scenes/images/shield.jpg" />
+        <texture id="starwarsnucleo" file="scenes/images/starwarsnucleo.jpg" />
 
     </textures>
 
@@ -105,19 +115,38 @@
     </transformations>
 
     <animations>
+
         <animation id ="GETBIG">
             <keyframe instant ="5">
                 <translate x="0" y="0" z="0"/>
                 <rotate angle_x="0" angle_y="0" angle_z="0" />
-                <scale x="2" y="2" z="2" />
+                <scale x="0.5" y="0.5" z="0.5" />
             </keyframe>
 
             <keyframe instant ="10">
                 <translate x="0" y="0" z="0"/>
                 <rotate angle_x="0" angle_y="0" angle_z="0" />
-                <scale x="5" y="5" z="5" />
+                <scale x="0" y="0" z="0" />
             </keyframe>
-        </animation>    
+        </animation>
+
+        <animation id ="ship_mov">
+            <keyframe instant ="5">
+                <translate x="0" y="0" z="0"/>
+                <rotate angle_x="0" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe> 
+
+            <keyframe instant ="10">
+                <translate x="0" y="0" z="10"/>
+                <rotate angle_x="0" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe> 
+
+        </animation>
+
+
+
     </animations>
 
     <primitives>
@@ -145,6 +174,10 @@
             <cylinder base="0.5" top="0.5" height="1" slices="20" stacks="100" />
         </primitive>
 
+        <primitive id="cylinder2">
+            <cylinder2 base="0.5" top="0.5" height="1" slices="20" stacks="100" />
+        </primitive>
+
         <primitive id="cone">
             <cylinder base="0.5" top="0" height="1" slices="100" stacks="100" />
         </primitive>
@@ -161,6 +194,27 @@
 
         <primitive id="torus">
             <torus inner="0.125" outer="1" slices="100" loops="100" />
+        </primitive>
+
+        <primitive id="plane1">
+            <plane npartsU="10" npartsV="20" />
+        </primitive>
+
+        <primitive id="patch1">
+            <patch npointsU="3" npointsV="4" npartsU="10" npartsV="20">
+                <controlpoint xx="-1.5" yy="-1.5" zz="0" />
+                <controlpoint xx="-2" yy="-2" zz="2" />
+                <controlpoint xx="-2" yy="2" zz="2" />
+                <controlpoint xx="-1.5" yy="1.5" zz="0" />
+                <controlpoint xx="0" yy="0" zz="3" />
+                <controlpoint xx="0" yy="-2" zz="3" />
+                <controlpoint xx="0" yy="2" zz="3" />
+                <controlpoint xx="0" yy="0" zz="3" />
+                <controlpoint xx="1.5" yy="-1.5" zz="0" />
+                <controlpoint xx="2" yy="-2" zz="2" />
+                <controlpoint xx="2" yy="2" zz="2" />
+                <controlpoint xx="1.5" yy="1.5" zz="0" />
+            </patch>
         </primitive>
 
     </primitives>
@@ -187,6 +241,7 @@
                 <componentref id = "tower" />
                 <componentref id = "planet"/> 
                 <componentref id = "star"/>
+                <componentref id = "ship"/>
             </children>
         </component>
 
@@ -212,6 +267,8 @@
             <transformation>
                 <translate x="0.5" y="3.5" z="21.5"/>
             </transformation>
+
+            
 
             <materials>
                 <material id="inherit" />
@@ -255,6 +312,25 @@
                 <componentref id = "star15"/>
                 <componentref id = "star16"/>                                                                   
             </children>
+        </component>
+
+        <component id="ship">
+            <transformation>
+                <translate x="0" y="0" z="0"/>
+            </transformation>
+
+            <materials>
+                <material id="inherit" />
+            </materials>
+
+            <texture id="superstar" />
+
+            <children>
+                <componentref id = "ship1"/> 
+                <componentref id = "ship2"/>
+                <componentref id = "ship3"/>
+                <componentref id = "ship4"/>                                                             
+            </children>
         </component>        
 
 
@@ -296,6 +372,7 @@
             <children>
                 <componentref id = "weapon"/>
                 <componentref id = "laser"/>
+                <componentref id = "spaceworm"/>
             </children>
 
         </component>
@@ -326,6 +403,8 @@
             <transformation>
                 <rotate axis="x" angle="90"/>
             </transformation>
+
+            <animationref id="GETBIG" />
 
             <materials>
                 <material id = "inherit" />
@@ -647,7 +726,136 @@
             <children>
                 <primitiveref id="triangle"/>
             </children>
+        </component>
+
+
+        <component id = "ship1">
+            <transformation>
+                <translate x="4" y="3" z="5"/>
+            </transformation>
+
+            <materials>
+                <material id = "inherit" />
+            </materials>
+
+            <texture id = "inherit" />
+
+            <children>
+                <componentref id = "leftwall"/>
+                <componentref id = "rightwall"/>
+                <componentref id = "nucleo"/>
+            </children>
+        </component> 
+
+        <component id ="leftwall">
+            <transformation>
+                <rotate axis="z" angle="-90" />
+            </transformation>
+
+                   <animationref id ="ship_mov" />
+            <materials>
+                <material id = "inherit" />
+            </materials>
+
+            <texture id = "supertower" />
+
+            <children>
+                <primitiveref id="plane1"/>
+            </children>
+        </component>
+
+        <component id ="rightwall">
+            <transformation>
+                <translate x="0.8" y="0" z="0"/>
+                <rotate axis="z" angle="-90" />
+            </transformation>
+
+               <animationref id ="ship_mov" />
+            <materials>
+                <material id = "inherit" />
+            </materials>
+
+            <texture id = "supertower" />
+
+            <children>
+                <primitiveref id="plane1"/>
+            </children>
+        </component>
+
+        <component id ="nucleo">
+            <transformation>
+                <translate x="0.4" y="0" z="0"/>
+                <scale x="0.6" y="0.6" z="0.6" />
+                
+            </transformation>
+
+                       <animationref id ="ship_mov" />
+
+            <materials>
+                <material id = "inherit" />
+            </materials>
+
+            <texture id = "starwarsnucleo" />
+
+            <children>
+                <primitiveref id="sphere"/>
+            </children>
         </component>        
+
+    
+        <component id = "ship2">
+            <transformation>
+                <translate x="6" y="2" z="7"/>
+            </transformation>
+
+            <materials>
+                <material id = "inherit" />
+            </materials>
+
+            <texture id = "inherit" />
+
+            <children>
+                <componentref id = "leftwall"/>
+                <componentref id = "rightwall"/>
+                <componentref id = "nucleo"/>
+            </children>
+        </component> 
+
+        <component id = "ship3">
+            <transformation>
+                <translate x="-2" y="4" z="12"/>
+            </transformation>
+
+            <materials>
+                <material id = "inherit" />
+            </materials>
+
+            <texture id = "inherit" />
+
+            <children>
+                <componentref id = "leftwall"/>
+                <componentref id = "rightwall"/>
+                <componentref id = "nucleo"/>
+            </children>
+        </component>         
+
+        <component id = "ship4">
+            <transformation>
+                <translate x="3" y="-2" z="6"/>
+            </transformation>
+
+            <materials>
+                <material id = "inherit" />
+            </materials>
+
+            <texture id = "inherit" />
+
+            <children>
+                <componentref id = "leftwall"/>
+                <componentref id = "rightwall"/>
+                <componentref id = "nucleo"/>
+            </children>
+        </component>
 
                                                              <!--3ºs filhos-->
 
@@ -780,9 +988,26 @@
             <texture id = "superlaser" />
 
             <children>
-                  <primitiveref id = "cylinder"/>
+                  <primitiveref id = "cylinder2"/>
             </children>
 
+        </component>
+
+        
+        <component id = "spaceworm">
+            <transformation>
+                <translate x="0" y="0" z="2"/>
+            </transformation>
+
+            <materials>
+                <material id = "inherit" />
+            </materials>
+
+            <texture id = "shield" />
+
+            <children>
+                <primitiveref id="patch1"/>
+            </children>
         </component>        
 
     </components>
