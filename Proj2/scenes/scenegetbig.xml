@@ -1,7 +1,7 @@
 <lxs>
     <scene root="sceneroot" axis_length="1" />
 
-    <views default="frente">
+    <views default="defaultCamera">
         <perspective id="frente" near="0.1" far="750" angle="45">
             <from x="5" y="5" z="5" />
             <to x="0" y="0" z="0" />
@@ -12,6 +12,11 @@
         </perspective>
         <perspective id="defaultCamera" near="0.1" far="500" angle="45">
             <from x="30" y="15" z="30" />
+            <to x="0" y="-2" z="0" />
+        </perspective>
+
+        <perspective id="planetCamera" near="0.1" far="500" angle="45">
+            <from x="0" y="10" z="30" />
             <to x="0" y="-2" z="0" />
         </perspective>
     </views>
@@ -142,10 +147,21 @@
                 <rotate angle_x="0" angle_y="0" angle_z="0" />
                 <scale x="1" y="1" z="1" />
             </keyframe> 
-
         </animation>
 
+        <animation id ="ship_mov2">
+            <keyframe instant ="5">
+                <translate x="0" y="0" z="0"/>
+                <rotate angle_x="0" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe> 
 
+            <keyframe instant ="10">
+                <translate x="0" y="0" z="16.6"/>
+                <rotate angle_x="0" angle_y="0" angle_z="0" />
+                <scale x="1" y="1" z="1" />
+            </keyframe> 
+        </animation>
 
     </animations>
 
@@ -789,7 +805,7 @@
                 
             </transformation>
 
-                       <animationref id ="ship_mov" />
+                       <animationref id ="ship_mov2" />
 
             <materials>
                 <material id = "inherit" />
