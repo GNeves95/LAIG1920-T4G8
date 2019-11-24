@@ -51,9 +51,9 @@ class KeyframeAnimation extends Animation{
                     this.O[1] = ratio*(this.segments[i]["O"][1]);
                     this.O[2] = ratio*(this.segments[i]["O"][2]);
 
-                    this.S[0] = 1 + ratio*(1 - this.segments[i]["S"][0]);
-                    this.S[1] = 1 + ratio*(1 - this.segments[i]["S"][1]);
-                    this.S[2] = 1 + ratio*(1 - this.segments[i]["S"][2]);
+                    this.S[0] = 1 + ratio*(this.segments[i]["S"][0] - 1);
+                    this.S[1] = 1 + ratio*(this.segments[i]["S"][1] - 1);
+                    this.S[2] = 1 + ratio*(this.segments[i]["S"][2] - 1);
                 }
 
                 return ;
