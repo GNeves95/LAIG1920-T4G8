@@ -1591,6 +1591,10 @@ class MySceneGraph {
             component.getCurrentMaterial().apply();
             if (component.texture) component.texture.bind();
             this.scene.pushMatrix();
+            if (component.animation) {
+                component.animation.apply();
+                this.scene.multMatrix(component.animation.Ma);
+            }
             this.processNode(component.childCompList[i]);
             this.scene.popMatrix();
         }
