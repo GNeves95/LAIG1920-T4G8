@@ -69,6 +69,7 @@ handle_request(_, 'Bad Request', '400 Bad Request').
 read_request(Stream, Request) :-
 	read_line(Stream, LineCodes),
 	print_header_line(LineCodes),
+	write(Request),
 	
 	% Parse Request
 	atom_codes('GET /',Get),

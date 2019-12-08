@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>LAIG - Parser Example</title>
+    <link rel="icon" href="data:,">
+
+<style>
+body, html {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+}
+
+canvas {
+    width: 100%;
+    height: 100%;
+}
+</style>
+</head>
+<body><h1>Sicstus HTTP Test</h1>
+
+	<div>
+		<input id="query_field" type="Text" value="handshake" />
+		<br>
+		<button id="send_button" type="button" onClick="makeRequest();"> Send </button>
+	</div>
+	<h3> Result: </h3>
+	<div id="query_result"></div>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+	<script>
+		function getPrologRequest(requestString, onSuccess, onError, port) {
+			var requestPort = port || 8080
+			var request = new XMLHttpRequest();
+			request.open('POST', 'http://localhost:' + requestPort + '/' + requestString, true);
+
+			request.onload = onSuccess || function (data) { console.log("Request successful. Reply: " + data.target.response); };
+			request.onerror = onError || function () { console.log("Error waiting for response"); };
+
+			request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+			request.send();
+		}
+
+		function makeRequest() {
+			// Get Parameter Values 
+			var requestString = document.querySelector("#query_field").value;
+			console.log(requestString);
+
+			// Make Request 
+			getPrologRequest(requestString, handleReply);
+		}
+
+		//Handle the Reply 
+		function handleReply(data) {
+			document.querySelector("#query_result").innerHTML = data.target.response;
+		} 
+	</script>
+
+<script src="main.js"></script>
+
+</body>
+</html>
