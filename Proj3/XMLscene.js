@@ -41,6 +41,10 @@ class XMLscene extends CGFscene {
         this.secCam = new MySecurityCamera(this, this.textureCam);
 
         this.setUpdatePeriod(100);
+
+        var pawnObj = new PawnObj();
+
+        this.pawn = new ChessPawn(this, "Pawn", true, 0, 0, pawnObj);
     }
 
     /**
@@ -211,8 +215,9 @@ class XMLscene extends CGFscene {
                 console.log("Key M no longer Pressed!");
             }
 
-            this.graph.displayScene();
+            //this.graph.displayScene();
             //this.secCam.display();
+            this.pawn.display();
         }
 
         this.popMatrix();

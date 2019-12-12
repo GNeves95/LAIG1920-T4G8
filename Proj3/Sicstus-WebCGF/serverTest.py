@@ -40,6 +40,7 @@ import socketio
 import websockets
 import threading
 from io import BytesIO
+import cgi
 
 def startHttpServer(handler):
     with socketserver.TCPServer(("127.0.0.1",8000), handler) as httpd:
@@ -61,14 +62,21 @@ class MyTCPHandler(http.server.SimpleHTTPRequestHandler):
         print(f'{self.path}')'''
     
     def do_POST(self):
+        content_length = int(self.headers['Content-Length'])
         message = self.path.split('/')
-        print(f'{message[1]}')
+        post_data = self.rfile.read(content_length)
+        #post_data = cgi.FieldStorage()
+        #for key in post_data.keys():
+        #    print(f'{key}: {post_data[key]}')
+        #post_data = b"teste"
+        print(f'{message[1]} and {post_data}')
         self.send_response(200)
         self.end_headers()
         response = BytesIO()
         response.write(b'')
         response.write(b'')
         response.write(message[1].encode())
+        response.write(post_data)
         self.wfile.write(response.getvalue())
 
     
