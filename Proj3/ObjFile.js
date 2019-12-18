@@ -34,20 +34,22 @@ class ObjFile {
                     var facePoints = faces[1].split('/');
 
                     if (!isNaN(facePoints[0])) {
-                        this.vertices.push(...auxVert[parseInt(facePoints[0]) - 1]);
+                        //console.log(facePoints[0]);
+                        //console.log(...auxVert[parseInt(facePoints[0]) - 1]);
+                        this.vertices.push(...auxVert[Math.abs(parseInt(facePoints[0])) - 1]);
                     }
 
                     if (facePoints[1]) {
-                        this.texCoords.push(...auxText[parseInt(facePoints[1]) - 1]);
+                        this.texCoords.push(...auxText[Math.abs(parseInt(facePoints[1])) - 1]);
                     }
 
                     if (facePoints[2]) {
-                        this.normals.push(...auxNorm[parseInt(facePoints[2]) - 1]);
+                        this.normals.push(...auxNorm[Math.abs(parseInt(facePoints[2])) - 1]);
                     } else {
                         if (auxNorm.length)
                             this.normals.push(...parseInt(auxNorm[i]) - 1);
                         else
-                            this.normals.push(...auxVert[parseInt(facePoints[0]) - 1]);
+                            this.normals.push(...auxVert[Math.abs(parseInt(facePoints[0])) - 1]);
                     }
 
                     this.indices.push(index);
@@ -56,20 +58,20 @@ class ObjFile {
                     var facePoints = faces[2].split('/');
 
                     if (!isNaN(facePoints[0])) {
-                        this.vertices.push(...auxVert[parseInt(facePoints[0]) - 1]);
+                        this.vertices.push(...auxVert[Math.abs(parseInt(facePoints[0])) - 1]);
                     }
 
                     if (facePoints[1]) {
-                        this.texCoords.push(...auxText[parseInt(facePoints[1]) - 1]);
+                        this.texCoords.push(...auxText[Math.abs(parseInt(facePoints[1])) - 1]);
                     }
 
                     if (facePoints[2]) {
-                        this.normals.push(...auxNorm[parseInt(facePoints[2]) - 1]);
+                        this.normals.push(...auxNorm[Math.abs(parseInt(facePoints[2])) - 1]);
                     } else {
                         if (auxNorm.length)
                             this.normals.push(...parseInt(auxNorm[i]) - 1);
                         else
-                            this.normals.push(...auxVert[parseInt(facePoints[0]) - 1]);
+                            this.normals.push(...auxVert[Math.abs(parseInt(facePoints[0])) - 1]);
                     }
 
                     this.indices.push(index);
@@ -78,20 +80,20 @@ class ObjFile {
                     var facePoints = faces[3].split('/');
 
                     if (!isNaN(facePoints[0])) {
-                        this.vertices.push(...auxVert[parseInt(facePoints[0]) - 1]);
+                        this.vertices.push(...auxVert[Math.abs(parseInt(facePoints[0])) - 1]);
                     }
 
                     if (facePoints[1]) {
-                        this.texCoords.push(...auxText[parseInt(facePoints[1]) - 1]);
+                        this.texCoords.push(...auxText[Math.abs(parseInt(facePoints[1])) - 1]);
                     }
 
                     if (facePoints[2]) {
-                        this.normals.push(...auxNorm[parseInt(facePoints[2]) - 1]);
+                        this.normals.push(...auxNorm[Math.abs(parseInt(facePoints[2])) - 1]);
                     } else {
                         if (auxNorm.length)
                             this.normals.push(...parseInt(auxNorm[i]) - 1);
                         else
-                            this.normals.push(...auxVert[parseInt(facePoints[0]) - 1]);
+                            this.normals.push(...auxVert[Math.abs(parseInt(facePoints[0])) - 1]);
                     }
 
                     this.indices.push(index);
@@ -100,20 +102,20 @@ class ObjFile {
                     var facePoints = faces[1].split('/');
 
                     if (!isNaN(facePoints[0])) {
-                        this.vertices.push(...auxVert[parseInt(facePoints[0]) - 1]);
+                        this.vertices.push(...auxVert[Math.abs(parseInt(facePoints[0])) - 1]);
                     }
 
                     if (facePoints[1]) {
-                        this.texCoords.push(...auxText[parseInt(facePoints[1]) - 1]);
+                        this.texCoords.push(...auxText[Math.abs(parseInt(facePoints[1])) - 1]);
                     }
 
                     if (facePoints[2]) {
-                        this.normals.push(...auxNorm[parseInt(facePoints[2]) - 1]);
+                        this.normals.push(...auxNorm[Math.abs(parseInt(facePoints[2])) - 1]);
                     } else {
                         if (auxNorm.length)
                             this.normals.push(...parseInt(auxNorm[i]) - 1);
                         else
-                            this.normals.push(...auxVert[parseInt(facePoints[0]) - 1]);
+                            this.normals.push(...auxVert[Math.abs(parseInt(facePoints[0])) - 1]);
                     }
 
                     this.indices.push(index);
@@ -122,20 +124,20 @@ class ObjFile {
                     var facePoints = faces[3].split('/');
 
                     if (!isNaN(facePoints[0])) {
-                        this.vertices.push(...auxVert[parseInt(facePoints[0]) - 1]);
+                        this.vertices.push(...auxVert[Math.abs(parseInt(facePoints[0])) - 1]);
                     }
 
                     if (facePoints[1]) {
-                        this.texCoords.push(...auxText[parseInt(facePoints[1]) - 1]);
+                        this.texCoords.push(...auxText[Math.abs(parseInt(facePoints[1])) - 1]);
                     }
 
                     if (facePoints[2]) {
-                        this.normals.push(...auxNorm[parseInt(facePoints[2]) - 1]);
+                        this.normals.push(...auxNorm[Math.abs(parseInt(facePoints[2])) - 1]);
                     } else {
                         if (auxNorm.length)
                             this.normals.push(...parseInt(auxNorm[i]) - 1);
                         else
-                            this.normals.push(...auxVert[parseInt(facePoints[0]) - 1]);
+                            this.normals.push(...auxVert[Math.abs(parseInt(facePoints[0])) - 1]);
                     }
 
                     this.indices.push(index);
@@ -144,20 +146,20 @@ class ObjFile {
                     var facePoints = faces[4].split('/');
 
                     if (!isNaN(facePoints[0])) {
-                        this.vertices.push(...auxVert[parseInt(facePoints[0]) - 1]);
+                        this.vertices.push(...auxVert[Math.abs(parseInt(facePoints[0])) - 1]);
                     }
 
                     if (facePoints[1]) {
-                        this.texCoords.push(...auxText[parseInt(facePoints[1]) - 1]);
+                        this.texCoords.push(...auxText[Math.abs(parseInt(facePoints[1])) - 1]);
                     }
 
                     if (facePoints[2]) {
-                        this.normals.push(...auxNorm[parseInt(facePoints[2]) - 1]);
+                        this.normals.push(...auxNorm[Math.abs(parseInt(facePoints[2])) - 1]);
                     } else {
                         if (auxNorm.length)
                             this.normals.push(...parseInt(auxNorm[i]) - 1);
                         else
-                            this.normals.push(...auxVert[parseInt(facePoints[0]) - 1]);
+                            this.normals.push(...auxVert[Math.abs(parseInt(facePoints[0])) - 1]);
                     }
 
                     this.indices.push(index);
@@ -168,20 +170,20 @@ class ObjFile {
                         var facePoints = faces[j].split('/');
 
                         if (!isNaN(facePoints[0])) {
-                            this.vertices.push(...auxVert[parseInt(facePoints[0]) - 1]);
+                            this.vertices.push(...auxVert[Math.abs(parseInt(facePoints[0])) - 1]);
                         }
 
                         if (facePoints[1]) {
-                            this.texCoords.push(...auxText[parseInt(facePoints[1]) - 1]);
+                            this.texCoords.push(...auxText[Math.abs(parseInt(facePoints[1])) - 1]);
                         }
 
                         if (facePoints[2]) {
-                            this.normals.push(...auxNorm[parseInt(facePoints[2]) - 1]);
+                            this.normals.push(...auxNorm[Math.abs(parseInt(facePoints[2])) - 1]);
                         } else {
                             if (auxNorm.length)
                                 this.normals.push(...parseInt(auxNorm[i]) - 1);
                             else
-                                this.normals.push(...auxVert[parseInt(facePoints[0]) - 1]);
+                                this.normals.push(...auxVert[Math.abs(parseInt(facePoints[0])) - 1]);
                         }
 
                         this.indices.push(index);
@@ -199,6 +201,9 @@ class ObjFile {
                     this.normals.push(i);
             }
         }
+
+        if (this.texCoords.length == 0)
+            this.texCoords = null;
         //console.log("");
         //console.log(this.normals);
         //console.log(this.indices);

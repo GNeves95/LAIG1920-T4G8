@@ -47,17 +47,54 @@ class XMLscene extends CGFscene {
 
         var pawnObj = new PawnObj();
         var bishopObj = new BishopObj();
+        var rookObj = new RookObj();
+        console.log(rookObj);
 
-        this.pawn = new ChessPawn(this, "Pawn", false, 2, 0, 0, pawnObj);
-        this.bishop = new ChessBishop(this, "Bishop", true, -2, 0, 0, bishopObj);
-        this.chessBoard = [];
-        for (var i = 0; i < 8 * 8; i++) {
-            console.log("X: " + ((i % 8) - 4) + " - Y: " + (((i - (i % 8)) / 8) - 4));
-            this.chessBoard.push(new ChessBoardSquare(this, ((i % 2) + ((i - (i % 8)) / 8) - 4) % 2, (i % 8) - 4, ((i - (i % 8)) / 8) - 4));
+        this.background = new MyRectangle(this, "bg", -100, 100, -100, 100);
+
+        for (var i = 0; i < 16; i++) {
+            if (i < 8) {
+                if (i == 0 || i == 7) {
+                    var newRook = new ChessRook(this, "Roock" + i + "w", true, i - 4, 0, 4, rookObj);
+                    this.objectsOnBoard.push(newRook);
+                } else if (i == 2 || i == 5) {
+                    var newBishop = new ChessRook(this, "Roock" + i + "w", true, i - 4, 0, 4, bishopObj);
+                    this.objectsOnBoard.push(newBishop);
+                }
+            } else {
+                var newPawn = new ChessPawn(this, "Pawn" + i + "w", true, i - 12, 0, 3, pawnObj);
+                this.objectsOnBoard.push(newPawn);
+            }
         }
 
-        this.objectsOnBoard.push(this.bishop);
-        this.objectsOnBoard.push(this.pawn);
+        for (var i = 0; i < 16; i++) {
+            if (i < 8) {
+                if (i == 0 || i == 7) {
+                    var newRook = new ChessRook(this, "Roock" + i + "w", false, i - 4, 0, -3, rookObj);
+                    this.objectsOnBoard.push(newRook);
+                } else if (i == 2 || i == 5) {
+                    var newBishop = new ChessRook(this, "Roock" + i + "w", false, i - 4, 0, -3, bishopObj);
+                    this.objectsOnBoard.push(newBishop);
+                }
+            } else {
+                var newPawn = new ChessPawn(this, "Pawn" + i + "w", false, i - 12, 0, -2, pawnObj);
+                this.objectsOnBoard.push(newPawn);
+            }
+        }
+
+        //this.rook = new ChessRook(this, "Rook", true, 0, 0, 0, rookObj);
+        console.log(this.rook);
+        //this.pawn = new ChessPawn(this, "Pawn", false, 2, 0, 0, pawnObj);
+        //this.bishop = new ChessBishop(this, "Bishop", true, -2, 0, 0, bishopObj);
+        this.chessBoard = [];
+        for (var i = 0; i < 8 * 8; i++) {
+            //console.log("X: " + ((i % 8) - 4) + " - Y: " + (((i - (i % 8)) / 8) - 4));
+            this.chessBoard.push(new ChessBoardSquare(this, ((i % 2) + ((i - (i % 8)) / 8) + 1) % 2, (i % 8) - 4, ((i - (i % 8)) / 8) - 4));
+        }
+
+        //this.objectsOnBoard.push(this.bishop);
+        //this.objectsOnBoard.push(this.pawn);
+        //this.objectsOnBoard.push(this.rook);
 
         this.setPickEnabled(true);
     }
@@ -70,9 +107,9 @@ class XMLscene extends CGFscene {
                     if (obj) {
                         obj.clicked = (!(obj.clicked)) || false;
                         var customId = this.pickResults[i][1];
-                        console.log("Picked object: ");
-                        console.log(obj);
-                        console.log(", with pick id " + customId);
+                        //console.log("Picked object: ");
+                        //console.log(obj);
+                        //console.log(", with pick id " + customId);
                     }
                 }
                 this.pickResults.splice(0, this.pickResults.length);
@@ -184,11 +221,11 @@ class XMLscene extends CGFscene {
     }
 
     printBoard() {
-        if (!this.printed) console.log(this.graph.materials);
+        //if (!this.printed) console.log(this.graph.materials);
         for (var i = 0; i < 8; i++) {
             for (var j = 0; j < 8; j++) {
                 var currSqr = this.chessBoard[i * 8 + j];
-                if (!this.printed) console.log(currSqr);
+                //if (!this.printed) console.log(currSqr);
                 this.pushMatrix();
                 if (currSqr.white) {
                     this.graph.materials["white"].apply();
@@ -269,6 +306,16 @@ class XMLscene extends CGFscene {
         if (this.sceneInited) {
             // Draw axis
             this.setDefaultAppearance();
+
+
+            this.pushMatrix();
+            var transfMatrix = mat4.create();
+            transfMatrix = mat4.translate(transfMatrix, transfMatrix, [0, 0, -30]);
+            this.multMatrix(transfMatrix);
+            this.background.display();
+            this.popMatrix();
+
+
             this.printBoard();
 
             // Displays the scene (MySceneGraph function).
@@ -292,15 +339,15 @@ class XMLscene extends CGFscene {
 
             for (var i = 0; i < this.objectsOnBoard.length; i++) {
                 var currObj = this.objectsOnBoard[i];
-                if(currObj.clicked && currObj.y < 4){
+                if (currObj.clicked && currObj.y < 1) {
                     currObj.y += 0.1;
-                } else if(!currObj.clicked && currObj.y > 0){
+                } else if (!currObj.clicked && currObj.y > 0) {
                     currObj.y -= 0.1;
                 }
                 this.pushMatrix();
                 this.registerForPick(i + 1, currObj);
                 var transfMatrix = mat4.create();
-                transfMatrix = mat4.translate(transfMatrix, transfMatrix, [currObj.x, currObj.y, currObj.z]);
+                transfMatrix = mat4.translate(transfMatrix, transfMatrix, [currObj.x * 3 + 1.5, currObj.y * 3, currObj.z * 3 - 1.5]);
                 this.multMatrix(transfMatrix);
                 if (currObj.white) {
                     this.graph.materials["white"].apply();

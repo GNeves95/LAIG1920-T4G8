@@ -78,14 +78,14 @@ class MyInterface extends CGFinterface {
                 console.log("View changed")
             }).name("View");
 
-        group.add(defaultView, "value", ids).onChange(function(){
-                //parent.cameraSec = parent.graph.views[defaultView.value]; /*parent.interface.setActiveCamera(parent.camera);*/
+        /*group.add(defaultView, "value", ids).onChange(function(){
+                //parent.cameraSec = parent.graph.views[defaultView.value];
                 parent.camSec = defaultView.value;
                 console.log("security camera changed")
-            }).name("Security Camera");
+            }).name("Security Camera");*/
     }
 
-    addSecViewsGroup(parent) {
+    /*addSecViewsGroup(parent) {
         var group = this.gui.addFolder("Security Camera View");
 
         group.open();
@@ -103,5 +103,5 @@ class MyInterface extends CGFinterface {
                 parent.interface.setActiveCamera(parent.cameraSec);
                 console.log("Security camera changed")
             }).name("Security Camera");
-    }
+    }*/
 }
