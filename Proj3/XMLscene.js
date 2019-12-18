@@ -43,6 +43,8 @@ class XMLscene extends CGFscene {
 
         this.setUpdatePeriod(100);
 
+        this.objectsOnBoard = [];
+
         var pawnObj = new PawnObj();
         var bishopObj = new BishopObj();
 
@@ -51,7 +53,30 @@ class XMLscene extends CGFscene {
         this.chessBoard = [];
         for (var i = 0; i < 8 * 8; i++) {
             console.log("X: " + ((i % 8) - 4) + " - Y: " + (((i - (i % 8)) / 8) - 4));
-            this.chessBoard.push(new ChessBoardSquare(this, ((i % 2)+((i - (i % 8)) / 8) - 4)%2, (i % 8) - 4, ((i - (i % 8)) / 8) - 4));
+            this.chessBoard.push(new ChessBoardSquare(this, ((i % 2) + ((i - (i % 8)) / 8) - 4) % 2, (i % 8) - 4, ((i - (i % 8)) / 8) - 4));
+        }
+
+        this.objectsOnBoard.push(this.bishop);
+        this.objectsOnBoard.push(this.pawn);
+
+        this.setPickEnabled(true);
+    }
+
+    logPicking() {
+        if (this.pickMode == false) {
+            if (this.pickResults != null && this.pickResults.length > 0) {
+                for (var i = 0; i < this.pickResults.length; i++) {
+                    var obj = this.pickResults[i][0];
+                    if (obj) {
+                        obj.clicked = (!(obj.clicked)) || false;
+                        var customId = this.pickResults[i][1];
+                        console.log("Picked object: ");
+                        console.log(obj);
+                        console.log(", with pick id " + customId);
+                    }
+                }
+                this.pickResults.splice(0, this.pickResults.length);
+            }
         }
     }
 
@@ -165,7 +190,7 @@ class XMLscene extends CGFscene {
                 var currSqr = this.chessBoard[i * 8 + j];
                 if (!this.printed) console.log(currSqr);
                 this.pushMatrix();
-                if(currSqr.white){
+                if (currSqr.white) {
                     this.graph.materials["white"].apply();
                 } else {
                     this.graph.materials["black"].apply();
@@ -185,6 +210,18 @@ class XMLscene extends CGFscene {
      * Displays the scene.
      */
     render(isRTT) {
+        this.clearPickRegistration();
+        this.logPicking();
+
+        //if (this.pickResults != null && this.pickResults.length == 0) {
+        //    for (var i = 0; i < this.objectsOnBoard.length; i++){
+        //        this.registerForPick(i + 1, this.objectsOnBoard[i]);
+        //
+        //        //this.clearPickRegistration();
+        //    }
+        //}
+
+
         // ---- BEGIN Background, camera and axis setup
 
         // Clear image and depth buffer everytime we update the scene
@@ -253,30 +290,50 @@ class XMLscene extends CGFscene {
             //this.graph.displayScene();
             //this.secCam.display();
 
-            
+            for (var i = 0; i < this.objectsOnBoard.length; i++) {
+                var currObj = this.objectsOnBoard[i];
+                if(currObj.clicked && currObj.y < 4){
+                    currObj.y += 0.1;
+                } else if(!currObj.clicked && currObj.y > 0){
+                    currObj.y -= 0.1;
+                }
+                this.pushMatrix();
+                this.registerForPick(i + 1, currObj);
+                var transfMatrix = mat4.create();
+                transfMatrix = mat4.translate(transfMatrix, transfMatrix, [currObj.x, currObj.y, currObj.z]);
+                this.multMatrix(transfMatrix);
+                if (currObj.white) {
+                    this.graph.materials["white"].apply();
+                } else {
+                    this.graph.materials["black"].apply();
+                }
+                currObj.display();
+                this.popMatrix();
+            }
 
-            this.pushMatrix();
-            var transfMatrix = mat4.create();
-            transfMatrix = mat4.translate(transfMatrix, transfMatrix, [this.pawn.x, this.pawn.y, this.pawn.z]);
-            this.multMatrix(transfMatrix);
-            if(this.pawn.white){
-                this.graph.materials["white"].apply();
-            } else {
-                this.graph.materials["black"].apply();
-            }
-            this.pawn.display();
-            this.popMatrix();
-            this.pushMatrix();
-            transfMatrix = mat4.create();
-            transfMatrix = mat4.translate(transfMatrix, transfMatrix, [this.bishop.x, this.bishop.y, this.bishop.z]);
-            this.multMatrix(transfMatrix);
-            if(this.bishop.white){
-                this.graph.materials["white"].apply();
-            } else {
-                this.graph.materials["black"].apply();
-            }
-            this.bishop.display();
-            this.popMatrix();
+
+            //this.pushMatrix();
+            //var transfMatrix = mat4.create();
+            //transfMatrix = mat4.translate(transfMatrix, transfMatrix, [this.pawn.x, this.pawn.y, this.pawn.z]);
+            //this.multMatrix(transfMatrix);
+            //if (this.pawn.white) {
+            //    this.graph.materials["white"].apply();
+            //} else {
+            //    this.graph.materials["black"].apply();
+            //}
+            //this.pawn.display();
+            //this.popMatrix();
+            //this.pushMatrix();
+            //transfMatrix = mat4.create();
+            //transfMatrix = mat4.translate(transfMatrix, transfMatrix, [this.bishop.x, this.bishop.y, this.bishop.z]);
+            //this.multMatrix(transfMatrix);
+            //if (this.bishop.white) {
+            //    this.graph.materials["white"].apply();
+            //} else {
+            //    this.graph.materials["black"].apply();
+            //}
+            //this.bishop.display();
+            //this.popMatrix();
         }
 
         this.popMatrix();
