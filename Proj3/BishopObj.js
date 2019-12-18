@@ -1,9 +1,9 @@
-class PawnObj extends ObjFile{
+class BishopObj extends ObjFile{
     constructor(){
         super();
         var xmlhttp = new XMLHttpRequest();
         var body;
-        xmlhttp.open("GET", "chess_pawn_complex.obj", false);
+        xmlhttp.open("GET", "chess_bishop_complex.obj", false);
         xmlhttp.send();
         xmlhttp.onload = function () {
             if (xmlhttp.status != 200) { // analyze HTTP status of the response

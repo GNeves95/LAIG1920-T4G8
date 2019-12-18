@@ -1,4 +1,4 @@
-class ChessPawn extends ChessPiece {
+class ChessBishop extends ChessPiece {
     constructor(scene, id, white, x, y, z, obj) {
         super(scene, id, white, x, y, z, obj);
     }

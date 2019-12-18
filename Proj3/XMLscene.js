@@ -13,7 +13,7 @@ class XMLscene extends CGFscene {
 
         this.interface = myinterface;
         this.cam = "";
-        this.camSec = "";
+        //this.camSec = "";
         this.defaultView = "";
     }
 
@@ -22,6 +22,7 @@ class XMLscene extends CGFscene {
      * @param {CGFApplication} application
      */
     init(application) {
+        this.printed = false;
         super.init(application);
         this.sceneInited = false;
 
@@ -38,13 +39,20 @@ class XMLscene extends CGFscene {
 
         this.axis = new CGFaxis(this);
         this.textureCam = new CGFtextureRTT(this, this.gl.canvas.width, this.gl.canvas.height);
-        this.secCam = new MySecurityCamera(this, this.textureCam);
+        //this.secCam = new MySecurityCamera(this, this.textureCam);
 
         this.setUpdatePeriod(100);
 
         var pawnObj = new PawnObj();
+        var bishopObj = new BishopObj();
 
-        this.pawn = new ChessPawn(this, "Pawn", true, 0, 0, pawnObj);
+        this.pawn = new ChessPawn(this, "Pawn", false, 2, 0, 0, pawnObj);
+        this.bishop = new ChessBishop(this, "Bishop", true, -2, 0, 0, bishopObj);
+        this.chessBoard = [];
+        for (var i = 0; i < 8 * 8; i++) {
+            console.log("X: " + ((i % 8) - 4) + " - Y: " + (((i - (i % 8)) / 8) - 4));
+            this.chessBoard.push(new ChessBoardSquare(this, ((i % 2)+((i - (i % 8)) / 8) - 4)%2, (i % 8) - 4, ((i - (i % 8)) / 8) - 4));
+        }
     }
 
     /**
@@ -52,7 +60,7 @@ class XMLscene extends CGFscene {
      */
     initCameras() {
         this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
-        this.cameraSec = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
+        //this.cameraSec = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
     }
     /**
      * Initializes the scene lights with the values read from the XML file.
@@ -110,14 +118,14 @@ class XMLscene extends CGFscene {
         this.setGlobalAmbientLight(this.graph.ambient[0], this.graph.ambient[1], this.graph.ambient[2], this.graph.ambient[3]);
 
         this.initLights();
-        
+
         this.defaultView = this.graph.defaultView;
 
         this.camera = this.graph.views[this.defaultView];
 
-        this.interface.setActiveCamera(this.cameraSec);
+        //this.interface.setActiveCamera(this.cameraSec);
         this.interface.setActiveCamera(this.camera);
-        
+
         this.interface.addLightsGroup(this);
         this.interface.addViewsGroup(this);
         //this.interface.addSecViewsGroup(this);
@@ -126,10 +134,10 @@ class XMLscene extends CGFscene {
     }
 
     update(t) {
-        if (this.last > 0){
-            this.delta = (t - this.last)/1000;
+        if (this.last > 0) {
+            this.delta = (t - this.last) / 1000;
 
-            for(const key in this.graph.animations){
+            for (const key in this.graph.animations) {
                 this.graph.animations[key].update(this.delta);
             }
 
@@ -137,17 +145,40 @@ class XMLscene extends CGFscene {
 
         this.last = t;
 
-        this.secCam.update((t/100)%1000);
+        //this.secCam.update((t/100)%1000);
     }
 
-    display(){
+    display() {
         this.textureCam.attachToFrameBuffer();
         this.render(true);
         this.textureCam.detachFromFrameBuffer();
-        
+
 
         this.render(false);
 
+    }
+
+    printBoard() {
+        if (!this.printed) console.log(this.graph.materials);
+        for (var i = 0; i < 8; i++) {
+            for (var j = 0; j < 8; j++) {
+                var currSqr = this.chessBoard[i * 8 + j];
+                if (!this.printed) console.log(currSqr);
+                this.pushMatrix();
+                if(currSqr.white){
+                    this.graph.materials["white"].apply();
+                } else {
+                    this.graph.materials["black"].apply();
+                }
+                var transfMatrix = mat4.create();
+                transfMatrix = mat4.translate(transfMatrix, transfMatrix, [currSqr.x, 0, currSqr.z]);
+                transfMatrix = mat4.scale(transfMatrix, transfMatrix, [2, 1, 2]);
+                this.multMatrix(transfMatrix);
+                currSqr.display();
+                this.popMatrix();
+            }
+        }
+        this.printed = true;
     }
 
     /**
@@ -164,16 +195,18 @@ class XMLscene extends CGFscene {
         this.updateProjectionMatrix();
         this.loadIdentity();
 
-        if(isRTT){
-            if(this.camSec != "")
-                this.camera = this.graph.views[this.camSec];
-            else
+        if (isRTT) {
+            //if(this.camSec != "")
+            //    this.camera = this.graph.views[this.camSec];
+            //else
+            if (this.graph.views)
                 this.camera = this.graph.views[this.defaultView];
         } else {
-            if(this.cam != "")
+            if (this.cam != "")
                 this.camera = this.graph.views[this.cam];
             else
-                this.camera = this.graph.views[this.defaultView];
+                if (this.graph.views)
+                    this.camera = this.graph.views[this.defaultView];
         }
 
         this.interface.setActiveCamera(this.camera);
@@ -186,7 +219,7 @@ class XMLscene extends CGFscene {
 
         var i = 0;
         for (const key in this.graph.lights) {
-            if (this.graph.lights[key][0]){
+            if (this.graph.lights[key][0]) {
                 this.lights[i].enable();
             }
             else {
@@ -199,6 +232,7 @@ class XMLscene extends CGFscene {
         if (this.sceneInited) {
             // Draw axis
             this.setDefaultAppearance();
+            this.printBoard();
 
             // Displays the scene (MySceneGraph function).
 
@@ -215,16 +249,41 @@ class XMLscene extends CGFscene {
                 console.log("Key M no longer Pressed!");
             }
 
+
             //this.graph.displayScene();
             //this.secCam.display();
+
+            
+
+            this.pushMatrix();
+            var transfMatrix = mat4.create();
+            transfMatrix = mat4.translate(transfMatrix, transfMatrix, [this.pawn.x, this.pawn.y, this.pawn.z]);
+            this.multMatrix(transfMatrix);
+            if(this.pawn.white){
+                this.graph.materials["white"].apply();
+            } else {
+                this.graph.materials["black"].apply();
+            }
             this.pawn.display();
+            this.popMatrix();
+            this.pushMatrix();
+            transfMatrix = mat4.create();
+            transfMatrix = mat4.translate(transfMatrix, transfMatrix, [this.bishop.x, this.bishop.y, this.bishop.z]);
+            this.multMatrix(transfMatrix);
+            if(this.bishop.white){
+                this.graph.materials["white"].apply();
+            } else {
+                this.graph.materials["black"].apply();
+            }
+            this.bishop.display();
+            this.popMatrix();
         }
 
         this.popMatrix();
 
-        if(!isRTT){
+        if (!isRTT) {
             this.gl.disable(this.gl.DEPTH_TEST);
-            this.secCam.display();
+            //this.secCam.display();
             this.gl.enable(this.gl.DEPTH_TEST);
         }
         // ---- END Background, camera and axis setup
