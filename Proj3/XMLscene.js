@@ -59,22 +59,34 @@ class XMLscene extends CGFscene {
             if (i < 8) {
                 if (i == 0 || i == 7) {
                     var newRook = new ChessRook(this, "Rook" + i + "w", true, i - 4, 0, 4, rookObj);
+                    newRook.scale = [1,1,1];
+                    newRook.rotate = [0,0,0];
                     this.objectsOnBoard.push(newRook);
                 } else if (i == 2 || i == 5) {
                     var newBishop = new ChessBishop(this, "Bishop" + i + "w", true, i - 4, 0, 4, bishopObj);
+                    newBishop.scale = [1,1,1];
+                    newBishop.rotate = [0,90,0];
                     this.objectsOnBoard.push(newBishop);
                 } else if (i == 1 || i == 6) {
                     var newKnight = new ChessKnight(this, "Knight" + i + "w", true, i - 4, 0, 4, knightObj);
+                    newKnight.scale = [1,1,1];
+                    newKnight.rotate = [0,180,0];
                     this.objectsOnBoard.push(newKnight);
                 } else if (i == 3) {
                     var newQueen = new ChessQueen(this, "Queen" + i + "w", true, i - 4, 0, 4, queenObj);
+                    newQueen.scale = [1,1,1];
+                    newQueen.rotate = [0,0,0];
                     this.objectsOnBoard.push(newQueen);
                 } else {
                     var newKing = new ChessKing(this, "King" + i + "w", true, i - 4, 0, 4, kingObj);
+                    newKing.scale = [0.4,0.4,0.4];
+                    newKing.rotate = [0,0,0];
                     this.objectsOnBoard.push(newKing);
                 }
             } else {
                 var newPawn = new ChessPawn(this, "Pawn" + i + "w", true, i - 12, 0, 3, pawnObj);
+                newPawn.scale = [1,1,1];
+                newPawn.rotate = [0,0,0];
                 this.objectsOnBoard.push(newPawn);
             }
         }
@@ -83,41 +95,48 @@ class XMLscene extends CGFscene {
             if (i < 8) {
                 if (i == 0 || i == 7) {
                     var newRook = new ChessRook(this, "Rook" + i + "b", false, i - 4, 0, -3, rookObj);
+                    newRook.scale = [1,1,1];
+                    newRook.rotate = [0,0,0];
                     this.objectsOnBoard.push(newRook);
                 } else if (i == 2 || i == 5) {
                     var newBishop = new ChessRook(this, "Bishop" + i + "b", false, i - 4, 0, -3, bishopObj);
+                    newBishop.scale = [1,1,1];
+                    newBishop.rotate = [0,-90,0];
                     this.objectsOnBoard.push(newBishop);
                 } else if (i == 1 || i == 6) {
                     var newKnight = new ChessKnight(this, "Knight" + i + "b", false, i - 4, 0, -3, knightObj);
+                    newKnight.scale = [1,1,1];
+                    newKnight.rotate = [0,0,0];
                     this.objectsOnBoard.push(newKnight);
-                }  else if (i == 3) {
+                } else if (i == 3) {
                     var newQueen = new ChessQueen(this, "Queen" + i + "b", false, i - 4, 0, -3, queenObj);
+                    newQueen.scale = [1,1,1];
+                    newQueen.rotate = [0,0,0];
                     this.objectsOnBoard.push(newQueen);
-                }  else {
+                } else {
                     var newKing = new ChessKing(this, "King" + i + "b", false, i - 4, 0, -3, kingObj);
+                    newKing.scale = [0.4,0.4,0.4];
+                    newKing.rotate = [0,0,0];
                     this.objectsOnBoard.push(newKing);
                 }
             } else {
                 var newPawn = new ChessPawn(this, "Pawn" + i + "b", false, i - 12, 0, -2, pawnObj);
+                newPawn.scale = [1,1,1];
+                newPawn.rotate = [0,0,0];
                 this.objectsOnBoard.push(newPawn);
             }
         }
 
-        //this.rook = new ChessRook(this, "Rook", true, 0, 0, 0, rookObj);
-        console.log(this.rook);
-        //this.pawn = new ChessPawn(this, "Pawn", false, 2, 0, 0, pawnObj);
-        //this.bishop = new ChessBishop(this, "Bishop", true, -2, 0, 0, bishopObj);
         this.chessBoard = [];
         for (var i = 0; i < 8 * 8; i++) {
             //console.log("X: " + ((i % 8) - 4) + " - Y: " + (((i - (i % 8)) / 8) - 4));
             this.chessBoard.push(new ChessBoardSquare(this, ((i % 2) + ((i - (i % 8)) / 8) + 1) % 2, (i % 8) - 4, ((i - (i % 8)) / 8) - 4));
         }
 
-        //this.objectsOnBoard.push(this.bishop);
-        //this.objectsOnBoard.push(this.pawn);
-        //this.objectsOnBoard.push(this.rook);
 
         this.setPickEnabled(true);
+
+        this.clickedObj = [];
     }
 
     logPicking() {
@@ -127,10 +146,11 @@ class XMLscene extends CGFscene {
                     var obj = this.pickResults[i][0];
                     if (obj) {
                         obj.clicked = (!(obj.clicked)) || false;
+                        if (obj.clicked)
+                            this.clickedObj.push(obj);
+                        else
+                            this.clickedObj = [];
                         var customId = this.pickResults[i][1];
-                        //console.log("Picked object: ");
-                        //console.log(obj);
-                        //console.log(", with pick id " + customId);
                     }
                 }
                 this.pickResults.splice(0, this.pickResults.length);
@@ -271,15 +291,6 @@ class XMLscene extends CGFscene {
         this.clearPickRegistration();
         this.logPicking();
 
-        //if (this.pickResults != null && this.pickResults.length == 0) {
-        //    for (var i = 0; i < this.objectsOnBoard.length; i++){
-        //        this.registerForPick(i + 1, this.objectsOnBoard[i]);
-        //
-        //        //this.clearPickRegistration();
-        //    }
-        //}
-
-
         // ---- BEGIN Background, camera and axis setup
 
         // Clear image and depth buffer everytime we update the scene
@@ -354,21 +365,26 @@ class XMLscene extends CGFscene {
                 console.log("Key M no longer Pressed!");
             }
 
-
-            //this.graph.displayScene();
-            //this.secCam.display();
-
             for (var i = 0; i < this.objectsOnBoard.length; i++) {
                 var currObj = this.objectsOnBoard[i];
                 if (currObj.clicked && currObj.y < 1) {
                     currObj.y += 0.1;
-                } else if (!currObj.clicked && currObj.y > 0) {
+                } else if (!currObj.clicked && currObj.y > 0.1) {
                     currObj.y -= 0.1;
+                } else if (!currObj.clicked && currObj.y < 0.1) {
+                    currObj.y = 0;
                 }
                 this.pushMatrix();
-                this.registerForPick(i + 1, currObj);
+                if (this.clickedObj.length == 0)
+                    this.registerForPick(i + 1, currObj);
+                else if (this.clickedObj[0].id == currObj.id)
+                    this.registerForPick(i + 1, currObj);
                 var transfMatrix = mat4.create();
                 transfMatrix = mat4.translate(transfMatrix, transfMatrix, [currObj.x * 3 + 1.5, currObj.y * 3, currObj.z * 3 - 1.5]);
+                transfMatrix = mat4.scale(transfMatrix,transfMatrix, currObj.scale);
+                transfMatrix = mat4.rotateX(transfMatrix, transfMatrix, DEGREE_TO_RAD*currObj.rotate[0]);
+                transfMatrix = mat4.rotateY(transfMatrix, transfMatrix, DEGREE_TO_RAD*currObj.rotate[1]);
+                transfMatrix = mat4.rotateZ(transfMatrix, transfMatrix, DEGREE_TO_RAD*currObj.rotate[2]);
                 this.multMatrix(transfMatrix);
                 if (currObj.white) {
                     this.graph.materials["white"].apply();
@@ -376,32 +392,12 @@ class XMLscene extends CGFscene {
                     this.graph.materials["black"].apply();
                 }
                 currObj.display();
+                if (this.clickedObj.length == 0)
+                    this.clearPickRegistration();
+                else if (this.clickedObj[0].id == currObj.id)
+                    this.clearPickRegistration();
                 this.popMatrix();
             }
-
-
-            //this.pushMatrix();
-            //var transfMatrix = mat4.create();
-            //transfMatrix = mat4.translate(transfMatrix, transfMatrix, [this.pawn.x, this.pawn.y, this.pawn.z]);
-            //this.multMatrix(transfMatrix);
-            //if (this.pawn.white) {
-            //    this.graph.materials["white"].apply();
-            //} else {
-            //    this.graph.materials["black"].apply();
-            //}
-            //this.pawn.display();
-            //this.popMatrix();
-            //this.pushMatrix();
-            //transfMatrix = mat4.create();
-            //transfMatrix = mat4.translate(transfMatrix, transfMatrix, [this.bishop.x, this.bishop.y, this.bishop.z]);
-            //this.multMatrix(transfMatrix);
-            //if (this.bishop.white) {
-            //    this.graph.materials["white"].apply();
-            //} else {
-            //    this.graph.materials["black"].apply();
-            //}
-            //this.bishop.display();
-            //this.popMatrix();
         }
 
         this.popMatrix();
