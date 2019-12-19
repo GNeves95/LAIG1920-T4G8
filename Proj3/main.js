@@ -11,7 +11,7 @@ function getUrlVars() {
     return vars;
 }	 
 //Include additional files here
-serialInclude(['./lib/CGF.js', 'XMLscene.js', 'MySceneGraph.js', 'MyInterface.js', 'MyRectangle.js', 'MyRectangle2.js', 'MyCylinder.js', 'MyTriangle.js', 'MySphere.js', 'MyTorus.js', 'MyComponent.js', 'Animation.js', 'KeyframeAnimation.js', 'Plane.js', 'NurbsScene.js', 'MyCylinder2.js', 'Patch.js', 'MySecurityCamera.js', 'ChessBoardSquare.js', 'ObjFile.js', 'PawnObj.js', 'BishopObj.js', 'RookObj.js', 'ChessPiece.js', 'ChessBishop.js', 'ChessPawn.js', 'ChessRook.js',
+serialInclude(['./lib/CGF.js', 'XMLscene.js', 'MySceneGraph.js', 'MyInterface.js', 'MyRectangle.js', 'MyRectangle2.js', 'MyCylinder.js', 'MyTriangle.js', 'MySphere.js', 'MyTorus.js', 'MyComponent.js', 'Animation.js', 'KeyframeAnimation.js', 'Plane.js', 'NurbsScene.js', 'MyCylinder2.js', 'Patch.js', 'MySecurityCamera.js', 'ChessBoardSquare.js', 'ObjFile.js', 'PawnObj.js', 'BishopObj.js', 'RookObj.js', 'KnightObj.js', 'QueenObj.js', 'KingObj.js', 'ChessPiece.js', 'ChessBishop.js', 'ChessPawn.js', 'ChessRook.js', 'ChessKnight.js', 'ChessQueen.js', 'ChessKing.js',
 
 main=function()
 {

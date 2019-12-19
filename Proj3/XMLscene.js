@@ -48,6 +48,9 @@ class XMLscene extends CGFscene {
         var pawnObj = new PawnObj();
         var bishopObj = new BishopObj();
         var rookObj = new RookObj();
+        var knightObj = new KnightObj();
+        var queenObj = new QueenObj();
+        var kingObj = new KingObj();
         console.log(rookObj);
 
         this.background = new MyRectangle(this, "bg", -100, 100, -100, 100);
@@ -55,11 +58,20 @@ class XMLscene extends CGFscene {
         for (var i = 0; i < 16; i++) {
             if (i < 8) {
                 if (i == 0 || i == 7) {
-                    var newRook = new ChessRook(this, "Roock" + i + "w", true, i - 4, 0, 4, rookObj);
+                    var newRook = new ChessRook(this, "Rook" + i + "w", true, i - 4, 0, 4, rookObj);
                     this.objectsOnBoard.push(newRook);
                 } else if (i == 2 || i == 5) {
-                    var newBishop = new ChessRook(this, "Roock" + i + "w", true, i - 4, 0, 4, bishopObj);
+                    var newBishop = new ChessBishop(this, "Bishop" + i + "w", true, i - 4, 0, 4, bishopObj);
                     this.objectsOnBoard.push(newBishop);
+                } else if (i == 1 || i == 6) {
+                    var newKnight = new ChessKnight(this, "Knight" + i + "w", true, i - 4, 0, 4, knightObj);
+                    this.objectsOnBoard.push(newKnight);
+                } else if (i == 3) {
+                    var newQueen = new ChessQueen(this, "Queen" + i + "w", true, i - 4, 0, 4, queenObj);
+                    this.objectsOnBoard.push(newQueen);
+                } else {
+                    var newKing = new ChessKing(this, "King" + i + "w", true, i - 4, 0, 4, kingObj);
+                    this.objectsOnBoard.push(newKing);
                 }
             } else {
                 var newPawn = new ChessPawn(this, "Pawn" + i + "w", true, i - 12, 0, 3, pawnObj);
@@ -70,14 +82,23 @@ class XMLscene extends CGFscene {
         for (var i = 0; i < 16; i++) {
             if (i < 8) {
                 if (i == 0 || i == 7) {
-                    var newRook = new ChessRook(this, "Roock" + i + "w", false, i - 4, 0, -3, rookObj);
+                    var newRook = new ChessRook(this, "Rook" + i + "b", false, i - 4, 0, -3, rookObj);
                     this.objectsOnBoard.push(newRook);
                 } else if (i == 2 || i == 5) {
-                    var newBishop = new ChessRook(this, "Roock" + i + "w", false, i - 4, 0, -3, bishopObj);
+                    var newBishop = new ChessRook(this, "Bishop" + i + "b", false, i - 4, 0, -3, bishopObj);
                     this.objectsOnBoard.push(newBishop);
+                } else if (i == 1 || i == 6) {
+                    var newKnight = new ChessKnight(this, "Knight" + i + "b", false, i - 4, 0, -3, knightObj);
+                    this.objectsOnBoard.push(newKnight);
+                }  else if (i == 3) {
+                    var newQueen = new ChessQueen(this, "Queen" + i + "b", false, i - 4, 0, -3, queenObj);
+                    this.objectsOnBoard.push(newQueen);
+                }  else {
+                    var newKing = new ChessKing(this, "King" + i + "b", false, i - 4, 0, -3, kingObj);
+                    this.objectsOnBoard.push(newKing);
                 }
             } else {
-                var newPawn = new ChessPawn(this, "Pawn" + i + "w", false, i - 12, 0, -2, pawnObj);
+                var newPawn = new ChessPawn(this, "Pawn" + i + "b", false, i - 12, 0, -2, pawnObj);
                 this.objectsOnBoard.push(newPawn);
             }
         }
