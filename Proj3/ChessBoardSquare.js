@@ -17,10 +17,10 @@ class ChessBoardSquare extends CGFobject {
 	
 	initBuffers() {
 		this.vertices = [
-			this.x, 0, this.z,	        //0
-			this.x + 1.5, 0, this.z,	    //1.5
-			this.x, 0, this.z + 1.5,	    //2
-			this.x + 1.5, 0, this.z + 1.5 	//3
+			-0.5, 0, -0.5,	        //0
+			0.5, 0, -0.5,	    //1
+			-0.5, 0, 0.5,	    //2
+			0.5, 0, 0.5 	//3
 		];
 
 		//Counter-clockwise reference of vertices

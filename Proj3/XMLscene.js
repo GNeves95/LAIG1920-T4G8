@@ -66,39 +66,39 @@ class XMLscene extends CGFscene {
         for (var i = 0; i < 16; i++) {
             if (i < 8) {
                 if (i == 0 || i == 7) {
-                    var newRook = new ChessRook(this, "Rook" + i + "w", true, i - 4, 0, 4, rookObj);
-                    newRook.scale = [1, 1, 1];
+                    var newRook = new ChessRook(this, "Rook" + i + "w", true, i - 4, 0, 3, rookObj);
+                    newRook.scale = [0.3, 0.3, 0.3];
                     newRook.rotate = [0, 0, 0];
                     this.objectsOnBoard.push(newRook);
                     this.board2D[i + 56] = 'rw';
                 } else if (i == 2 || i == 5) {
-                    var newBishop = new ChessBishop(this, "Bishop" + i + "w", true, i - 4, 0, 4, bishopObj);
-                    newBishop.scale = [1, 1, 1];
+                    var newBishop = new ChessBishop(this, "Bishop" + i + "w", true, i - 4, 0, 3, bishopObj);
+                    newBishop.scale = [0.3, 0.3, 0.3];
                     newBishop.rotate = [0, 90, 0];
                     this.objectsOnBoard.push(newBishop);
                     this.board2D[i + 56] = 'bw';
                 } else if (i == 1 || i == 6) {
-                    var newKnight = new ChessKnight(this, "Knight" + i + "w", true, i - 4, 0, 4, knightObj);
-                    newKnight.scale = [1, 1, 1];
+                    var newKnight = new ChessKnight(this, "Knight" + i + "w", true, i - 4, 0, 3, knightObj);
+                    newKnight.scale = [0.3, 0.3, 0.3];
                     newKnight.rotate = [0, 180, 0];
                     this.objectsOnBoard.push(newKnight);
                     this.board2D[i + 56] = 'kw';
                 } else if (i == 3) {
-                    var newQueen = new ChessQueen(this, "Queen" + i + "w", true, i - 4, 0, 4, queenObj);
-                    newQueen.scale = [1, 1, 1];
+                    var newQueen = new ChessQueen(this, "Queen" + i + "w", true, i - 4, 0, 3, queenObj);
+                    newQueen.scale = [0.3, 0.3, 0.3];
                     newQueen.rotate = [0, 0, 0];
                     this.objectsOnBoard.push(newQueen);
                     this.board2D[i + 56] = 'qw';
                 } else {
-                    var newKing = new ChessKing(this, "King" + i + "w", true, i - 4, 0, 4, kingObj);
-                    newKing.scale = [0.4, 0.4, 0.4];
+                    var newKing = new ChessKing(this, "King" + i + "w", true, i - 4, 0, 3, kingObj);
+                    newKing.scale = [0.1, 0.1, 0.1];
                     newKing.rotate = [0, 0, 0];
                     this.objectsOnBoard.push(newKing);
                     this.board2D[i + 56] = 'Kw';
                 }
             } else {
-                var newPawn = new ChessPawn(this, "Pawn" + i + "w", true, i - 12, 0, 3, pawnObj);
-                newPawn.scale = [1, 1, 1];
+                var newPawn = new ChessPawn(this, "Pawn" + i + "w", true, i - 12, 0, 2, pawnObj);
+                newPawn.scale = [0.3, 0.3, 0.3];
                 newPawn.rotate = [0, 0, 0];
                 this.objectsOnBoard.push(newPawn);
                 this.board2D[i + 40] = 'pw';
@@ -108,39 +108,39 @@ class XMLscene extends CGFscene {
         for (var i = 0; i < 16; i++) {
             if (i < 8) {
                 if (i == 0 || i == 7) {
-                    var newRook = new ChessRook(this, "Rook" + i + "b", false, i - 4, 0, -3, rookObj);
-                    newRook.scale = [1, 1, 1];
+                    var newRook = new ChessRook(this, "Rook" + i + "b", false, i - 4, 0, -4, rookObj);
+                    newRook.scale = [0.3, 0.3, 0.3];
                     newRook.rotate = [0, 0, 0];
                     this.objectsOnBoard.push(newRook);
                     this.board2D[i] = 'rb';
                 } else if (i == 2 || i == 5) {
-                    var newBishop = new ChessRook(this, "Bishop" + i + "b", false, i - 4, 0, -3, bishopObj);
-                    newBishop.scale = [1, 1, 1];
+                    var newBishop = new ChessRook(this, "Bishop" + i + "b", false, i - 4, 0, -4, bishopObj);
+                    newBishop.scale = [0.3, 0.3, 0.3];
                     newBishop.rotate = [0, -90, 0];
                     this.objectsOnBoard.push(newBishop);
                     this.board2D[i] = 'bb';
                 } else if (i == 1 || i == 6) {
-                    var newKnight = new ChessKnight(this, "Knight" + i + "b", false, i - 4, 0, -3, knightObj);
-                    newKnight.scale = [1, 1, 1];
+                    var newKnight = new ChessKnight(this, "Knight" + i + "b", false, i - 4, 0, -4, knightObj);
+                    newKnight.scale = [0.3, 0.3, 0.3];
                     newKnight.rotate = [0, 0, 0];
                     this.objectsOnBoard.push(newKnight);
                     this.board2D[i] = 'kb';
                 } else if (i == 3) {
-                    var newQueen = new ChessQueen(this, "Queen" + i + "b", false, i - 4, 0, -3, queenObj);
-                    newQueen.scale = [1, 1, 1];
+                    var newQueen = new ChessQueen(this, "Queen" + i + "b", false, i - 4, 0, -4, queenObj);
+                    newQueen.scale = [0.3, 0.3, 0.3];
                     newQueen.rotate = [0, 0, 0];
                     this.objectsOnBoard.push(newQueen);
                     this.board2D[i] = 'qb';
                 } else {
-                    var newKing = new ChessKing(this, "King" + i + "b", false, i - 4, 0, -3, kingObj);
-                    newKing.scale = [0.4, 0.4, 0.4];
+                    var newKing = new ChessKing(this, "King" + i + "b", false, i - 4, 0, -4, kingObj);
+                    newKing.scale = [0.1, 0.1, 0.1];
                     newKing.rotate = [0, 0, 0];
                     this.objectsOnBoard.push(newKing);
                     this.board2D[i] = 'Kb';
                 }
             } else {
-                var newPawn = new ChessPawn(this, "Pawn" + i + "b", false, i - 12, 0, -2, pawnObj);
-                newPawn.scale = [1, 1, 1];
+                var newPawn = new ChessPawn(this, "Pawn" + i + "b", false, i - 12, 0, -3, pawnObj);
+                newPawn.scale = [0.3, 0.3, 0.3];
                 newPawn.rotate = [0, 0, 0];
                 this.objectsOnBoard.push(newPawn);
                 this.board2D[i] = 'pb';
@@ -167,12 +167,19 @@ class XMLscene extends CGFscene {
                 for (var i = 0; i < this.pickResults.length; i++) {
                     var obj = this.pickResults[i][0];
                     if (obj) {
+                        var customId = this.pickResults[i][1];
+                        console.log(customId);
+                        console.log(obj);
+                        if (customId > 100) {
+                            this.clickedObj[0].destx = obj.x;
+                            this.clickedObj[0].destz = obj.z;
+
+                        }
                         obj.clicked = (!(obj.clicked)) || false;
                         if (obj.clicked)
                             this.clickedObj.push(obj);
                         else
                             this.clickedObj = [];
-                        var customId = this.pickResults[i][1];
                     }
                 }
                 this.pickResults.splice(0, this.pickResults.length);
@@ -297,17 +304,17 @@ class XMLscene extends CGFscene {
                 if (this.clickedObj.length) {
                     //console.log("Clicked Object");
                     //console.log(this.clickedObj);
-                    var dist = Math.sqrt(((this.clickedObj[0].x - currSqr.x)*(this.clickedObj[0].x - currSqr.x)*1.0) + ((this.clickedObj[0].z - currSqr.z)*(this.clickedObj[0].z - currSqr.z)*1.0))*1.0;
-                    if (!this.printed){
-                        console.log(dist + ": (" + this.clickedObj[0].x + "," + this.clickedObj[0].z + ") - (" + currSqr.x + "," + currSqr.z + ")");
+                    var dist = Math.sqrt(((this.clickedObj[0].x - currSqr.x) * (this.clickedObj[0].x - currSqr.x) * 1.0) + (((this.clickedObj[0].z) - currSqr.z) * ((this.clickedObj[0].z) - currSqr.z) * 1.0)) * 1.0;
+                    if (!this.printed) {
+                        //console.log(dist + ": (" + this.clickedObj[0].x + "," + this.clickedObj[0].z + ") - (" + currSqr.x + "," + currSqr.z + ")");
                     }
                     if (dist > 0.9 && dist < 2) {
-                        if (!this.printed && this.clickedObj.length){
-                            console.log("Inside print board");
-                            console.log(this.clickedObj);
-                            console.log(currSqr);
-                            console.log(dist);
-                        
+                        if (!this.printed && this.clickedObj.length) {
+                            //console.log("Inside print board");
+                            //console.log(this.clickedObj);
+                            //console.log(currSqr);
+                            //console.log(dist);
+
                             //this.printed=true;
                         }
                         if (currSqr.white) {
@@ -331,9 +338,14 @@ class XMLscene extends CGFscene {
                 }
                 var transfMatrix = mat4.create();
                 transfMatrix = mat4.translate(transfMatrix, transfMatrix, [currSqr.x, 0, currSqr.z]);
-                transfMatrix = mat4.scale(transfMatrix, transfMatrix, [2, 1, 2]);
+                if (this.clickedObj.length != 0){
+                    this.registerForPick(i + 100, currSqr);
+                    currSqr.registered = true;
+                }
                 this.multMatrix(transfMatrix);
                 currSqr.display();
+                if (this.clickedObj.length != 0 || currSqr.registered)
+                    this.clearPickRegistration();
                 this.popMatrix();
             }
         }
@@ -424,12 +436,26 @@ class XMLscene extends CGFscene {
 
             for (var i = 0; i < this.objectsOnBoard.length; i++) {
                 var currObj = this.objectsOnBoard[i];
-                if (currObj.clicked && currObj.y < 1) {
-                    currObj.y += 0.1;
-                } else if (!currObj.clicked && currObj.y > 0.1) {
-                    currObj.y -= 0.1;
-                } else if (!currObj.clicked && currObj.y < 0.1) {
-                    currObj.y = 0;
+                if (currObj.x != currObj.destx && currObj.z != currObj.destz) {
+                    currObj.clicked = false;
+                    var auxX = currObj.destx - currObj.x;
+                    var auxZ = currObj.destz - currObj.z;
+                    //currObj.x += (currObj.destx - currObj.x) / (Math.abs(currObj.destx - currObj.x)*10.0);
+                    //currObj.z += (currObj.destz - currObj.z) / (Math.abs(currObj.destz - currObj.z)*10.0);
+                    currObj.x += (auxX/(Math.sqrt(auxX*auxX+auxZ*auxZ)*10));
+                    currObj.z += (auxZ/(Math.sqrt(auxX*auxX+auxZ*auxZ)*10));
+                    if (Math.abs(currObj.destx - currObj.x) < 0.1)
+                        currObj.x = currObj.destx;
+                        if (Math.abs(currObj.destz - currObj.z) < 0.1)
+                            currObj.z = currObj.destz;
+                } else {
+                    if (currObj.clicked && currObj.y < 1) {
+                        currObj.y += 0.1;
+                    } else if (!currObj.clicked && currObj.y > 0.1) {
+                        currObj.y -= 0.1;
+                    } else if (!currObj.clicked && currObj.y < 0.1) {
+                        currObj.y = 0;
+                    }
                 }
                 this.pushMatrix();
                 if (this.clickedObj.length == 0)
@@ -437,7 +463,7 @@ class XMLscene extends CGFscene {
                 else if (this.clickedObj[0].id == currObj.id)
                     this.registerForPick(i + 1, currObj);
                 var transfMatrix = mat4.create();
-                transfMatrix = mat4.translate(transfMatrix, transfMatrix, [currObj.x * 3 + 1.5, currObj.y * 3, currObj.z * 3 - 1.5]);
+                transfMatrix = mat4.translate(transfMatrix, transfMatrix, [currObj.x, currObj.y, currObj.z]);
                 transfMatrix = mat4.scale(transfMatrix, transfMatrix, currObj.scale);
                 transfMatrix = mat4.rotateX(transfMatrix, transfMatrix, DEGREE_TO_RAD * currObj.rotate[0]);
                 transfMatrix = mat4.rotateY(transfMatrix, transfMatrix, DEGREE_TO_RAD * currObj.rotate[1]);

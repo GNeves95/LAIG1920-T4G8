@@ -1,7 +1,7 @@
 <lxs>
     <scene root="sceneroot" axis_length="1" />
 
-    <views default="planetCamera">
+    <views default="whiteView">
         <perspective id="frente" near="0.1" far="750" angle="45">
             <from x="5" y="5" z="5" />
             <to x="0" y="0" z="0" />
@@ -18,6 +18,11 @@
         <perspective id="planetCamera" near="0.1" far="500" angle="45">
             <from x="0" y="10" z="30" />
             <to x="0" y="-2" z="0" />
+        </perspective>
+
+        <perspective id="whiteView" near="0.1" far="500" angle="45">
+            <from x="0" y="4" z="9" />
+            <to x="0" y="0" z="0" />
         </perspective>
 
         <ortho id="orthoCamera1" near="0.1" far="500" left="-30" right="30" top="30" bottom="-30">
@@ -110,7 +115,7 @@
         </material>
         
         <material id="black_selected" shininess="10">
-            <emission r="0" g="0" b="0.1" a="1.0" />
+            <emission r="0" g="0" b="0.3" a="1.0" />
             <ambient r="0.0" g="0.0" b="0.0" a="1.0" />
             <diffuse r="0.0" g="0.0" b="0.0" a="1.0" />
             <specular r="0.6" g="0.6" b="0.6" a="1.0" />
