@@ -295,14 +295,20 @@ class XMLscene extends CGFscene {
                 //}
                 this.pushMatrix();
                 if (this.clickedObj.length) {
-                    var dist = (Math.abs(this.clickedObj[0].x - currSqr.x) + Math.abs(this.clickedObj[0].y - currSqr.y));
-                    if (dist > 0.9 && dist < 1.1) {
+                    //console.log("Clicked Object");
+                    //console.log(this.clickedObj);
+                    var dist = Math.sqrt(((this.clickedObj[0].x - currSqr.x)*(this.clickedObj[0].x - currSqr.x)*1.0) + ((this.clickedObj[0].z - currSqr.z)*(this.clickedObj[0].z - currSqr.z)*1.0))*1.0;
+                    if (!this.printed){
+                        console.log(dist + ": (" + this.clickedObj[0].x + "," + this.clickedObj[0].z + ") - (" + currSqr.x + "," + currSqr.z + ")");
+                    }
+                    if (dist > 0.9 && dist < 2) {
                         if (!this.printed && this.clickedObj.length){
+                            console.log("Inside print board");
                             console.log(this.clickedObj);
                             console.log(currSqr);
                             console.log(dist);
                         
-                            this.printed=true;
+                            //this.printed=true;
                         }
                         if (currSqr.white) {
                             this.graph.materials["white_selected"].apply();
@@ -331,6 +337,7 @@ class XMLscene extends CGFscene {
                 this.popMatrix();
             }
         }
+        if (this.clickedObj.length) this.printed = true;
         //this.printed = true;
     }
 
@@ -436,6 +443,11 @@ class XMLscene extends CGFscene {
                 transfMatrix = mat4.rotateY(transfMatrix, transfMatrix, DEGREE_TO_RAD * currObj.rotate[1]);
                 transfMatrix = mat4.rotateZ(transfMatrix, transfMatrix, DEGREE_TO_RAD * currObj.rotate[2]);
                 this.multMatrix(transfMatrix);
+                if (currObj.white) {
+                    this.graph.materials["white"].apply();
+                } else {
+                    this.graph.materials["black"].apply();
+                }
                 this.pushMatrix();
                 if (this.clickedObj.length == 0) {
                     if (currObj.white) {
