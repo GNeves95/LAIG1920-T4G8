@@ -7,6 +7,9 @@ class ChessPiece extends CGFobject{
         this.x = x;
         this.y = y;
         this.z = z;
+        this.destx = x;
+        this.desty = y;
+        this.destz = z;
 
 		this.vertices = obj.vertices;
 		this.indices = obj.indices;
