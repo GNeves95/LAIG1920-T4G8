@@ -70,38 +70,38 @@ class XMLscene extends CGFscene {
                     newRook.scale = [0.3, 0.3, 0.3];
                     newRook.rotate = [0, 0, 0];
                     this.objectsOnBoard.push(newRook);
-                    this.board2D[i + 56] = 'rw';
+                    this.board2D[i] = 'rw';
                 } else if (i == 2 || i == 5) {
                     var newBishop = new ChessBishop(this, "Bishop" + i + "w", true, i, 0, 0, bishopObj);
                     newBishop.scale = [0.3, 0.3, 0.3];
                     newBishop.rotate = [0, -90, 0];
                     this.objectsOnBoard.push(newBishop);
-                    this.board2D[i + 56] = 'bw';
+                    this.board2D[i] = 'bw';
                 } else if (i == 1 || i == 6) {
                     var newKnight = new ChessKnight(this, "Knight" + i + "w", true, i, 0, 0, knightObj);
                     newKnight.scale = [0.3, 0.3, 0.3];
                     newKnight.rotate = [0, 0, 0];
                     this.objectsOnBoard.push(newKnight);
-                    this.board2D[i + 56] = 'kw';
+                    this.board2D[i] = 'kw';
                 } else if (i == 4) {
                     var newQueen = new ChessQueen(this, "Queen" + i + "w", true, i, 0, 0, queenObj);
                     newQueen.scale = [0.3, 0.3, 0.3];
                     newQueen.rotate = [0, 0, 0];
                     this.objectsOnBoard.push(newQueen);
-                    this.board2D[i + 56] = 'qw';
+                    this.board2D[i] = 'qw';
                 } else {
                     var newKing = new ChessKing(this, "King" + i + "w", true, i, 0, 0, kingObj);
                     newKing.scale = [0.1, 0.1, 0.1];
                     newKing.rotate = [0, 0, 0];
                     this.objectsOnBoard.push(newKing);
-                    this.board2D[i + 56] = 'Kw';
+                    this.board2D[i] = 'Kw';
                 }
             } else {
                 var newPawn = new ChessPawn(this, "Pawn" + i + "w", true, i - 8, 0, 1, pawnObj);
                 newPawn.scale = [0.3, 0.3, 0.3];
                 newPawn.rotate = [0, 0, 0];
                 this.objectsOnBoard.push(newPawn);
-                this.board2D[i + 40] = 'pw';
+                this.board2D[i] = 'pw';
             }
         }
 
@@ -112,38 +112,38 @@ class XMLscene extends CGFscene {
                     newRook.scale = [0.3, 0.3, 0.3];
                     newRook.rotate = [0, 0, 0];
                     this.objectsOnBoard.push(newRook);
-                    this.board2D[i] = 'rb';
+                    this.board2D[i+56] = 'rb';
                 } else if (i == 2 || i == 5) {
                     var newBishop = new ChessRook(this, "Bishop" + i + "b", false, i, 0, 7, bishopObj);
                     newBishop.scale = [0.3, 0.3, 0.3];
                     newBishop.rotate = [0, 90, 0];
                     this.objectsOnBoard.push(newBishop);
-                    this.board2D[i] = 'bb';
+                    this.board2D[i+56] = 'bb';
                 } else if (i == 1 || i == 6) {
                     var newKnight = new ChessKnight(this, "Knight" + i + "b", false, i, 0, 7, knightObj);
                     newKnight.scale = [0.3, 0.3, 0.3];
                     newKnight.rotate = [0, 180, 0];
                     this.objectsOnBoard.push(newKnight);
-                    this.board2D[i] = 'kb';
+                    this.board2D[i+56] = 'kb';
                 } else if (i == 4) {
                     var newQueen = new ChessQueen(this, "Queen" + i + "b", false, i, 0, 7, queenObj);
                     newQueen.scale = [0.3, 0.3, 0.3];
                     newQueen.rotate = [0, 0, 0];
                     this.objectsOnBoard.push(newQueen);
-                    this.board2D[i] = 'qb';
+                    this.board2D[i+56] = 'qb';
                 } else {
                     var newKing = new ChessKing(this, "King" + i + "b", false, i, 0, 7, kingObj);
                     newKing.scale = [0.1, 0.1, 0.1];
                     newKing.rotate = [0, 0, 0];
                     this.objectsOnBoard.push(newKing);
-                    this.board2D[i] = 'Kb';
+                    this.board2D[i+56] = 'Kb';
                 }
             } else {
                 var newPawn = new ChessPawn(this, "Pawn" + i + "b", false, i - 8, 0, 6, pawnObj);
                 newPawn.scale = [0.3, 0.3, 0.3];
                 newPawn.rotate = [0, 0, 0];
                 this.objectsOnBoard.push(newPawn);
-                this.board2D[i] = 'pb';
+                this.board2D[i+40] = 'pb';
             }
         }
 
