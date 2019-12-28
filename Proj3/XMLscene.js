@@ -59,7 +59,7 @@ class XMLscene extends CGFscene {
         this.board2D = [];
         for (var i = 0; i < 8 * 8; i++) {
             //console.log("X: " + ((i % 8) - 4) + " - Y: " + (((i - (i % 8)) / 8) - 4));
-            console.log(i + ": (" + (i % 8) + ", " + ((i - (i % 8)) / 8) + ")");
+            //console.log(i + ": (" + (i % 8) + ", " + ((i - (i % 8)) / 8) + ")");
             this.chessBoard.push(new ChessBoardSquare(this, ((i % 2) + ((i - (i % 8)) / 8) + 1) % 2, (i % 8), ((i - (i % 8)) / 8)));
             this.board2D.push('  ');
         }
@@ -154,7 +154,7 @@ class XMLscene extends CGFscene {
             string += (this.board2D[i]);
             string += ("|");
         }
-        console.log(string);
+        //console.log(string);
 
 
         this.setPickEnabled(true);
@@ -169,8 +169,8 @@ class XMLscene extends CGFscene {
                     var obj = this.pickResults[i][0];
                     if (obj) {
                         var customId = this.pickResults[i][1];
-                        console.log(customId);
-                        console.log(obj);
+                        //console.log(customId);
+                        //console.log(obj);
                         if (customId > 100) {
                             this.clickedObj[0].destx = obj.x;
                             this.clickedObj[0].destz = obj.z;
@@ -296,8 +296,9 @@ class XMLscene extends CGFscene {
         for (var i = 0; i < 8; i++) {
             for (var j = 0; j < 8; j++) {
                 var currSqr = this.chessBoard[i * 8 + j];
+                if (this.clickedObj.length == 0) currSqr.selectable = false;
                 //if (!this.printed && this.clickedObj.length){
-                //    console.log(this.clickedObj);
+                //    //console.log(this.clickedObj);
                 //
                 //    this.printed=true;
                 //}
@@ -309,17 +310,18 @@ class XMLscene extends CGFscene {
                     if (!this.printed) {
                         //console.log(dist + ": (" + this.clickedObj[0].x + "," + this.clickedObj[0].z + ") - (" + currSqr.x + "," + currSqr.z + ")");
                     }
-                    if (dist > 0.9 && dist < 2) {
+                    if (dist > 0.1 && dist < 2) {
                         if (!this.printed && this.clickedObj.length) {
-                            //console.log("Inside print board");
-                            //console.log(this.clickedObj);
-                            //console.log(currSqr);
-                            //console.log(dist);
+                            console.log("Inside print board");
+                            console.log(this.clickedObj);
+                            console.log(currSqr);
+                            console.log(dist);
+                            console.log("\nid: " +(i*8 + j + 100) + "\n");
 
                             //this.printed=true;
                         }
 
-                        this.registerForPick(i + 100, currSqr);
+                        this.registerForPick(i*8 + j + 100, currSqr);
                         currSqr.registered = true;
 
                         if (currSqr.white) {
@@ -352,7 +354,7 @@ class XMLscene extends CGFscene {
                 this.popMatrix();
                 if (currSqr.registered)
                     this.clearPickRegistration();
-                this.clearPickRegistration();
+                //this.clearPickRegistration();
             }
         }
         if (this.clickedObj.length) this.printed = true;
@@ -429,7 +431,7 @@ class XMLscene extends CGFscene {
 
             if (this.interface.isKeyPressed('KeyM') && this.mPressed == false) {
                 this.mPressed = true;
-                console.log("Key M Pressed!");
+                //console.log("Key M Pressed!");
                 for (const key in this.graph.components) {
                     this.graph.components[key].changeMaterial();
                 }
@@ -437,14 +439,14 @@ class XMLscene extends CGFscene {
 
             if (this.interface.isKeyPressed('KeyM') == false && this.mPressed) {
                 this.mPressed = false;
-                console.log("Key M no longer Pressed!");
+                //console.log("Key M no longer Pressed!");
             }
 
             for (var i = 0; i < this.objectsOnBoard.length; i++) {
                 var currObj = this.objectsOnBoard[i];
                 if (currObj.x != currObj.destx && currObj.z != currObj.destz) {
                     this.clickedObj.splice(0, this.clickedObj.length);
-                    console.log("Curr coord: (" + currObj.x + ", " + currObj.z + ")\nDest coord: (" + currObj.destx + ", " + currObj.destz + ")\n\n");
+                    //console.log("Curr coord: (" + currObj.x + ", " + currObj.z + ")\nDest coord: (" + currObj.destx + ", " + currObj.destz + ")\n\n");
                     currObj.clicked = false;
                     var auxX = currObj.destx - currObj.x;
                     var auxZ = currObj.destz - currObj.z;
