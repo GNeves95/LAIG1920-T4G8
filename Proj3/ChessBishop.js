@@ -13,22 +13,22 @@ class ChessBishop extends ChessPiece {
             temp_z++;
             moves.push([temp_x, temp_z]);
         }
-        temp_x = x;
-        temp_z = z;
+        temp_x = this.x;
+        temp_z = this.z;
         while(temp_x < 7 && temp_z > 0){
             temp_x++;
             temp_z--;
             moves.push([temp_x, temp_z]);
         }
-        temp_x = x;
-        temp_z = z;
+        temp_x = this.x;
+        temp_z = this.z;
         while(temp_x > 0 && temp_z < 7){
             temp_x--;
             temp_z++;
             moves.push([temp_x, temp_z]);
         }
-        temp_x = x;
-        temp_z = z;
+        temp_x = this.x;
+        temp_z = this.z;
         while(temp_x > 0 && temp_z > 0){
             temp_x--;
             temp_z--;

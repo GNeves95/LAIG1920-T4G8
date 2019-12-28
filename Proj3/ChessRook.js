@@ -12,17 +12,17 @@ class ChessRook extends ChessPiece {
             temp_z--;
             moves.push([temp_x, temp_z]);
         }
-        temp_z = z;
+        temp_z = this.z;
         while(temp_z < 7){
             temp_z++;
             moves.push([temp_x, temp_z]);
         }
-        temp_z = z;
+        temp_z = this.z;
         while(temp_x > 0){
             temp_x--;
             moves.push([temp_x, temp_z]);
         }
-        temp_x = x;
+        temp_x = this.x;
         while(temp_x < 7){
             temp_x++;
             moves.push([temp_x, temp_z]);

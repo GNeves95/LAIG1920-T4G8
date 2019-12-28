@@ -304,8 +304,8 @@ class XMLscene extends CGFscene {
             var makeSelectable = this.chessBoard[dest[k][0]+(dest[k][1]*8)];
             this.chessBoard[dest[k][0]+(dest[k][1]*8)].selectable = true;
             makeSelectable.selectable = true;
-            if (!this.printed)
-            console.log(makeSelectable);
+            //if (!this.printed)
+            //console.log(makeSelectable);
         }
 
         //this.printed = true;
