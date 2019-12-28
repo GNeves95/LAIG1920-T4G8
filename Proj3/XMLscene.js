@@ -59,6 +59,7 @@ class XMLscene extends CGFscene {
         this.board2D = [];
         for (var i = 0; i < 8 * 8; i++) {
             //console.log("X: " + ((i % 8) - 4) + " - Y: " + (((i - (i % 8)) / 8) - 4));
+            console.log(i + ": (" + (i % 8) + ", " + ((i - (i % 8)) / 8) + ")");
             this.chessBoard.push(new ChessBoardSquare(this, ((i % 2) + ((i - (i % 8)) / 8) + 1) % 2, (i % 8), ((i - (i % 8)) / 8)));
             this.board2D.push('  ');
         }
@@ -112,38 +113,38 @@ class XMLscene extends CGFscene {
                     newRook.scale = [0.3, 0.3, 0.3];
                     newRook.rotate = [0, 0, 0];
                     this.objectsOnBoard.push(newRook);
-                    this.board2D[i+56] = 'rb';
+                    this.board2D[i + 56] = 'rb';
                 } else if (i == 2 || i == 5) {
                     var newBishop = new ChessRook(this, "Bishop" + i + "b", false, i, 0, 7, bishopObj);
                     newBishop.scale = [0.3, 0.3, 0.3];
                     newBishop.rotate = [0, 90, 0];
                     this.objectsOnBoard.push(newBishop);
-                    this.board2D[i+56] = 'bb';
+                    this.board2D[i + 56] = 'bb';
                 } else if (i == 1 || i == 6) {
                     var newKnight = new ChessKnight(this, "Knight" + i + "b", false, i, 0, 7, knightObj);
                     newKnight.scale = [0.3, 0.3, 0.3];
                     newKnight.rotate = [0, 180, 0];
                     this.objectsOnBoard.push(newKnight);
-                    this.board2D[i+56] = 'kb';
+                    this.board2D[i + 56] = 'kb';
                 } else if (i == 4) {
                     var newQueen = new ChessQueen(this, "Queen" + i + "b", false, i, 0, 7, queenObj);
                     newQueen.scale = [0.3, 0.3, 0.3];
                     newQueen.rotate = [0, 0, 0];
                     this.objectsOnBoard.push(newQueen);
-                    this.board2D[i+56] = 'qb';
+                    this.board2D[i + 56] = 'qb';
                 } else {
                     var newKing = new ChessKing(this, "King" + i + "b", false, i, 0, 7, kingObj);
                     newKing.scale = [0.1, 0.1, 0.1];
                     newKing.rotate = [0, 0, 0];
                     this.objectsOnBoard.push(newKing);
-                    this.board2D[i+56] = 'Kb';
+                    this.board2D[i + 56] = 'Kb';
                 }
             } else {
                 var newPawn = new ChessPawn(this, "Pawn" + i + "b", false, i - 8, 0, 6, pawnObj);
                 newPawn.scale = [0.3, 0.3, 0.3];
                 newPawn.rotate = [0, 0, 0];
                 this.objectsOnBoard.push(newPawn);
-                this.board2D[i+40] = 'pb';
+                this.board2D[i + 40] = 'pb';
             }
         }
 
@@ -317,6 +318,10 @@ class XMLscene extends CGFscene {
 
                             //this.printed=true;
                         }
+
+                        this.registerForPick(i + 100, currSqr);
+                        currSqr.registered = true;
+
                         if (currSqr.white) {
                             this.graph.materials["white_selected"].apply();
                         } else {
@@ -336,17 +341,18 @@ class XMLscene extends CGFscene {
                         this.graph.materials["black"].apply();
                     }
                 }
-                var transfMatrix = mat4.create();
-                transfMatrix = mat4.translate(transfMatrix, transfMatrix, [currSqr.x, 0, currSqr.z]);
-                if (this.clickedObj.length != 0){
-                    this.registerForPick(i + 100, currSqr);
-                    currSqr.registered = true;
-                }
-                this.multMatrix(transfMatrix);
+                //var transfMatrix = mat4.create();
+                //transfMatrix = mat4.translate(transfMatrix, transfMatrix, [currSqr.x, 0, currSqr.z]);
+                //if (this.clickedObj.length != 0) {
+                //    this.registerForPick(i + 100, currSqr);
+                //    currSqr.registered = true;
+                //}
+                //this.multMatrix(transfMatrix);
                 currSqr.display();
                 this.popMatrix();
-                if (this.clickedObj.length != 0 || currSqr.registered)
+                if (currSqr.registered)
                     this.clearPickRegistration();
+                this.clearPickRegistration();
             }
         }
         if (this.clickedObj.length) this.printed = true;
@@ -437,17 +443,19 @@ class XMLscene extends CGFscene {
             for (var i = 0; i < this.objectsOnBoard.length; i++) {
                 var currObj = this.objectsOnBoard[i];
                 if (currObj.x != currObj.destx && currObj.z != currObj.destz) {
+                    this.clickedObj.splice(0, this.clickedObj.length);
+                    console.log("Curr coord: (" + currObj.x + ", " + currObj.z + ")\nDest coord: (" + currObj.destx + ", " + currObj.destz + ")\n\n");
                     currObj.clicked = false;
                     var auxX = currObj.destx - currObj.x;
                     var auxZ = currObj.destz - currObj.z;
                     //currObj.x += (currObj.destx - currObj.x) / (Math.abs(currObj.destx - currObj.x)*10.0);
                     //currObj.z += (currObj.destz - currObj.z) / (Math.abs(currObj.destz - currObj.z)*10.0);
-                    currObj.x += (auxX/(Math.sqrt(auxX*auxX+auxZ*auxZ)*10));
-                    currObj.z += (auxZ/(Math.sqrt(auxX*auxX+auxZ*auxZ)*10));
+                    currObj.x += (auxX / (Math.sqrt(auxX * auxX + auxZ * auxZ) * 10));
+                    currObj.z += (auxZ / (Math.sqrt(auxX * auxX + auxZ * auxZ) * 10));
                     if (Math.abs(currObj.destx - currObj.x) < 0.1)
                         currObj.x = currObj.destx;
-                        if (Math.abs(currObj.destz - currObj.z) < 0.1)
-                            currObj.z = currObj.destz;
+                    if (Math.abs(currObj.destz - currObj.z) < 0.1)
+                        currObj.z = currObj.destz;
                 } else {
                     if (currObj.clicked && currObj.y < 1) {
                         currObj.y += 0.1;
@@ -463,7 +471,7 @@ class XMLscene extends CGFscene {
                 else if (this.clickedObj[0].id == currObj.id)
                     this.registerForPick(i + 1, currObj);
                 var transfMatrix = mat4.create();
-                transfMatrix = mat4.translate(transfMatrix, transfMatrix, [currObj.x, currObj.y, currObj.z]);
+                transfMatrix = mat4.translate(transfMatrix, transfMatrix, [currObj.x + 0.5, currObj.y, currObj.z+0.5]);
                 transfMatrix = mat4.scale(transfMatrix, transfMatrix, currObj.scale);
                 transfMatrix = mat4.rotateX(transfMatrix, transfMatrix, DEGREE_TO_RAD * currObj.rotate[0]);
                 transfMatrix = mat4.rotateY(transfMatrix, transfMatrix, DEGREE_TO_RAD * currObj.rotate[1]);
