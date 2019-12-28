@@ -293,10 +293,27 @@ class XMLscene extends CGFscene {
 
     printBoard() {
         //if (!this.printed) console.log(this.graph.materials);
+        var dest = [];
+
+        if (this.clickedObj.length) {
+            dest = this.clickedObj[0].getPossibleMoves();
+            //console.log(dest);
+        }
+
+        for (var k = 0; k < dest.length;k++){
+            var makeSelectable = this.chessBoard[dest[k][0]+(dest[k][1]*8)];
+            this.chessBoard[dest[k][0]+(dest[k][1]*8)].selectable = true;
+            makeSelectable.selectable = true;
+            if (!this.printed)
+            console.log(makeSelectable);
+        }
+
+        //this.printed = true;
+
         for (var i = 0; i < 8; i++) {
             for (var j = 0; j < 8; j++) {
                 var currSqr = this.chessBoard[i * 8 + j];
-                if (this.clickedObj.length == 0) currSqr.selectable = false;
+                //if (this.clickedObj.length == 0) currSqr.selectable = false;
                 //if (!this.printed && this.clickedObj.length){
                 //    //console.log(this.clickedObj);
                 //
@@ -310,19 +327,20 @@ class XMLscene extends CGFscene {
                     if (!this.printed) {
                         //console.log(dist + ": (" + this.clickedObj[0].x + "," + this.clickedObj[0].z + ") - (" + currSqr.x + "," + currSqr.z + ")");
                     }
-                    if (dist > 0.1 && dist < 2) {
+                    if (currSqr.selectable) {
                         if (!this.printed && this.clickedObj.length) {
-                            console.log("Inside print board");
-                            console.log(this.clickedObj);
-                            console.log(currSqr);
-                            console.log(dist);
-                            console.log("\nid: " +(i*8 + j + 100) + "\n");
+                            //console.log("Inside print board");
+                            //console.log(this.clickedObj);
+                            //console.log(currSqr);
+                            //console.log(dist);
+                            //console.log("\nid: " + (i * 8 + j + 100) + "\n");
 
                             //this.printed=true;
                         }
 
-                        this.registerForPick(i*8 + j + 100, currSqr);
+                        this.registerForPick(i * 8 + j + 100, currSqr);
                         currSqr.registered = true;
+                        currSqr.selectable = false;
 
                         if (currSqr.white) {
                             this.graph.materials["white_selected"].apply();
@@ -444,7 +462,7 @@ class XMLscene extends CGFscene {
 
             for (var i = 0; i < this.objectsOnBoard.length; i++) {
                 var currObj = this.objectsOnBoard[i];
-                if (currObj.x != currObj.destx && currObj.z != currObj.destz) {
+                if (currObj.x != currObj.destx || currObj.z != currObj.destz) {
                     this.clickedObj.splice(0, this.clickedObj.length);
                     //console.log("Curr coord: (" + currObj.x + ", " + currObj.z + ")\nDest coord: (" + currObj.destx + ", " + currObj.destz + ")\n\n");
                     currObj.clicked = false;
@@ -473,7 +491,7 @@ class XMLscene extends CGFscene {
                 else if (this.clickedObj[0].id == currObj.id)
                     this.registerForPick(i + 1, currObj);
                 var transfMatrix = mat4.create();
-                transfMatrix = mat4.translate(transfMatrix, transfMatrix, [currObj.x + 0.5, currObj.y, currObj.z+0.5]);
+                transfMatrix = mat4.translate(transfMatrix, transfMatrix, [currObj.x + 0.5, currObj.y, currObj.z + 0.5]);
                 transfMatrix = mat4.scale(transfMatrix, transfMatrix, currObj.scale);
                 transfMatrix = mat4.rotateX(transfMatrix, transfMatrix, DEGREE_TO_RAD * currObj.rotate[0]);
                 transfMatrix = mat4.rotateY(transfMatrix, transfMatrix, DEGREE_TO_RAD * currObj.rotate[1]);

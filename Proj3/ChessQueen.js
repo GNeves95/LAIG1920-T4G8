@@ -4,64 +4,66 @@ class ChessQueen extends ChessPiece {
     }
 
     getPossibleMoves(){
-        moves = [];
-        var temp_x = x;
-        var temp_z = z;
+        var moves = [];
+        var temp_x = this.x;
+        var temp_z = this.z;
 
         //Bishop
-         moves = [];
-        var temp_x = x;
-        var temp_z = z;
+        var moves = [];
+        var temp_x = this.x;
+        var temp_z = this.z;
         while(temp_x < 7 && temp_z < 7){
             temp_x++;
             temp_z++;
-            moves.push[temp_x, temp_z];
+            moves.push([temp_x, temp_z]);
         }
-        temp_x = x;
-        temp_z = z;
+        temp_x = this.x;
+        temp_z = this.z;
         while(temp_x < 7 && temp_z > 0){
             temp_x++;
             temp_z--;
-            moves.push[temp_x, temp_z];
+            moves.push([temp_x, temp_z]);
             }
-        temp_x = x;
-        temp_z = z;
+        temp_x = this.x;
+        temp_z = this.z;
         while(temp_x > 0 && temp_z < 7){
             temp_x--;
             temp_z++;
-            moves.push[temp_x, temp_z];
+            moves.push([temp_x, temp_z]);
         }
-        temp_x = x;
-        temp_z = z;
+        temp_x = this.x;
+        temp_z = this.z;
         while(temp_x > 0 && temp_z > 0){
             temp_x--;
             temp_z--;
-            moves.push[temp_x, temp_z];
+            moves.push([temp_x, temp_z]);
         }
 
         //Rook
-        var temp_x = x;
-        var temp_z = z;
+        var temp_x = this.x;
+        var temp_z = this.z;
 
         while(temp_z > 0){
             temp_z--;
-            moves.push[temp_x, temp_z];
+            moves.push([temp_x, temp_z]);
         }
-        temp_z = z;
+        temp_z = this.z;
         while(temp_z < 7){
             temp_z++;
-            moves.push[temp_x, temp_z];
+            moves.push([temp_x, temp_z]);
         }
-        temp_z = z;
+        temp_z = this.z;
         while(temp_x > 0){
             temp_x--;
-            moves.push[temp_x, temp_z];
+            moves.push([temp_x, temp_z]);
         }
-        temp_x = x;
+        temp_x = this.x;
         while(temp_x < 7){
             temp_x++;
-            moves.push[temp_x, temp_z];
+            moves.push([temp_x, temp_z]);
         }
+
+        return moves;
 
     }
 

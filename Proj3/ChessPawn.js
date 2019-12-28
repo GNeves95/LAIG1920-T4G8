@@ -3,17 +3,18 @@ class ChessPawn extends ChessPiece {
         super(scene, id, white, x, y, z, obj);
     }
 
-    getPossibleMoves(){
-        moves = [];
-        if(white == 1){
-            moves.push[x, z-1];
-            if(z == 6)
-                moves.push[x, z-2];
+    getPossibleMoves() {
+        var moves = [];
+        if (this.white == 1) {
+            moves.push([this.x, this.z + 1]);
+            if (this.z == 1)
+                moves.push([this.x, this.z + 2]);
         }
-        else{
-            moves.push[x, z+1];
-            if(z == 1)
-                moves.push[x, z+2];
+        else {
+            moves.push([this.x, this.z - 1]);
+            if (this.z == 6)
+                moves.push([this.x, this.z - 2]);
         }
+        return moves;
     }
 }

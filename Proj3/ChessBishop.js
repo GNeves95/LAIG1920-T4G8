@@ -5,34 +5,35 @@ class ChessBishop extends ChessPiece {
 
     getPossibleMoves(){
         //bispo está no [2, y, 0]
-        moves = [];
-        var temp_x = x;
-        var temp_z = z;
+        var moves = [];
+        var temp_x = this.x;
+        var temp_z = this.z;
         while(temp_x < 7 && temp_z < 7){
             temp_x++;
             temp_z++;
-            moves.push[temp_x, temp_z];
+            moves.push([temp_x, temp_z]);
         }
         temp_x = x;
         temp_z = z;
         while(temp_x < 7 && temp_z > 0){
             temp_x++;
             temp_z--;
-            moves.push[temp_x, temp_z];
+            moves.push([temp_x, temp_z]);
         }
         temp_x = x;
         temp_z = z;
         while(temp_x > 0 && temp_z < 7){
             temp_x--;
             temp_z++;
-            moves.push[temp_x, temp_z];
+            moves.push([temp_x, temp_z]);
         }
         temp_x = x;
         temp_z = z;
         while(temp_x > 0 && temp_z > 0){
             temp_x--;
             temp_z--;
-            moves.push[temp_x, temp_z];
+            moves.push([temp_x, temp_z]);
         }
+        return moves;
     }
 }

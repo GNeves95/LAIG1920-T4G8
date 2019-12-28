@@ -4,49 +4,50 @@ class ChessKnight extends ChessPiece {
     }
 
     getPossibleMoves(){
-        moves = [];
-        temp_x = x;
-        temp_z = z;
+        var moves = [];
+        var temp_x = this.x;
+        var temp_z = this.z;
 
         if(temp_x <=7 && temp_x >=0 && temp_z <=7 && temp_z >=0){
-            moves.push[x-2, z-1];
-            temp_x = x;
-            temp_z = z;
+            moves.push([this.x-2, this.z-1]);
+            temp_x = this.x;
+            temp_z = this.z;
         }
         if(temp_x <=7 && temp_x >=0 && temp_z <=7 && temp_z >=0){
-            moves.push[x-1, z-2];
-            temp_x = x;
-            temp_z = z;
+            moves.push([this.x-1, this.z-2]);
+            temp_x = this.x;
+            temp_z = this.z;
         }
         if(temp_x <=7 && temp_x >=0 && temp_z <=7 && temp_z >=0){
-            moves.push[x+1, z-2];
-            temp_x = x;
-            temp_z = z;
+            moves.push([this.x+1, this.z-2]);
+            temp_x = this.x;
+            temp_z = this.z;
         }
         if(temp_x <=7 && temp_x >=0 && temp_z <=7 && temp_z >=0){
-            moves.push[x+2, z-1];
-            temp_x = x;
-            temp_z = z;
+            moves.push([this.x+2, this.z-1]);
+            temp_x = this.x;
+            temp_z = this.z;
         }
         if(temp_x <=7 && temp_x >=0 && temp_z <=7 && temp_z >=0){
-            moves.push[x+2, z+1];
-            temp_x = x;
-            temp_z = z;
+            moves.push([this.x+2, this.z+1]);
+            temp_x = this.x;
+            temp_z = this.z;
         }
         if(temp_x <=7 && temp_x >=0 && temp_z <=7 && temp_z >=0){
-            moves.push[x+1, z+2];
-            temp_x = x;
-            temp_z = z;
+            moves.push([this.x+1, this.z+2]);
+            temp_x = this.x;
+            temp_z = this.z;
         }
         if(temp_x <=7 && temp_x >=0 && temp_z <=7 && temp_z >=0){
-            moves.push[x-1, z+2];
-            temp_x = x;
-            temp_z = z;
+            moves.push([this.x-1, this.z+2]);
+            temp_x = this.x;
+            temp_z = this.z;
         }
         if(temp_x <=7 && temp_x >=0 && temp_z <=7 && temp_z >=0){
-            moves.push[x-2, z+1];
-            temp_x = x;
-            temp_z = z;
+            moves.push([this.x-2, this.z+1]);
+            temp_x = this.x;
+            temp_z = this.z;
         }
+        return moves;
     }
 }
