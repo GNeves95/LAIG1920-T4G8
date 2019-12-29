@@ -148,18 +148,41 @@ class XMLscene extends CGFscene {
             }
         }
 
+        var coord1 = this.toChessCoord(0,0);
+        var coord2 = this.toChessCoord(3,5);
+        var coord3 = coord1 + coord2;
+
+        console.log(coord3);
+
+        this.fromChessCoord(coord3);
+
         var string = "";
         for (var i = 0; i < 8 * 8; i++) {
-            if ((i % 8) == 0) { console.log(string); string = ""; }
+            //if ((i % 8) == 0) { console.log(string); string = ""; }
             string += (this.board2D[i]);
             string += ("|");
         }
-        //console.log(string);
+        console.log(string);
 
 
         this.setPickEnabled(true);
 
         this.clickedObj = [];
+
+        this.commChannel = new Comms();
+
+        //this.commChannel.makeRequest("player:" + 1 + "-" + "level:" + 1 + string);
+        this.sendBoard(1,1);
+    }
+
+    sendBoard(player,level){
+        var string = "";
+        for (var i = 0; i < 8 * 8; i++) {
+            string += (this.board2D[i]);
+            string += ("|");
+        }
+
+        this.commChannel.makeRequest("player:" + player + "-" + "level:" + level + "-" + string);
     }
 
     logPicking() {
@@ -539,5 +562,24 @@ class XMLscene extends CGFscene {
             this.gl.enable(this.gl.DEPTH_TEST);
         }
         // ---- END Background, camera and axis setup
+    }
+
+    toChessCoord(x,z){
+        var chessCoords = '';
+        chessCoords += String.fromCharCode((7 - x)+'a'.charCodeAt(0)) + (z+1);
+        console.log(chessCoords);
+        return chessCoords;
+    }
+
+    fromChessCoord(chessCoords){
+        var coords = [];
+        if (chessCoords.length == 2){
+            coords.push([7-(chessCoords.charCodeAt(0)-'a'.charCodeAt(0)),parseInt(chessCoords[1])-1]);
+        } else if (chessCoords.length == 4){
+            coords.push([7-(chessCoords.charCodeAt(0)-'a'.charCodeAt(0)),parseInt(chessCoords[1])-1]);
+            coords.push([7-(chessCoords.charCodeAt(2)-'a'.charCodeAt(0)),parseInt(chessCoords[3])-1]);
+        }
+        console.log(coords);
+        return coords;
     }
 }
