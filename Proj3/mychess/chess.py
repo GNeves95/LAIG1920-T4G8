@@ -2,16 +2,18 @@
 
 
 class GameState:
-    def __init__(self, board, movement):
+    def __init__(self, board, movement, parent):
         self.min = 99999
         self.max = -99999
-        self.state = ''
+        self.state = board
         self.children = []
         self.move = movement
+        self.parent = parent
 
     def addChild(self, board, move):
-        auxChild = GameState(board, move)
+        auxChild = GameState(board, move, self)
         self.children.append(auxChild)
+        return auxChild
 
 def boardEval(board):
     i = 0
@@ -88,7 +90,7 @@ def getPossibleMoves(board, player):
         x = i % 8
         y = int((i-(i % 8))/8)
         orig = chr(ord('a')+(7-x))+str(y+1).split('.')[0]
-        print(orig + " - " + board[i])
+        #print(orig + " - " + board[i])
         # White Pieces
         # Pawn
         if player == 0:
@@ -677,7 +679,7 @@ def getPossibleMoves(board, player):
 
 
 def processMove(board, move):
-    print(move)
+    #print(move)
     origX = 7-(ord(move[0])-ord('a'))
     origY = int(move[1])-1
 
@@ -685,7 +687,7 @@ def processMove(board, move):
     destY = int(move[3])-1
     newBoard = (board + '.')[:-1]
     newBoard = list(newBoard)
-    print(f'({origX},{origY}) - ({destX},{destY})')
+    #print(f'({origX},{origY}) - ({destX},{destY})')
 
     switched = newBoard[origY*8+origX]
     newBoard[origY*8+origX] = '.'
@@ -695,11 +697,54 @@ def processMove(board, move):
 
     return newBoard
 
+def goThrough(level, currBoard, player):
+    bestMove = ''
+    bestMoveValue = 0
+
+    moves = getPossibleMoves(currBoard.state,player)
+
+    for x in moves:
+        currBoard.addChild(processMove(currBoard.state,x), x)
+
+def minimax(depth, currBoard, player, alpha, beta):
+    if depth == 0:
+        return [boardEval(currBoard.state),currBoard.move]
+
+    #moveEval = [0,'']
+
+    currMoves = getPossibleMoves(currBoard.state, player)
+    if player:
+        bestMove = [9999,'']
+        for x in currMoves:
+            newBoard = processMove(currBoard.state, x)
+            child = currBoard.addChild(newBoard, x)
+            nextMove = minimax(depth-1, child, not player, alpha, beta)
+            bestMove = [nextMove[0],x] if nextMove[0] < bestMove[0] else bestMove
+            beta = bestMove[0] if bestMove[0] < beta else beta
+            #bestMove[1] = x
+            if beta <= alpha:
+                return bestMove
+        return bestMove
+    else:
+        bestMove = [-9999, '']
+        for x in currMoves:
+            newBoard = processMove(currBoard.state, x)
+            child = currBoard.addChild(newBoard, x)
+            nextMove = minimax(depth-1, child, not player, alpha, beta)
+            bestMove = [nextMove[0],x] if nextMove[0] > bestMove[0] else bestMove
+            alpha = bestMove[0] if bestMove[0] > alpha else alpha
+            #bestMove[1] = x
+            if beta <= alpha:
+                return bestMove
+        return bestMove
+
 
 def mainSolver(level, board, player):
     print(f'Solving')
     boardArray = convertBoard(board)
     moves = getPossibleMoves(boardArray, player)
+    currBoard = GameState(boardArray, '', None)
+
     #print(f'this is the boardArray {boardArray}')
     i = 7
     while i >= 0:
@@ -711,7 +756,11 @@ def mainSolver(level, board, player):
                 print(f' | ', end='')
         print()
         i -= 1
-    boardArray = processMove(boardArray, moves[0])
+
+    bestMove = minimax(level,currBoard,player, -99999, 99999)
+    print(f'The best move is {bestMove}')
+
+    boardArray = processMove(boardArray, bestMove[1])
     value = boardEval(boardArray)
     i = 7
     while i >= 0:
