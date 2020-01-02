@@ -51,7 +51,7 @@ def convertBoard(board):
     return newBoard
 
 
-def getPossibleMoves(board):
+def getPossibleMoves(board, player):
     moves = []
     i = 0
     while i < 8*8:
@@ -61,594 +61,627 @@ def getPossibleMoves(board):
         print(orig + " - " + board[i])
         # White Pieces
         # Pawn
-        if board[i] == 'P':
-            if y == 1:
-                if board[i + 16] == '.':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-x))+str(y+3).split('.')[0]))
-                if x > 0 and 'a' <= board[i+15] <= 'z':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(x-1)))+str(y+3).split('.')[0]))
-                if x < 7 and 'a' <= board[i+17] <= 'z':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(x+1)))+str(y+3).split('.')[0]))
-            if y < 7:
-                if board[i + 8] == '.':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-x))+str(y+2).split('.')[0]))
-                if x > 0 and 'a' <= board[i+7] <= 'z':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(x-1)))+str(y+2).split('.')[0]))
-                if x < 7 and 'a' <= board[i+9] <= 'z':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(x+1)))+str(y+2).split('.')[0]))
-        # Rook
-        if board[i] == 'R':
-            tempX = x
-            tempY = int(y)
-            while tempX > 0:
-                tempX -= 1
-                if board[tempY * 8 + tempX] == '.':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                else:
-                    if 'a' <= board[tempY * 8 + tempX] <= 'z':
+        if player == 0:
+            if board[i] == 'P':
+                if y == 1:
+                    if board[i + 16] == '.':
                         moves.append(
-                            orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                    break
-            tempX = x
-            while tempX < 7:
-                tempX += 1
-                if board[tempY * 8 + tempX] == '.':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                else:
-                    if 'a' <= board[tempY * 8 + tempX] <= 'z':
-                        moves.append(
-                            orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                    break
-            tempX = x
-            while tempY > 0:
-                tempY -= 1
-                if board[tempY * 8 + tempX] == '.':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                else:
-                    if 'a' <= board[tempY * 8 + tempX] <= 'z':
-                        moves.append(
-                            orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                    break
-            tempY = int(y)
-            while tempY < 7:
-                tempY += 1
-                if board[tempY * 8 + tempX] == '.':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                else:
-                    if 'a' <= board[tempY * 8 + tempX] <= 'z':
-                        moves.append(
-                            orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                    break
-        # Knight
-        if board[i] == 'N':
-            if x > 1:
-                if y > 0:
-                    if board[(y-1) * 8 + (x-2)] == '.' or 'a' <= board[(y-1) * 8 + (x-2)] <= 'z':
-                        moves.append(
-                            orig + (chr(ord('a')+(7-(x-2)))+str(y).split('.')[0]))
-                if y < 7:
-                    if board[(y+1) * 8 + (x-2)] == '.' or 'a' <= board[(y+1) * 8 + (x-2)] <= 'z':
-                        moves.append(
-                            orig + (chr(ord('a')+(7-(x-2)))+str(y+2).split('.')[0]))
-            if x > 0:
-                if y > 1:
-                    if board[(y-2) * 8 + (x-1)] == '.' or 'a' <= board[(y-2) * 8 + (x-1)] <= 'z':
-                        moves.append(
-                            orig + (chr(ord('a')+(7-(x-1)))+str(y-1).split('.')[0]))
-                if y < 6:
-                    if board[(y+2) * 8 + (x-1)] == '.' or 'a' <= board[(y+2) * 8 + (x-1)] <= 'z':
+                            orig + (chr(ord('a')+(7-x))+str(y+3).split('.')[0]))
+                    if x > 0 and 'a' <= board[i+15] <= 'z':
                         moves.append(
                             orig + (chr(ord('a')+(7-(x-1)))+str(y+3).split('.')[0]))
-            if x < 6:
-                if y > 0:
-                    if board[(y-1) * 8 + (x+2)] == '.' or 'a' <= board[(y-1) * 8 + (x+2)] <= 'z':
-                        moves.append(
-                            orig + (chr(ord('a')+(7-(x+2)))+str(y).split('.')[0]))
-                if y < 7:
-                    if board[(y+1) * 8 + (x+2)] == '.' or 'a' <= board[(y+1) * 8 + (x+2)] <= 'z':
-                        moves.append(
-                            orig + (chr(ord('a')+(7-(x+2)))+str(y+2).split('.')[0]))
-            if x < 7:
-                if y > 1:
-                    if board[(y-2) * 8 + (x+1)] == '.' or 'a' <= board[(y-2) * 8 + (x+1)] <= 'z':
-                        moves.append(
-                            orig + (chr(ord('a')+(7-(x+1)))+str(y-1).split('.')[0]))
-                if y < 6:
-                    if board[(y+2) * 8 + (x+1)] == '.' or 'a' <= board[(y+2) * 8 + (x+1)] <= 'z':
+                    if x < 7 and 'a' <= board[i+17] <= 'z':
                         moves.append(
                             orig + (chr(ord('a')+(7-(x+1)))+str(y+3).split('.')[0]))
-        # Bishop
-        if board[i] == 'B':
-            tempX = x
-            tempY = int(y)
-            while tempX > 0 and tempY > 0:
-                tempX -= 1
-                tempY -= 1
-                if board[tempY * 8 + tempX] == '.':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                else:
-                    if 'a' <= board[tempY * 8 + tempX] <= 'z':
-                        moves.append(
-                            orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                    break
-            tempX = x
-            tempY = int(y)
-            while tempX > 0 and tempY < 7:
-                tempX -= 1
-                tempY += 1
-                if board[tempY * 8 + tempX] == '.':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                else:
-                    if 'a' <= board[tempY * 8 + tempX] <= 'z':
-                        moves.append(
-                            orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                    break
-            tempX = x
-            tempY = int(y)
-            while tempX < 7 and tempY > 0:
-                tempX += 1
-                tempY -= 1
-                if board[tempY * 8 + tempX] == '.':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                else:
-                    if 'a' <= board[tempY * 8 + tempX] <= 'z':
-                        moves.append(
-                            orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                    break
-            tempX = x
-            tempY = int(y)
-            while tempX < 7 and tempY < 7:
-                tempX += 1
-                tempY += 1
-                if board[tempY * 8 + tempX] == '.':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                else:
-                    if 'a' <= board[tempY * 8 + tempX] <= 'z':
-                        moves.append(
-                            orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                    break
-        # Queen
-        if board[i] == 'Q':
-            tempX = x
-            tempY = int(y)
-            while tempX > 0:
-                tempX -= 1
-                if board[tempY * 8 + tempX] == '.':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                else:
-                    if 'a' <= board[tempY * 8 + tempX] <= 'z':
-                        moves.append(
-                            orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                    break
-            tempX = x
-            while tempX < 7:
-                tempX += 1
-                if board[tempY * 8 + tempX] == '.':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                else:
-                    if 'a' <= board[tempY * 8 + tempX] <= 'z':
-                        moves.append(
-                            orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                    break
-            tempX = x
-            while tempY > 0:
-                tempY -= 1
-                if board[tempY * 8 + tempX] == '.':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                else:
-                    if 'a' <= board[tempY * 8 + tempX] <= 'z':
-                        moves.append(
-                            orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                    break
-            tempY = int(y)
-            while tempY < 7:
-                tempY += 1
-                if board[tempY * 8 + tempX] == '.':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                else:
-                    if 'a' <= board[tempY * 8 + tempX] <= 'z':
-                        moves.append(
-                            orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                    break
-            tempX = x
-            tempY = int(y)
-            while tempX > 0 and tempY > 0:
-                tempX -= 1
-                tempY -= 1
-                if board[tempY * 8 + tempX] == '.':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                else:
-                    if 'a' <= board[tempY * 8 + tempX] <= 'z':
-                        moves.append(
-                            orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                    break
-            tempX = x
-            tempY = int(y)
-            while tempX > 0 and tempY < 7:
-                tempX -= 1
-                tempY += 1
-                if board[tempY * 8 + tempX] == '.':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                else:
-                    if 'a' <= board[tempY * 8 + tempX] <= 'z':
-                        moves.append(
-                            orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                    break
-            tempX = x
-            tempY = int(y)
-            while tempX < 7 and tempY > 0:
-                tempX += 1
-                tempY -= 1
-                if board[tempY * 8 + tempX] == '.':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                else:
-                    if 'a' <= board[tempY * 8 + tempX] <= 'z':
-                        moves.append(
-                            orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                    break
-            tempX = x
-            tempY = int(y)
-            while tempX < 7 and tempY < 7:
-                tempX += 1
-                tempY += 1
-                if board[tempY * 8 + tempX] == '.':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                else:
-                    if 'a' <= board[tempY * 8 + tempX] <= 'z':
-                        moves.append(
-                            orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                    break
-        # King
-        if board[i] == 'K':
-            if (board[(8*y)+x-1] == '.' or 'a' <= board[(8*y)+x-1] <= 'z') and x > 0:
-                moves.append(
-                    orig + (chr(ord('a')+(7-(x-1)))+str(y+1).split('.')[0]))
-            if (board[(8*y)+x+1] == '.' or 'a' <= board[(8*y)+x+1] <= 'z') and x < 7:
-                moves.append(
-                    orig + (chr(ord('a')+(7-(x+1)))+str(y+1).split('.')[0]))
-            if y > 0:
-                if (board[(8*(y-1))+x-1] == '.' or 'a' <= board[(8*(y-1))+x-1] <= 'z') and x > 0:
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(x-1)))+str(y).split('.')[0]))
-                if board[(8*(y-1))+x] == '.' or 'a' <= board[(8*(y-1))+x] <= 'z':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(x)))+str(y).split('.')[0]))
-                if (board[(8*(y-1))+x+1] == '.' or 'a' <= board[(8*(y-1))+x+1] <= 'z') and x < 7:
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(x+1)))+str(y).split('.')[0]))
-            if y < 7:
-                if (board[(8*(y+1))+x-1] == '.' or 'a' <= board[(8*(y+1))+x-1] <= 'z') and x > 0:
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(x-1)))+str(y+2).split('.')[0]))
-                if board[(8*(y+1))+x] == '.' or 'a' <= board[(8*(y+1))+x] <= 'z':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(x)))+str(y+2).split('.')[0]))
-                if (board[(8*(y+1))+x+1] == '.' or 'a' <= board[(8*(y+1))+x+1] <= 'z') and x < 7:
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(x+1)))+str(y+2).split('.')[0]))
-
-        # Black Pieces
-        # Pawn
-        if board[i] == 'p':
-            if y == 6:
-                if board[i - 16] == '.':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-x))+str(y-1).split('.')[0]))
-                if x > 0 and 'A' <= board[i-17] <= 'Z':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(x-1)))+str(y-1).split('.')[0]))
-                if x < 7 and 'A' <= board[i-15] <= 'Z':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(x+1)))+str(y-1).split('.')[0]))
-            if y > 0:
-                if board[i - 8] == '.':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-x))+str(y).split('.')[0]))
-                if x > 0 and 'A' <= board[i-9] <= 'Z':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(x-1)))+str(y).split('.')[0]))
-                if x < 7 and 'A' <= board[i-7] <= 'Z':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(x+1)))+str(y).split('.')[0]))
-        # Rook
-        if board[i] == 'r':
-            tempX = x
-            tempY = int(y)
-            while tempX > 0:
-                tempX -= 1
-                if board[tempY * 8 + tempX] == '.':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                else:
-                    if 'A' <= board[tempY * 8 + tempX] <= 'Z':
-                        moves.append(
-                            orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                    break
-            tempX = x
-            while tempX < 7:
-                tempX += 1
-                if board[tempY * 8 + tempX] == '.':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                else:
-                    if 'A' <= board[tempY * 8 + tempX] <= 'Z':
-                        moves.append(
-                            orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                    break
-            tempX = x
-            while tempY > 0:
-                tempY -= 1
-                if board[tempY * 8 + tempX] == '.':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                else:
-                    if 'A' <= board[tempY * 8 + tempX] <= 'Z':
-                        moves.append(
-                            orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                    break
-            tempY = int(y)
-            while tempY < 7:
-                tempY += 1
-                if board[tempY * 8 + tempX] == '.':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                else:
-                    if 'A' <= board[tempY * 8 + tempX] <= 'Z':
-                        moves.append(
-                            orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                    break
-        # Knight
-        if board[i] == 'n':
-            if x > 1:
-                if y > 0:
-                    if board[(y-1) * 8 + (x-2)] == '.' or 'A' <= board[(y-1) * 8 + (x-2)] <= 'Z':
-                        moves.append(
-                            orig + (chr(ord('a')+(7-(x-2)))+str(y).split('.')[0]))
                 if y < 7:
-                    if board[(y+1) * 8 + (x-2)] == '.' or 'A' <= board[(y+1) * 8 + (x-2)] <= 'Z':
+                    if board[i + 8] == '.':
                         moves.append(
-                            orig + (chr(ord('a')+(7-(x-2)))+str(y+2).split('.')[0]))
-            if x > 0:
-                if y > 1:
-                    if board[(y-2) * 8 + (x-1)] == '.' or 'A' <= board[(y-2) * 8 + (x-1)] <= 'Z':
+                            orig + (chr(ord('a')+(7-x))+str(y+2).split('.')[0]))
+                    if x > 0 and 'a' <= board[i+7] <= 'z':
+                        moves.append(
+                            orig + (chr(ord('a')+(7-(x-1)))+str(y+2).split('.')[0]))
+                    if x < 7 and 'a' <= board[i+9] <= 'z':
+                        moves.append(
+                            orig + (chr(ord('a')+(7-(x+1)))+str(y+2).split('.')[0]))
+            # Rook
+            if board[i] == 'R':
+                tempX = x
+                tempY = int(y)
+                while tempX > 0:
+                    tempX -= 1
+                    if board[tempY * 8 + tempX] == '.':
+                        moves.append(
+                            orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                    else:
+                        if 'a' <= board[tempY * 8 + tempX] <= 'z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                        break
+                tempX = x
+                while tempX < 7:
+                    tempX += 1
+                    if board[tempY * 8 + tempX] == '.':
+                        moves.append(
+                            orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                    else:
+                        if 'a' <= board[tempY * 8 + tempX] <= 'z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                        break
+                tempX = x
+                while tempY > 0:
+                    tempY -= 1
+                    if board[tempY * 8 + tempX] == '.':
+                        moves.append(
+                            orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                    else:
+                        if 'a' <= board[tempY * 8 + tempX] <= 'z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                        break
+                tempY = int(y)
+                while tempY < 7:
+                    tempY += 1
+                    if board[tempY * 8 + tempX] == '.':
+                        moves.append(
+                            orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                    else:
+                        if 'a' <= board[tempY * 8 + tempX] <= 'z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                        break
+            # Knight
+            if board[i] == 'N':
+                if x > 1:
+                    if y > 0:
+                        if board[(y-1) * 8 + (x-2)] == '.' or 'a' <= board[(y-1) * 8 + (x-2)] <= 'z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(x-2)))+str(y).split('.')[0]))
+                    if y < 7:
+                        if board[(y+1) * 8 + (x-2)] == '.' or 'a' <= board[(y+1) * 8 + (x-2)] <= 'z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(x-2)))+str(y+2).split('.')[0]))
+                if x > 0:
+                    if y > 1:
+                        if board[(y-2) * 8 + (x-1)] == '.' or 'a' <= board[(y-2) * 8 + (x-1)] <= 'z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(x-1)))+str(y-1).split('.')[0]))
+                    if y < 6:
+                        if board[(y+2) * 8 + (x-1)] == '.' or 'a' <= board[(y+2) * 8 + (x-1)] <= 'z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(x-1)))+str(y+3).split('.')[0]))
+                if x < 6:
+                    if y > 0:
+                        if board[(y-1) * 8 + (x+2)] == '.' or 'a' <= board[(y-1) * 8 + (x+2)] <= 'z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(x+2)))+str(y).split('.')[0]))
+                    if y < 7:
+                        if board[(y+1) * 8 + (x+2)] == '.' or 'a' <= board[(y+1) * 8 + (x+2)] <= 'z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(x+2)))+str(y+2).split('.')[0]))
+                if x < 7:
+                    if y > 1:
+                        if board[(y-2) * 8 + (x+1)] == '.' or 'a' <= board[(y-2) * 8 + (x+1)] <= 'z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(x+1)))+str(y-1).split('.')[0]))
+                    if y < 6:
+                        if board[(y+2) * 8 + (x+1)] == '.' or 'a' <= board[(y+2) * 8 + (x+1)] <= 'z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(x+1)))+str(y+3).split('.')[0]))
+            # Bishop
+            if board[i] == 'B':
+                tempX = x
+                tempY = int(y)
+                while tempX > 0 and tempY > 0:
+                    tempX -= 1
+                    tempY -= 1
+                    if board[tempY * 8 + tempX] == '.':
+                        moves.append(
+                            orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                    else:
+                        if 'a' <= board[tempY * 8 + tempX] <= 'z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                        break
+                tempX = x
+                tempY = int(y)
+                while tempX > 0 and tempY < 7:
+                    tempX -= 1
+                    tempY += 1
+                    if board[tempY * 8 + tempX] == '.':
+                        moves.append(
+                            orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                    else:
+                        if 'a' <= board[tempY * 8 + tempX] <= 'z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                        break
+                tempX = x
+                tempY = int(y)
+                while tempX < 7 and tempY > 0:
+                    tempX += 1
+                    tempY -= 1
+                    if board[tempY * 8 + tempX] == '.':
+                        moves.append(
+                            orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                    else:
+                        if 'a' <= board[tempY * 8 + tempX] <= 'z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                        break
+                tempX = x
+                tempY = int(y)
+                while tempX < 7 and tempY < 7:
+                    tempX += 1
+                    tempY += 1
+                    if board[tempY * 8 + tempX] == '.':
+                        moves.append(
+                            orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                    else:
+                        if 'a' <= board[tempY * 8 + tempX] <= 'z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                        break
+            # Queen
+            if board[i] == 'Q':
+                tempX = x
+                tempY = int(y)
+                while tempX > 0:
+                    tempX -= 1
+                    if board[tempY * 8 + tempX] == '.':
+                        moves.append(
+                            orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                    else:
+                        if 'a' <= board[tempY * 8 + tempX] <= 'z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                        break
+                tempX = x
+                while tempX < 7:
+                    tempX += 1
+                    if board[tempY * 8 + tempX] == '.':
+                        moves.append(
+                            orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                    else:
+                        if 'a' <= board[tempY * 8 + tempX] <= 'z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                        break
+                tempX = x
+                while tempY > 0:
+                    tempY -= 1
+                    if board[tempY * 8 + tempX] == '.':
+                        moves.append(
+                            orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                    else:
+                        if 'a' <= board[tempY * 8 + tempX] <= 'z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                        break
+                tempY = int(y)
+                while tempY < 7:
+                    tempY += 1
+                    if board[tempY * 8 + tempX] == '.':
+                        moves.append(
+                            orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                    else:
+                        if 'a' <= board[tempY * 8 + tempX] <= 'z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                        break
+                tempX = x
+                tempY = int(y)
+                while tempX > 0 and tempY > 0:
+                    tempX -= 1
+                    tempY -= 1
+                    if board[tempY * 8 + tempX] == '.':
+                        moves.append(
+                            orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                    else:
+                        if 'a' <= board[tempY * 8 + tempX] <= 'z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                        break
+                tempX = x
+                tempY = int(y)
+                while tempX > 0 and tempY < 7:
+                    tempX -= 1
+                    tempY += 1
+                    if board[tempY * 8 + tempX] == '.':
+                        moves.append(
+                            orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                    else:
+                        if 'a' <= board[tempY * 8 + tempX] <= 'z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                        break
+                tempX = x
+                tempY = int(y)
+                while tempX < 7 and tempY > 0:
+                    tempX += 1
+                    tempY -= 1
+                    if board[tempY * 8 + tempX] == '.':
+                        moves.append(
+                            orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                    else:
+                        if 'a' <= board[tempY * 8 + tempX] <= 'z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                        break
+                tempX = x
+                tempY = int(y)
+                while tempX < 7 and tempY < 7:
+                    tempX += 1
+                    tempY += 1
+                    if board[tempY * 8 + tempX] == '.':
+                        moves.append(
+                            orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                    else:
+                        if 'a' <= board[tempY * 8 + tempX] <= 'z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                        break
+            # King
+            if board[i] == 'K':
+                if (board[(8*y)+x-1] == '.' or 'a' <= board[(8*y)+x-1] <= 'z') and x > 0:
+                    moves.append(
+                        orig + (chr(ord('a')+(7-(x-1)))+str(y+1).split('.')[0]))
+                if (board[(8*y)+x+1] == '.' or 'a' <= board[(8*y)+x+1] <= 'z') and x < 7:
+                    moves.append(
+                        orig + (chr(ord('a')+(7-(x+1)))+str(y+1).split('.')[0]))
+                if y > 0:
+                    if (board[(8*(y-1))+x-1] == '.' or 'a' <= board[(8*(y-1))+x-1] <= 'z') and x > 0:
+                        moves.append(
+                            orig + (chr(ord('a')+(7-(x-1)))+str(y).split('.')[0]))
+                    if board[(8*(y-1))+x] == '.' or 'a' <= board[(8*(y-1))+x] <= 'z':
+                        moves.append(
+                            orig + (chr(ord('a')+(7-(x)))+str(y).split('.')[0]))
+                    if (board[(8*(y-1))+x+1] == '.' or 'a' <= board[(8*(y-1))+x+1] <= 'z') and x < 7:
+                        moves.append(
+                            orig + (chr(ord('a')+(7-(x+1)))+str(y).split('.')[0]))
+                if y < 7:
+                    if (board[(8*(y+1))+x-1] == '.' or 'a' <= board[(8*(y+1))+x-1] <= 'z') and x > 0:
+                        moves.append(
+                            orig + (chr(ord('a')+(7-(x-1)))+str(y+2).split('.')[0]))
+                    if board[(8*(y+1))+x] == '.' or 'a' <= board[(8*(y+1))+x] <= 'z':
+                        moves.append(
+                            orig + (chr(ord('a')+(7-(x)))+str(y+2).split('.')[0]))
+                    if (board[(8*(y+1))+x+1] == '.' or 'a' <= board[(8*(y+1))+x+1] <= 'z') and x < 7:
+                        moves.append(
+                            orig + (chr(ord('a')+(7-(x+1)))+str(y+2).split('.')[0]))
+        elif player == 1:
+            # Black Pieces
+            # Pawn
+            if board[i] == 'p':
+                if y == 6:
+                    if board[i - 16] == '.':
+                        moves.append(
+                            orig + (chr(ord('a')+(7-x))+str(y-1).split('.')[0]))
+                    if x > 0 and 'A' <= board[i-17] <= 'Z':
                         moves.append(
                             orig + (chr(ord('a')+(7-(x-1)))+str(y-1).split('.')[0]))
-                if y < 6:
-                    if board[(y+2) * 8 + (x-1)] == '.' or 'A' <= board[(y+2) * 8 + (x-1)] <= 'Z':
-                        moves.append(
-                            orig + (chr(ord('a')+(7-(x-1)))+str(y+3).split('.')[0]))
-            if x < 6:
-                if y > 0:
-                    if board[(y-1) * 8 + (x+2)] == '.' or 'A' <= board[(y-1) * 8 + (x+2)] <= 'Z':
-                        moves.append(
-                            orig + (chr(ord('a')+(7-(x+2)))+str(y).split('.')[0]))
-                if y < 7:
-                    if board[(y+1) * 8 + (x+2)] == '.' or 'A' <= board[(y+1) * 8 + (x+2)] <= 'Z':
-                        moves.append(
-                            orig + (chr(ord('a')+(7-(x+2)))+str(y+2).split('.')[0]))
-            if x < 7:
-                if y > 1:
-                    if board[(y-2) * 8 + (x+1)] == '.' or 'A' <= board[(y-2) * 8 + (x+1)] <= 'Z':
+                    if x < 7 and 'A' <= board[i-15] <= 'Z':
                         moves.append(
                             orig + (chr(ord('a')+(7-(x+1)))+str(y-1).split('.')[0]))
-                if y < 6:
-                    if board[(y+2) * 8 + (x+1)] == '.' or 'A' <= board[(y+2) * 8 + (x+1)] <= 'Z':
+                if y > 0:
+                    if board[i - 8] == '.':
                         moves.append(
-                            orig + (chr(ord('a')+(7-(x+1)))+str(y+3).split('.')[0]))
-        # Bishop
-        if board[i] == 'b':
-            tempX = x
-            tempY = int(y)
-            while tempX > 0 and tempY > 0:
-                tempX -= 1
-                tempY -= 1
-                if board[tempY * 8 + tempX] == '.':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                else:
-                    if 'A' <= board[tempY * 8 + tempX] <= 'Z':
+                            orig + (chr(ord('a')+(7-x))+str(y).split('.')[0]))
+                    if x > 0 and 'A' <= board[i-9] <= 'Z':
                         moves.append(
-                            orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                    break
-            tempX = x
-            tempY = int(y)
-            while tempX > 0 and tempY < 7:
-                tempX -= 1
-                tempY += 1
-                if board[tempY * 8 + tempX] == '.':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                else:
-                    if 'A' <= board[tempY * 8 + tempX] <= 'Z':
+                            orig + (chr(ord('a')+(7-(x-1)))+str(y).split('.')[0]))
+                    if x < 7 and 'A' <= board[i-7] <= 'Z':
+                        moves.append(
+                            orig + (chr(ord('a')+(7-(x+1)))+str(y).split('.')[0]))
+            # Rook
+            if board[i] == 'r':
+                tempX = x
+                tempY = int(y)
+                while tempX > 0:
+                    tempX -= 1
+                    if board[tempY * 8 + tempX] == '.':
                         moves.append(
                             orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                    break
-            tempX = x
-            tempY = int(y)
-            while tempX < 7 and tempY > 0:
-                tempX += 1
-                tempY -= 1
-                if board[tempY * 8 + tempX] == '.':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                else:
-                    if 'A' <= board[tempY * 8 + tempX] <= 'Z':
+                    else:
+                        if 'A' <= board[tempY * 8 + tempX] <= 'Z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                        break
+                tempX = x
+                while tempX < 7:
+                    tempX += 1
+                    if board[tempY * 8 + tempX] == '.':
                         moves.append(
                             orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                    break
-            tempX = x
-            tempY = int(y)
-            while tempX < 7 and tempY < 7:
-                tempX += 1
-                tempY += 1
-                if board[tempY * 8 + tempX] == '.':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                else:
-                    if 'A' <= board[tempY * 8 + tempX] <= 'Z':
+                    else:
+                        if 'A' <= board[tempY * 8 + tempX] <= 'Z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                        break
+                tempX = x
+                while tempY > 0:
+                    tempY -= 1
+                    if board[tempY * 8 + tempX] == '.':
                         moves.append(
                             orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                    break
-        # Queen
-        if board[i] == 'q':
-            tempX = x
-            tempY = int(y)
-            while tempX > 0:
-                tempX -= 1
-                if board[tempY * 8 + tempX] == '.':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                else:
-                    if 'A' <= board[tempY * 8 + tempX] <= 'Z':
+                    else:
+                        if 'A' <= board[tempY * 8 + tempX] <= 'Z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                        break
+                tempY = int(y)
+                while tempY < 7:
+                    tempY += 1
+                    if board[tempY * 8 + tempX] == '.':
                         moves.append(
                             orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                    break
-            tempX = x
-            while tempX < 7:
-                tempX += 1
-                if board[tempY * 8 + tempX] == '.':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                else:
-                    if 'A' <= board[tempY * 8 + tempX] <= 'Z':
+                    else:
+                        if 'A' <= board[tempY * 8 + tempX] <= 'Z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                        break
+            # Knight
+            if board[i] == 'n':
+                if x > 1:
+                    if y > 0:
+                        if board[(y-1) * 8 + (x-2)] == '.' or 'A' <= board[(y-1) * 8 + (x-2)] <= 'Z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(x-2)))+str(y).split('.')[0]))
+                    if y < 7:
+                        if board[(y+1) * 8 + (x-2)] == '.' or 'A' <= board[(y+1) * 8 + (x-2)] <= 'Z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(x-2)))+str(y+2).split('.')[0]))
+                if x > 0:
+                    if y > 1:
+                        if board[(y-2) * 8 + (x-1)] == '.' or 'A' <= board[(y-2) * 8 + (x-1)] <= 'Z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(x-1)))+str(y-1).split('.')[0]))
+                    if y < 6:
+                        if board[(y+2) * 8 + (x-1)] == '.' or 'A' <= board[(y+2) * 8 + (x-1)] <= 'Z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(x-1)))+str(y+3).split('.')[0]))
+                if x < 6:
+                    if y > 0:
+                        if board[(y-1) * 8 + (x+2)] == '.' or 'A' <= board[(y-1) * 8 + (x+2)] <= 'Z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(x+2)))+str(y).split('.')[0]))
+                    if y < 7:
+                        if board[(y+1) * 8 + (x+2)] == '.' or 'A' <= board[(y+1) * 8 + (x+2)] <= 'Z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(x+2)))+str(y+2).split('.')[0]))
+                if x < 7:
+                    if y > 1:
+                        if board[(y-2) * 8 + (x+1)] == '.' or 'A' <= board[(y-2) * 8 + (x+1)] <= 'Z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(x+1)))+str(y-1).split('.')[0]))
+                    if y < 6:
+                        if board[(y+2) * 8 + (x+1)] == '.' or 'A' <= board[(y+2) * 8 + (x+1)] <= 'Z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(x+1)))+str(y+3).split('.')[0]))
+            # Bishop
+            if board[i] == 'b':
+                tempX = x
+                tempY = int(y)
+                while tempX > 0 and tempY > 0:
+                    tempX -= 1
+                    tempY -= 1
+                    if board[tempY * 8 + tempX] == '.':
                         moves.append(
                             orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                    break
-            tempX = x
-            while tempY > 0:
-                tempY -= 1
-                if board[tempY * 8 + tempX] == '.':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                else:
-                    if 'A' <= board[tempY * 8 + tempX] <= 'Z':
+                    else:
+                        if 'A' <= board[tempY * 8 + tempX] <= 'Z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                        break
+                tempX = x
+                tempY = int(y)
+                while tempX > 0 and tempY < 7:
+                    tempX -= 1
+                    tempY += 1
+                    if board[tempY * 8 + tempX] == '.':
                         moves.append(
                             orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                    break
-            tempY = int(y)
-            while tempY < 7:
-                tempY += 1
-                if board[tempY * 8 + tempX] == '.':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                else:
-                    if 'A' <= board[tempY * 8 + tempX] <= 'Z':
+                    else:
+                        if 'A' <= board[tempY * 8 + tempX] <= 'Z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                        break
+                tempX = x
+                tempY = int(y)
+                while tempX < 7 and tempY > 0:
+                    tempX += 1
+                    tempY -= 1
+                    if board[tempY * 8 + tempX] == '.':
                         moves.append(
                             orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                    break
-            tempX = x
-            tempY = int(y)
-            while tempX > 0 and tempY > 0:
-                tempX -= 1
-                tempY -= 1
-                if board[tempY * 8 + tempX] == '.':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                else:
-                    if 'A' <= board[tempY * 8 + tempX] <= 'Z':
+                    else:
+                        if 'A' <= board[tempY * 8 + tempX] <= 'Z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                        break
+                tempX = x
+                tempY = int(y)
+                while tempX < 7 and tempY < 7:
+                    tempX += 1
+                    tempY += 1
+                    if board[tempY * 8 + tempX] == '.':
                         moves.append(
                             orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                    break
-            tempX = x
-            tempY = int(y)
-            while tempX > 0 and tempY < 7:
-                tempX -= 1
-                tempY += 1
-                if board[tempY * 8 + tempX] == '.':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                else:
-                    if 'A' <= board[tempY * 8 + tempX] <= 'Z':
+                    else:
+                        if 'A' <= board[tempY * 8 + tempX] <= 'Z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                        break
+            # Queen
+            if board[i] == 'q':
+                tempX = x
+                tempY = int(y)
+                while tempX > 0:
+                    tempX -= 1
+                    if board[tempY * 8 + tempX] == '.':
                         moves.append(
                             orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                    break
-            tempX = x
-            tempY = int(y)
-            while tempX < 7 and tempY > 0:
-                tempX += 1
-                tempY -= 1
-                if board[tempY * 8 + tempX] == '.':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                else:
-                    if 'A' <= board[tempY * 8 + tempX] <= 'Z':
+                    else:
+                        if 'A' <= board[tempY * 8 + tempX] <= 'Z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                        break
+                tempX = x
+                while tempX < 7:
+                    tempX += 1
+                    if board[tempY * 8 + tempX] == '.':
                         moves.append(
                             orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                    break
-            tempX = x
-            tempY = int(y)
-            while tempX < 7 and tempY < 7:
-                tempX += 1
-                tempY += 1
-                if board[tempY * 8 + tempX] == '.':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                else:
-                    if 'A' <= board[tempY * 8 + tempX] <= 'Z':
+                    else:
+                        if 'A' <= board[tempY * 8 + tempX] <= 'Z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                        break
+                tempX = x
+                while tempY > 0:
+                    tempY -= 1
+                    if board[tempY * 8 + tempX] == '.':
                         moves.append(
                             orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
-                    break
-        # King
-        if board[i] == 'k':
-            if (board[(8*y)+x-1] == '.' or 'A' <= board[(8*y)+x-1] <= 'Z') and x > 0:
-                moves.append(
-                    orig + (chr(ord('a')+(7-(x-1)))+str(y+1).split('.')[0]))
-            if (board[(8*y)+x+1] == '.' or 'A' <= board[(8*y)+x+1] <= 'Z') and x < 7:
-                moves.append(
-                    orig + (chr(ord('a')+(7-(x+1)))+str(y+1).split('.')[0]))
-            if y > 0:
-                if (board[(8*(y-1))+x-1] == '.' or 'A' <= board[(8*(y-1))+x-1] <= 'Z') and x > 0:
+                    else:
+                        if 'A' <= board[tempY * 8 + tempX] <= 'Z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                        break
+                tempY = int(y)
+                while tempY < 7:
+                    tempY += 1
+                    if board[tempY * 8 + tempX] == '.':
+                        moves.append(
+                            orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                    else:
+                        if 'A' <= board[tempY * 8 + tempX] <= 'Z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                        break
+                tempX = x
+                tempY = int(y)
+                while tempX > 0 and tempY > 0:
+                    tempX -= 1
+                    tempY -= 1
+                    if board[tempY * 8 + tempX] == '.':
+                        moves.append(
+                            orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                    else:
+                        if 'A' <= board[tempY * 8 + tempX] <= 'Z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                        break
+                tempX = x
+                tempY = int(y)
+                while tempX > 0 and tempY < 7:
+                    tempX -= 1
+                    tempY += 1
+                    if board[tempY * 8 + tempX] == '.':
+                        moves.append(
+                            orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                    else:
+                        if 'A' <= board[tempY * 8 + tempX] <= 'Z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                        break
+                tempX = x
+                tempY = int(y)
+                while tempX < 7 and tempY > 0:
+                    tempX += 1
+                    tempY -= 1
+                    if board[tempY * 8 + tempX] == '.':
+                        moves.append(
+                            orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                    else:
+                        if 'A' <= board[tempY * 8 + tempX] <= 'Z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                        break
+                tempX = x
+                tempY = int(y)
+                while tempX < 7 and tempY < 7:
+                    tempX += 1
+                    tempY += 1
+                    if board[tempY * 8 + tempX] == '.':
+                        moves.append(
+                            orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                    else:
+                        if 'A' <= board[tempY * 8 + tempX] <= 'Z':
+                            moves.append(
+                                orig + (chr(ord('a')+(7-(tempX)))+str(tempY+1).split('.')[0]))
+                        break
+            # King
+            if board[i] == 'k':
+                if (board[(8*y)+x-1] == '.' or 'A' <= board[(8*y)+x-1] <= 'Z') and x > 0:
                     moves.append(
-                        orig + (chr(ord('a')+(7-(x-1)))+str(y).split('.')[0]))
-                if board[(8*(y-1))+x] == '.' or 'A' <= board[(8*(y-1))+x] <= 'Z':
+                        orig + (chr(ord('a')+(7-(x-1)))+str(y+1).split('.')[0]))
+                if (board[(8*y)+x+1] == '.' or 'A' <= board[(8*y)+x+1] <= 'Z') and x < 7:
                     moves.append(
-                        orig + (chr(ord('a')+(7-(x)))+str(y).split('.')[0]))
-                if (board[(8*(y-1))+x+1] == '.' or 'A' <= board[(8*(y-1))+x+1] <= 'Z') and x < 7:
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(x+1)))+str(y).split('.')[0]))
-            if y < 7:
-                if (board[(8*(y+1))+x-1] == '.' or 'A' <= board[(8*(y+1))+x-1] <= 'Z') and x > 0:
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(x-1)))+str(y+2).split('.')[0]))
-                if board[(8*(y+1))+x] == '.' or 'A' <= board[(8*(y+1))+x] <= 'Z':
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(x)))+str(y+2).split('.')[0]))
-                if (board[(8*(y+1))+x+1] == '.' or 'A' <= board[(8*(y+1))+x+1] <= 'Z') and x < 7:
-                    moves.append(
-                        orig + (chr(ord('a')+(7-(x+1)))+str(y+2).split('.')[0]))
+                        orig + (chr(ord('a')+(7-(x+1)))+str(y+1).split('.')[0]))
+                if y > 0:
+                    if (board[(8*(y-1))+x-1] == '.' or 'A' <= board[(8*(y-1))+x-1] <= 'Z') and x > 0:
+                        moves.append(
+                            orig + (chr(ord('a')+(7-(x-1)))+str(y).split('.')[0]))
+                    if board[(8*(y-1))+x] == '.' or 'A' <= board[(8*(y-1))+x] <= 'Z':
+                        moves.append(
+                            orig + (chr(ord('a')+(7-(x)))+str(y).split('.')[0]))
+                    if (board[(8*(y-1))+x+1] == '.' or 'A' <= board[(8*(y-1))+x+1] <= 'Z') and x < 7:
+                        moves.append(
+                            orig + (chr(ord('a')+(7-(x+1)))+str(y).split('.')[0]))
+                if y < 7:
+                    if (board[(8*(y+1))+x-1] == '.' or 'A' <= board[(8*(y+1))+x-1] <= 'Z') and x > 0:
+                        moves.append(
+                            orig + (chr(ord('a')+(7-(x-1)))+str(y+2).split('.')[0]))
+                    if board[(8*(y+1))+x] == '.' or 'A' <= board[(8*(y+1))+x] <= 'Z':
+                        moves.append(
+                            orig + (chr(ord('a')+(7-(x)))+str(y+2).split('.')[0]))
+                    if (board[(8*(y+1))+x+1] == '.' or 'A' <= board[(8*(y+1))+x+1] <= 'Z') and x < 7:
+                        moves.append(
+                            orig + (chr(ord('a')+(7-(x+1)))+str(y+2).split('.')[0]))
 
         board[i]
         i += 1
-    print(moves)
+    # print(moves)
+    return moves
+
+
+def processMove(board, move):
+    print(move)
+    origX = 7-(ord(move[0])-ord('a'))
+    origY = int(move[1])-1
+
+    destX = 7-(ord(move[2])-ord('a'))
+    destY = int(move[3])-1
+    newBoard = (board + '.')[:-1]
+    newBoard = list(newBoard)
+    print(f'({origX},{origY}) - ({destX},{destY})')
+
+    switched = newBoard[origY*8+origX]
+    newBoard[origY*8+origX] = '.'
+    newBoard[destY*8+destX] = switched
+
+    newBoard = "".join(newBoard)
+
+    return newBoard
 
 
 def mainSolver(level, board, player):
     print(f'Solving')
     boardArray = convertBoard(board)
-    getPossibleMoves(boardArray)
+    moves = getPossibleMoves(boardArray, player)
     #print(f'this is the boardArray {boardArray}')
+    i = 7
+    while i >= 0:
+        j = 7
+        while j >= 0:
+            print(f'{boardArray[i*8+j]}', end='')
+            j -= 1
+            if j >= 0:
+                print(f' | ', end='')
+        print()
+        i -= 1
+    boardArray = processMove(boardArray, moves[0])
     i = 7
     while i >= 0:
         j = 7
