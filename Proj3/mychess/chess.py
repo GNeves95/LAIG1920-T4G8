@@ -773,7 +773,7 @@ def mainSolver(level, board, player):
         print()
         i -= 1
     print(value)
-    return boardArray
+    return bestMove[1]
 
 #chessBoard = 'rw|kw|bw|Kw|qw|bw|kw|rw|pw|pw|pw|pw|pw|pw|pw|pw|  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |pb|pb|pb|pb|pb|pb|pb|pb|rb|kb|bb|Kb|qb|bb|kb|rb|'
 
