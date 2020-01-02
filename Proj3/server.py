@@ -36,14 +36,16 @@ class MyTCPHandler(http.server.SimpleHTTPRequestHandler):
         level = int(info[1].split('level:')[1])
         board = info[2]
 
-        chess.mainSolver(1, board, player)
+        answer = chess.mainSolver(1, board, player)
+
         self.send_response(200)
         self.end_headers()
         response = BytesIO()
         response.write(b'')
         response.write(b'')
         response.write(message[1].encode())
-        response.write(post_data)
+        #response.write(post_data)
+        response.write(answer.encode())
         self.wfile.write(response.getvalue())
 
 
