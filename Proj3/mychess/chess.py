@@ -13,6 +13,36 @@ class GameState:
         auxChild = GameState(board, move)
         self.children.append(auxChild)
 
+def boardEval(board):
+    i = 0
+    value = 0
+    while i < 8*8:
+        if board[i] == 'P':
+            value += 10
+        elif board[i] == 'N':
+            value += 30
+        elif board[i] == 'B':
+            value += 30
+        elif board[i] == 'R':
+            value += 50
+        elif board[i] == 'Q':
+            value += 90
+        elif board[i] == 'K':
+            value += 900
+        elif board[i] == 'p':
+            value -= 10
+        elif board[i] == 'n':
+            value -= 30
+        elif board[i] == 'b':
+            value -= 30
+        elif board[i] == 'r':
+            value -= 50
+        elif board[i] == 'q':
+            value -= 90
+        elif board[i] == 'k':
+            value -= 900
+        i+=1
+    return value
 
 def convertBoard(board):
     boardArray = board.split('|')
@@ -682,6 +712,7 @@ def mainSolver(level, board, player):
         print()
         i -= 1
     boardArray = processMove(boardArray, moves[0])
+    value = boardEval(boardArray)
     i = 7
     while i >= 0:
         j = 7
@@ -692,6 +723,7 @@ def mainSolver(level, board, player):
                 print(f' | ', end='')
         print()
         i -= 1
+    print(value)
     return boardArray
 
 #chessBoard = 'rw|kw|bw|Kw|qw|bw|kw|rw|pw|pw|pw|pw|pw|pw|pw|pw|  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |pb|pb|pb|pb|pb|pb|pb|pb|rb|kb|bb|Kb|qb|bb|kb|rb|'
