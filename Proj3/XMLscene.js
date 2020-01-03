@@ -55,6 +55,8 @@ class XMLscene extends CGFscene {
 
         this.background = new MyRectangle(this, "bg", 100, -100, -100, 100);
 
+        this.boardCoords = new MyRectangle(this, 'boardCoords', 0,9,0,9);
+
         this.chessBoard = [];
         this.board2D = [];
         for (var i = 0; i < 8 * 8; i++) {
@@ -140,6 +142,15 @@ class XMLscene extends CGFscene {
                     this.board2D[i + 56] = 'Kb';
                 }
             } else {
+                //if (!this.printed && this.clickedObj.length) {
+                //    console.log("Inside print board");
+                //    console.log(this.clickedObj);
+                //    console.log(currSqr);
+                //    console.log(dist);
+                //    console.log("\nid: " + 171 + "\n");
+                //
+                //    //this.printed=true;
+                //}
                 var newPawn = new ChessPawn(this, "Pawn" + i + "b", false, i - 8, 0, 6, pawnObj);
                 newPawn.scale = [0.3, 0.3, 0.3];
                 newPawn.rotate = [0, 0, 0];
@@ -148,8 +159,8 @@ class XMLscene extends CGFscene {
             }
         }
 
-        var coord1 = this.toChessCoord(0,0);
-        var coord2 = this.toChessCoord(3,5);
+        var coord1 = this.toChessCoord(0, 0);
+        var coord2 = this.toChessCoord(3, 5);
         var coord3 = coord1 + coord2;
 
         console.log(coord3);
@@ -171,11 +182,13 @@ class XMLscene extends CGFscene {
 
         this.commChannel = new Comms();
 
+        this.turn = 0;
+
         //this.commChannel.makeRequest("player:" + 1 + "-" + "level:" + 1 + string);
-        this.sendBoard(1,1);
+        this.sendBoard(1, 1);
     }
 
-    sendBoard(player,level){
+    sendBoard(player, level) {
         var string = "";
         for (var i = 0; i < 8 * 8; i++) {
             string += (this.board2D[i]);
@@ -191,6 +204,7 @@ class XMLscene extends CGFscene {
                 for (var i = 0; i < this.pickResults.length; i++) {
                     var obj = this.pickResults[i][0];
                     if (obj) {
+                        this.printed = false;
                         var customId = this.pickResults[i][1];
                         //console.log(customId);
                         //console.log(obj);
@@ -198,10 +212,11 @@ class XMLscene extends CGFscene {
                             this.clickedObj[0].destx = obj.x;
                             this.clickedObj[0].destz = obj.z;
                             this.rotateCamera();
-                            var auxElem = this.board2D[this.clickedObj[0].z*8 + this.clickedObj[0].x];
-                            this.board2D[this.clickedObj[0].z*8 + this.clickedObj[0].x] = "  ";
-                            this.board2D[obj.z*8+obj.x] = auxElem;
-                            this.sendBoard((this.clickedObj[0].white == true)?1:0,(this.clickedObj[0].white == true)?1:5);
+                            var auxElem = this.board2D[this.clickedObj[0].z * 8 + this.clickedObj[0].x];
+                            this.board2D[this.clickedObj[0].z * 8 + this.clickedObj[0].x] = "  ";
+                            this.board2D[obj.z * 8 + obj.x] = auxElem;
+                            this.turn = 1 - this.turn;
+                            this.sendBoard(this.turn, (this.clickedObj[0].white == true) ? 1 : 5);
                         }
                         obj.clicked = (!(obj.clicked)) || false;
                         if (obj.clicked)
@@ -260,9 +275,9 @@ class XMLscene extends CGFscene {
             }
         }
     }
-    
+
     rotateCamera() {
-        this.camera.destPos = {...this.camera.position};
+        this.camera.destPos = { ...this.camera.position };
         //console.log(auxArray);
         this.camera.destPos[2] = 8 - (this.camera.position[2]);
         //console.log(this.camera);
@@ -335,12 +350,12 @@ class XMLscene extends CGFscene {
             //console.log(dest);
         }
 
-        for (var k = 0; k < dest.length;k++){
-            var makeSelectable = this.chessBoard[dest[k][0]+(dest[k][1]*8)];
-            this.chessBoard[dest[k][0]+(dest[k][1]*8)].selectable = true;
+        for (var k = 0; k < dest.length; k++) {
+            var makeSelectable = this.chessBoard[dest[k][0] + (dest[k][1] * 8)];
+            this.chessBoard[dest[k][0] + (dest[k][1] * 8)].selectable = true;
             makeSelectable.selectable = true;
-            //if (!this.printed)
-            //console.log(makeSelectable);
+            if (!this.printed)
+                console.log(makeSelectable);
         }
 
         //this.printed = true;
@@ -354,33 +369,41 @@ class XMLscene extends CGFscene {
                 //
                 //    this.printed=true;
                 //}
-                this.pushMatrix();
-                if (this.clickedObj.length) {
-                    //console.log("Clicked Object");
-                    //console.log(this.clickedObj);
-                    var dist = Math.sqrt(((this.clickedObj[0].x - currSqr.x) * (this.clickedObj[0].x - currSqr.x) * 1.0) + (((this.clickedObj[0].z) - currSqr.z) * ((this.clickedObj[0].z) - currSqr.z) * 1.0)) * 1.0;
-                    if (!this.printed) {
-                        //console.log(dist + ": (" + this.clickedObj[0].x + "," + this.clickedObj[0].z + ") - (" + currSqr.x + "," + currSqr.z + ")");
-                    }
-                    if (currSqr.selectable) {
-                        if (!this.printed && this.clickedObj.length) {
-                            //console.log("Inside print board");
-                            //console.log(this.clickedObj);
-                            //console.log(currSqr);
-                            //console.log(dist);
-                            //console.log("\nid: " + (i * 8 + j + 100) + "\n");
-
-                            //this.printed=true;
+                if (currSqr.x != 0 || currSqr.z != 0) {
+                    this.pushMatrix();
+                    if (this.clickedObj.length) {
+                        //console.log("Clicked Object");
+                        //console.log(this.clickedObj);
+                        var dist = Math.sqrt(((this.clickedObj[0].x - currSqr.x) * (this.clickedObj[0].x - currSqr.x) * 1.0) + (((this.clickedObj[0].z) - currSqr.z) * ((this.clickedObj[0].z) - currSqr.z) * 1.0)) * 1.0;
+                        if (!this.printed) {
+                            //console.log(dist + ": (" + this.clickedObj[0].x + "," + this.clickedObj[0].z + ") - (" + currSqr.x + "," + currSqr.z + ")");
                         }
+                        if (currSqr.selectable) {
+                            if (!this.printed && this.clickedObj.length) {
+                                console.log("Inside print board");
+                                console.log(this.clickedObj);
+                                console.log(currSqr);
+                                console.log(dist);
+                                console.log("\nid: " + (i * 8 + j + 100) + "\n");
 
-                        this.registerForPick(i * 8 + j + 100, currSqr);
-                        currSqr.registered = true;
-                        currSqr.selectable = false;
+                                //this.printed=true;
+                            }
 
-                        if (currSqr.white) {
-                            this.graph.materials["white_selected"].apply();
+                            this.registerForPick(i * 8 + j + 100, currSqr);
+                            currSqr.registered = true;
+                            currSqr.selectable = false;
+
+                            if (currSqr.white) {
+                                this.graph.materials["white_selected"].apply();
+                            } else {
+                                this.graph.materials["black_selected"].apply();
+                            }
                         } else {
-                            this.graph.materials["black_selected"].apply();
+                            if (currSqr.white) {
+                                this.graph.materials["white"].apply();
+                            } else {
+                                this.graph.materials["black"].apply();
+                            }
                         }
                     } else {
                         if (currSqr.white) {
@@ -389,27 +412,64 @@ class XMLscene extends CGFscene {
                             this.graph.materials["black"].apply();
                         }
                     }
-                } else {
-                    if (currSqr.white) {
-                        this.graph.materials["white"].apply();
-                    } else {
-                        this.graph.materials["black"].apply();
-                    }
+                    //var transfMatrix = mat4.create();
+                    //transfMatrix = mat4.translate(transfMatrix, transfMatrix, [currSqr.x, 0, currSqr.z]);
+                    //if (this.clickedObj.length != 0) {
+                    //    this.registerForPick(i + 100, currSqr);
+                    //    currSqr.registered = true;
+                    //}
+                    //this.multMatrix(transfMatrix);
+                    currSqr.display();
+                    this.popMatrix();
+                    if (currSqr.registered)
+                        this.clearPickRegistration();
+                    //this.clearPickRegistration();
                 }
-                //var transfMatrix = mat4.create();
-                //transfMatrix = mat4.translate(transfMatrix, transfMatrix, [currSqr.x, 0, currSqr.z]);
-                //if (this.clickedObj.length != 0) {
-                //    this.registerForPick(i + 100, currSqr);
-                //    currSqr.registered = true;
-                //}
-                //this.multMatrix(transfMatrix);
-                currSqr.display();
-                this.popMatrix();
-                if (currSqr.registered)
-                    this.clearPickRegistration();
-                //this.clearPickRegistration();
             }
         }
+
+
+
+
+
+        var currSqr = this.chessBoard[0];
+        this.pushMatrix();
+        if (this.clickedObj.length) {
+            if (currSqr.selectable) {
+
+                this.registerForPick(171, currSqr);
+                currSqr.registered = true;
+                currSqr.selectable = false;
+
+                if (currSqr.white) {
+                    this.graph.materials["white_selected"].apply();
+                } else {
+                    this.graph.materials["black_selected"].apply();
+                }
+            } else {
+                if (currSqr.white) {
+                    this.graph.materials["white"].apply();
+                } else {
+                    this.graph.materials["black"].apply();
+                }
+            }
+        } else {
+            if (currSqr.white) {
+                this.graph.materials["white"].apply();
+            } else {
+                this.graph.materials["black"].apply();
+            }
+        }
+        currSqr.display();
+        this.popMatrix();
+        if (currSqr.registered)
+            this.clearPickRegistration();
+
+
+
+
+
+
         if (this.clickedObj.length) this.printed = true;
         //this.printed = true;
     }
@@ -448,8 +508,8 @@ class XMLscene extends CGFscene {
                     this.camera = this.graph.views[this.defaultView];
         }
 
-        if (this.camera.destPos[2] != this.camera.position[2]){
-            this.camera.position[2] += (this.camera.destPos[2]-this.camera.position[2])/(Math.abs(this.camera.destPos[2]-this.camera.position[2])*10);
+        if (this.camera.destPos[2] != this.camera.position[2]) {
+            this.camera.position[2] += (this.camera.destPos[2] - this.camera.position[2]) / (Math.abs(this.camera.destPos[2] - this.camera.position[2]) * 10);
         }
 
         this.interface.setActiveCamera(this.camera);
@@ -458,7 +518,20 @@ class XMLscene extends CGFscene {
         this.applyViewMatrix();
 
         this.pushMatrix();
-        this.axis.display();
+        //this.axis.display();
+
+        this.pushMatrix();
+        var transfMa = mat4.create();
+        transfMa = mat4.translate(transfMa, transfMa, [8.5, -0.01, -0.5]);
+        transfMa = mat4.scale(transfMa, transfMa, [1,1,1]);
+        transfMa = mat4.rotateX(transfMa, transfMa, DEGREE_TO_RAD * -90);
+        transfMa = mat4.rotateZ(transfMa, transfMa, DEGREE_TO_RAD * 180);
+        this.multMatrix(transfMa);
+        this.graph.materials['white'].apply();
+        this.graph.textures['board'].bind();
+        this.boardCoords.display();
+        this.graph.textures['board'].unbind();
+        this.popMatrix();
 
         var i = 0;
         for (const key in this.graph.lights) {
@@ -481,6 +554,7 @@ class XMLscene extends CGFscene {
             var transfMatrix = mat4.create();
             transfMatrix = mat4.translate(transfMatrix, transfMatrix, [0, 0, 30]);
             this.multMatrix(transfMatrix);
+            this.graph.materials['sky'].apply();
             this.background.display();
             this.popMatrix();
 
@@ -528,8 +602,9 @@ class XMLscene extends CGFscene {
                     }
                 }
                 this.pushMatrix();
-                if (this.clickedObj.length == 0)
-                    this.registerForPick(i + 1, currObj);
+                if (this.clickedObj.length == 0) {
+                    if ((currObj.white && this.turn == 0) || (!currObj.white && this.turn == 1)) this.registerForPick(i + 1, currObj);
+                }
                 else if (this.clickedObj[0].id == currObj.id)
                     this.registerForPick(i + 1, currObj);
                 var transfMatrix = mat4.create();
@@ -583,20 +658,20 @@ class XMLscene extends CGFscene {
         // ---- END Background, camera and axis setup
     }
 
-    toChessCoord(x,z){
+    toChessCoord(x, z) {
         var chessCoords = '';
-        chessCoords += String.fromCharCode((7 - x)+'a'.charCodeAt(0)) + (z+1);
+        chessCoords += String.fromCharCode((7 - x) + 'a'.charCodeAt(0)) + (z + 1);
         console.log(chessCoords);
         return chessCoords;
     }
 
-    fromChessCoord(chessCoords){
+    fromChessCoord(chessCoords) {
         var coords = [];
-        if (chessCoords.length == 2){
-            coords.push([7-(chessCoords.charCodeAt(0)-'a'.charCodeAt(0)),parseInt(chessCoords[1])-1]);
-        } else if (chessCoords.length == 4){
-            coords.push([7-(chessCoords.charCodeAt(0)-'a'.charCodeAt(0)),parseInt(chessCoords[1])-1]);
-            coords.push([7-(chessCoords.charCodeAt(2)-'a'.charCodeAt(0)),parseInt(chessCoords[3])-1]);
+        if (chessCoords.length == 2) {
+            coords.push([7 - (chessCoords.charCodeAt(0) - 'a'.charCodeAt(0)), parseInt(chessCoords[1]) - 1]);
+        } else if (chessCoords.length == 4) {
+            coords.push([7 - (chessCoords.charCodeAt(0) - 'a'.charCodeAt(0)), parseInt(chessCoords[1]) - 1]);
+            coords.push([7 - (chessCoords.charCodeAt(2) - 'a'.charCodeAt(0)), parseInt(chessCoords[3]) - 1]);
         }
         console.log(coords);
         return coords;
