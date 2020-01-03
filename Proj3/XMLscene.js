@@ -115,7 +115,7 @@ class XMLscene extends CGFscene {
                     this.objectsOnBoard.push(newRook);
                     this.board2D[i + 56] = 'rb';
                 } else if (i == 2 || i == 5) {
-                    var newBishop = new ChessRook(this, "Bishop" + i + "b", false, i, 0, 7, bishopObj);
+                    var newBishop = new ChessBishop(this, "Bishop" + i + "b", false, i, 0, 7, bishopObj);
                     newBishop.scale = [0.3, 0.3, 0.3];
                     newBishop.rotate = [0, 90, 0];
                     this.objectsOnBoard.push(newBishop);
@@ -197,7 +197,11 @@ class XMLscene extends CGFscene {
                         if (customId > 100) {
                             this.clickedObj[0].destx = obj.x;
                             this.clickedObj[0].destz = obj.z;
-
+                            this.rotateCamera();
+                            var auxElem = this.board2D[this.clickedObj[0].z*8 + this.clickedObj[0].x];
+                            this.board2D[this.clickedObj[0].z*8 + this.clickedObj[0].x] = "  ";
+                            this.board2D[obj.z*8+obj.x] = auxElem;
+                            this.sendBoard((this.clickedObj[0].white == true)?1:0,(this.clickedObj[0].white == true)?1:5);
                         }
                         obj.clicked = (!(obj.clicked)) || false;
                         if (obj.clicked)
@@ -255,6 +259,13 @@ class XMLscene extends CGFscene {
                 i++;
             }
         }
+    }
+    
+    rotateCamera() {
+        this.camera.destPos = {...this.camera.position};
+        //console.log(auxArray);
+        this.camera.destPos[2] = 8 - (this.camera.position[2]);
+        //console.log(this.camera);
     }
 
     setDefaultAppearance() {
@@ -319,7 +330,8 @@ class XMLscene extends CGFscene {
         var dest = [];
 
         if (this.clickedObj.length) {
-            dest = this.clickedObj[0].getPossibleMoves();
+            dest = this.clickedObj[0].getPossibleMoves(this.board2D);
+            //console.log(this.clickedObj[0]);
             //console.log(dest);
         }
 
@@ -406,6 +418,9 @@ class XMLscene extends CGFscene {
      * Displays the scene.
      */
     render(isRTT) {
+        if (this.camera.destPos == null)
+            this.camera.destPos = this.camera.position;
+
         this.clearPickRegistration();
         this.logPicking();
 
@@ -431,6 +446,10 @@ class XMLscene extends CGFscene {
             else
                 if (this.graph.views)
                     this.camera = this.graph.views[this.defaultView];
+        }
+
+        if (this.camera.destPos[2] != this.camera.position[2]){
+            this.camera.position[2] += (this.camera.destPos[2]-this.camera.position[2])/(Math.abs(this.camera.destPos[2]-this.camera.position[2])*10);
         }
 
         this.interface.setActiveCamera(this.camera);

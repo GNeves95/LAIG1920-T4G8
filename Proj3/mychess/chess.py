@@ -99,12 +99,12 @@ def getPossibleMoves(board, player):
                     if board[i + 16] == '.':
                         moves.append(
                             orig + (chr(ord('a')+(7-x))+str(y+3).split('.')[0]))
-                    if x > 0 and 'a' <= board[i+15] <= 'z':
+                    '''if x > 0 and 'a' <= board[i+15] <= 'z':
                         moves.append(
                             orig + (chr(ord('a')+(7-(x-1)))+str(y+3).split('.')[0]))
                     if x < 7 and 'a' <= board[i+17] <= 'z':
                         moves.append(
-                            orig + (chr(ord('a')+(7-(x+1)))+str(y+3).split('.')[0]))
+                            orig + (chr(ord('a')+(7-(x+1)))+str(y+3).split('.')[0]))'''
                 if y < 7:
                     if board[i + 8] == '.':
                         moves.append(
@@ -389,12 +389,12 @@ def getPossibleMoves(board, player):
                     if board[i - 16] == '.':
                         moves.append(
                             orig + (chr(ord('a')+(7-x))+str(y-1).split('.')[0]))
-                    if x > 0 and 'A' <= board[i-17] <= 'Z':
+                    '''if x > 0 and 'A' <= board[i-17] <= 'Z':
                         moves.append(
                             orig + (chr(ord('a')+(7-(x-1)))+str(y-1).split('.')[0]))
                     if x < 7 and 'A' <= board[i-15] <= 'Z':
                         moves.append(
-                            orig + (chr(ord('a')+(7-(x+1)))+str(y-1).split('.')[0]))
+                            orig + (chr(ord('a')+(7-(x+1)))+str(y-1).split('.')[0]))'''
                 if y > 0:
                     if board[i - 8] == '.':
                         moves.append(

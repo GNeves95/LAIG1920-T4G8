@@ -19,7 +19,7 @@ class ChessPiece extends CGFobject{
         this.primitiveType = this.scene.gl.TRIANGLES;
         this.initGLBuffers();
     }
-    getPossibleMoves(){};
+    getPossibleMoves(board2D){};
     canMoveTo(x,y){};
     move(x,y){};
 }

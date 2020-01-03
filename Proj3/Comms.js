@@ -1,6 +1,6 @@
 class Comms {
     constructor() {
-        this.response = '';
+        this.answer = '';
         this.hasResponse = false;
     }
 
@@ -11,7 +11,7 @@ class Comms {
 
         request.open('POST', 'http://localhost:' + requestPort + '/', true);
 
-        request.onload = onSuccess || function (data) { console.log("Request successful. Reply: " + data.target.response); };
+        request.onload = onSuccess || function (data) { console.log("Request successful. Reply: " + data.target.response); this.hasResponse = true; this.answer = data.target.response;};
         request.onerror = onError || function () { console.log("Error waiting for response"); };
 
         request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
@@ -25,15 +25,15 @@ class Comms {
 
         // Make Request 
         //console.log(message);
-        this.getPrologRequest(message/*, this.handleReply*/);
         this.hasResponse = false;
+        this.getPrologRequest(message/*, this.handleReply*/);
     }
 
     //Handle the Reply 
     handleReply(data) {
         //document.querySelector("#query_result").innerHTML = data.target.response;
         console.log(data.target.response);
-        this.response = data.target.response;
+        this.answer = data.target.response;
         this.hasResponse = true;
     }
 }
