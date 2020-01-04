@@ -73,6 +73,9 @@ class XMLscene extends CGFscene {
             this.board2D.push('  ');
         }
 
+        this.kingW = null;
+        this.kingB = null;
+
         for (var i = 0; i < 16; i++) {
             if (i < 8) {
                 if (i == 0 || i == 7) {
@@ -105,6 +108,7 @@ class XMLscene extends CGFscene {
                     newKing.rotate = [0, 0, 0];
                     this.objectsOnBoard.push(newKing);
                     this.board2D[i] = 'Kw';
+                    this.kingW = newKing;
                 }
             } else {
                 var newPawn = new ChessPawn(this, "Pawn" + i + "w", true, i - 8, 0, 1, pawnObj);
@@ -147,17 +151,9 @@ class XMLscene extends CGFscene {
                     newKing.rotate = [0, 0, 0];
                     this.objectsOnBoard.push(newKing);
                     this.board2D[i + 56] = 'Kb';
+                    this.kingB = newKing;
                 }
             } else {
-                //if (!this.printed && this.clickedObj.length) {
-                //    console.log("Inside print board");
-                //    console.log(this.clickedObj);
-                //    console.log(currSqr);
-                //    console.log(dist);
-                //    console.log("\nid: " + 171 + "\n");
-                //
-                //    //this.printed=true;
-                //}
                 var newPawn = new ChessPawn(this, "Pawn" + i + "b", false, i - 8, 0, 6, pawnObj);
                 newPawn.scale = [0.3, 0.3, 0.3];
                 newPawn.rotate = [0, 0, 0];
@@ -269,7 +265,7 @@ class XMLscene extends CGFscene {
                             this.board2D[obj.z * 8 + obj.x] = auxElem;
                             this.turn = 1 - this.turn;
                             this.moving[this.turn] = false;
-                            this.sendBoard(this.turn, (this.clickedObj[0].white == true) ? 1 : 5);
+                            this.sendBoard(this.turn, (this.clickedObj[0].white == true) ? 5 : 5);
                         }
                         obj.clicked = (!(obj.clicked)) || false;
                         if (obj.clicked)
@@ -701,7 +697,7 @@ class XMLscene extends CGFscene {
                                     this.processing[this.turn] = false;
                                     this.turn = 1 - this.turn;
                                     this.moving[this.turn] = false;
-                                    this.sendBoard(this.turn, (toMove.white == true) ? 1 : 5);
+                                    this.sendBoard(this.turn, (toMove.white == true) ? 5 : 5);
                                     this.rotateCamera();
                                 }
                             }
