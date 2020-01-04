@@ -45,6 +45,9 @@ class XMLscene extends CGFscene {
 
         this.objectsOnBoard = [];
 
+        this.blackCaptured = [];
+        this.whiteCaptured = [];
+
         var pawnObj = new PawnObj();
         var bishopObj = new BishopObj();
         var rookObj = new RookObj();
@@ -53,9 +56,11 @@ class XMLscene extends CGFscene {
         var kingObj = new KingObj();
         //console.log(rookObj);
 
+        this.newAnswer = "";
+
         this.background = new MyRectangle(this, "bg", 100, -100, -100, 100);
 
-        this.boardCoords = new MyRectangle(this, 'boardCoords', 0,9,0,9);
+        this.boardCoords = new MyRectangle(this, 'boardCoords', 0, 9, 0, 9);
 
         this.chessBoard = [];
         this.board2D = [];
@@ -167,6 +172,8 @@ class XMLscene extends CGFscene {
 
         this.fromChessCoord(coord3);
 
+        this.players = ['h', 'p'];
+
         var string = "";
         for (var i = 0; i < 8 * 8; i++) {
             //if ((i % 8) == 0) { console.log(string); string = ""; }
@@ -180,12 +187,19 @@ class XMLscene extends CGFscene {
 
         this.clickedObj = [];
 
-        this.commChannel = new Comms();
+        this.commChannel = new Comms(this);
 
         this.turn = 0;
 
+        this.processing = [false, false];
+        this.moving = [false, false];
+
         //this.commChannel.makeRequest("player:" + 1 + "-" + "level:" + 1 + string);
         this.sendBoard(1, 1);
+        this.lastAnswer = '';
+        this.gotAnswer = '';
+        this.newAnswer = '';
+        this.wait = false;
     }
 
     sendBoard(player, level) {
@@ -196,6 +210,31 @@ class XMLscene extends CGFscene {
         }
 
         this.commChannel.makeRequest("player:" + player + "-" + "level:" + level + "-" + string);
+    }
+
+    getPieceAt(coords) {
+        for (var i = 0; i < this.objectsOnBoard.length; i++) {
+            var auxObj = this.objectsOnBoard[i];
+            if (auxObj.x == coords[0] && auxObj.z == coords[1]) {
+                return auxObj;
+            }
+        }
+        return null;
+    }
+
+    checkCollision(coords) {
+        var auxObj = this.getPieceAt(coords);
+        if (auxObj) {
+            if (auxObj.white) {
+                this.blackCaptured.push[auxObj];
+                auxObj.destx = (this.blackCaptured.length < 8) ? -3 : -4;
+                auxObj.destz = this.blackCaptured.length % 8;
+            } else {
+                this.blackCaptured.push[auxObj];
+                auxObj.destx = (this.blackCaptured.length < 8) ? 10 : 11;
+                auxObj.destz = this.blackCaptured.length % 8;
+            }
+        }
     }
 
     logPicking() {
@@ -211,11 +250,13 @@ class XMLscene extends CGFscene {
                         if (customId > 100) {
                             this.clickedObj[0].destx = obj.x;
                             this.clickedObj[0].destz = obj.z;
+                            this.checkCollision([obj.x, obj.z]);
                             this.rotateCamera();
                             var auxElem = this.board2D[this.clickedObj[0].z * 8 + this.clickedObj[0].x];
                             this.board2D[this.clickedObj[0].z * 8 + this.clickedObj[0].x] = "  ";
                             this.board2D[obj.z * 8 + obj.x] = auxElem;
                             this.turn = 1 - this.turn;
+                            this.moving[this.turn] = false;
                             this.sendBoard(this.turn, (this.clickedObj[0].white == true) ? 1 : 5);
                         }
                         obj.clicked = (!(obj.clicked)) || false;
@@ -354,8 +395,8 @@ class XMLscene extends CGFscene {
             var makeSelectable = this.chessBoard[dest[k][0] + (dest[k][1] * 8)];
             this.chessBoard[dest[k][0] + (dest[k][1] * 8)].selectable = true;
             makeSelectable.selectable = true;
-            if (!this.printed)
-                console.log(makeSelectable);
+            //if (!this.printed)
+            //console.log(makeSelectable);
         }
 
         //this.printed = true;
@@ -380,11 +421,11 @@ class XMLscene extends CGFscene {
                         }
                         if (currSqr.selectable) {
                             if (!this.printed && this.clickedObj.length) {
-                                console.log("Inside print board");
-                                console.log(this.clickedObj);
-                                console.log(currSqr);
-                                console.log(dist);
-                                console.log("\nid: " + (i * 8 + j + 100) + "\n");
+                                //console.log("Inside print board");
+                                //console.log(this.clickedObj);
+                                //console.log(currSqr);
+                                //console.log(dist);
+                                //console.log("\nid: " + (i * 8 + j + 100) + "\n");
 
                                 //this.printed=true;
                             }
@@ -428,10 +469,6 @@ class XMLscene extends CGFscene {
             }
         }
 
-
-
-
-
         var currSqr = this.chessBoard[0];
         this.pushMatrix();
         if (this.clickedObj.length) {
@@ -464,12 +501,6 @@ class XMLscene extends CGFscene {
         this.popMatrix();
         if (currSqr.registered)
             this.clearPickRegistration();
-
-
-
-
-
-
         if (this.clickedObj.length) this.printed = true;
         //this.printed = true;
     }
@@ -509,7 +540,13 @@ class XMLscene extends CGFscene {
         }
 
         if (this.camera.destPos[2] != this.camera.position[2]) {
+            this.wait = true;
             this.camera.position[2] += (this.camera.destPos[2] - this.camera.position[2]) / (Math.abs(this.camera.destPos[2] - this.camera.position[2]) * 10);
+            if (Math.abs(this.camera.destPos[2] - this.camera.position[2]) < 0.1){
+                this.camera.position[2] = this.camera.destPos[2];
+            }
+        } else {
+            this.wait = false;
         }
 
         this.interface.setActiveCamera(this.camera);
@@ -520,10 +557,23 @@ class XMLscene extends CGFscene {
         this.pushMatrix();
         //this.axis.display();
 
+        this.displayGame();
+
+        this.popMatrix();
+
+        if (!isRTT) {
+            this.gl.disable(this.gl.DEPTH_TEST);
+            //this.secCam.display();
+            this.gl.enable(this.gl.DEPTH_TEST);
+        }
+        // ---- END Background, camera and axis setup
+    }
+
+    displayGame() {
         this.pushMatrix();
         var transfMa = mat4.create();
         transfMa = mat4.translate(transfMa, transfMa, [8.5, -0.01, -0.5]);
-        transfMa = mat4.scale(transfMa, transfMa, [1,1,1]);
+        transfMa = mat4.scale(transfMa, transfMa, [1, 1, 1]);
         transfMa = mat4.rotateX(transfMa, transfMa, DEGREE_TO_RAD * -90);
         transfMa = mat4.rotateZ(transfMa, transfMa, DEGREE_TO_RAD * 180);
         this.multMatrix(transfMa);
@@ -549,6 +599,11 @@ class XMLscene extends CGFscene {
             // Draw axis
             this.setDefaultAppearance();
 
+            if (this.newAnswer != ""){
+                console.log(this.newAnswer);
+                this.gotAnswer = this.newAnswer;
+                this.newAnswer = "";
+            }
 
             this.pushMatrix();
             var transfMatrix = mat4.create();
@@ -580,12 +635,9 @@ class XMLscene extends CGFscene {
                 var currObj = this.objectsOnBoard[i];
                 if (currObj.x != currObj.destx || currObj.z != currObj.destz) {
                     this.clickedObj.splice(0, this.clickedObj.length);
-                    //console.log("Curr coord: (" + currObj.x + ", " + currObj.z + ")\nDest coord: (" + currObj.destx + ", " + currObj.destz + ")\n\n");
                     currObj.clicked = false;
                     var auxX = currObj.destx - currObj.x;
                     var auxZ = currObj.destz - currObj.z;
-                    //currObj.x += (currObj.destx - currObj.x) / (Math.abs(currObj.destx - currObj.x)*10.0);
-                    //currObj.z += (currObj.destz - currObj.z) / (Math.abs(currObj.destz - currObj.z)*10.0);
                     currObj.x += (auxX / (Math.sqrt(auxX * auxX + auxZ * auxZ) * 10));
                     currObj.z += (auxZ / (Math.sqrt(auxX * auxX + auxZ * auxZ) * 10));
                     if (Math.abs(currObj.destx - currObj.x) < 0.1)
@@ -601,9 +653,48 @@ class XMLscene extends CGFscene {
                         currObj.y = 0;
                     }
                 }
+
+                if (this.players[this.turn] == 'p') {
+                    if (!this.wait) {
+                        if (!this.processing[this.turn]) {
+                            if (this.gotAnswer != "") {
+                                //var dest = this.fromChessCoord(this.commChannel.answer);
+                                this.processing[this.turn] = true;
+                                this.lastAnswer = this.gotAnswer;
+                                this.gotAnswer = "";
+                            }
+                        } else {
+                            var dest = this.fromChessCoord(this.lastAnswer);
+                            var toMove = this.getPieceAt(dest[0]);
+                            if (!this.moving[this.turn] && !toMove.clicked) {
+                                toMove.clicked = true;
+                            } else if (!this.moving[this.turn] && toMove.clicked && toMove.y >= 1) {
+                                toMove.destx = dest[1][0];
+                                toMove.destz = dest[1][1];
+                                //TODO
+                                this.checkCollision(dest[1]);
+                                var auxElem = this.board2D[dest[0][1] * 8 + dest[0][0]];
+                                this.board2D[dest[0][1] * 8 + dest[0][0]] = "  ";
+                                this.board2D[dest[1][1] * 8 + dest[1][0]] = auxElem;
+                                this.moving[this.turn] = true;
+                                this.processing[this.turn] = false;
+                                this.turn = 1 - this.turn;
+                                this.moving[this.turn] = false;
+                                this.sendBoard(this.turn, (toMove.white == true) ? 1 : 5);
+                                this.rotateCamera();
+                            }
+                        }
+                    }
+                }
+
+
+
+
+
+
                 this.pushMatrix();
                 if (this.clickedObj.length == 0) {
-                    if ((currObj.white && this.turn == 0) || (!currObj.white && this.turn == 1)) this.registerForPick(i + 1, currObj);
+                    if (((currObj.white && this.turn == 0) || (!currObj.white && this.turn == 1)) && currObj.x >= 0 && currObj.x <= 8 && this.players[this.turn] == 'h') this.registerForPick(i + 1, currObj);
                 }
                 else if (this.clickedObj[0].id == currObj.id)
                     this.registerForPick(i + 1, currObj);
@@ -647,21 +738,16 @@ class XMLscene extends CGFscene {
                 this.popMatrix();
             }
         }
+    }
 
-        this.popMatrix();
+    displayMenu() {
 
-        if (!isRTT) {
-            this.gl.disable(this.gl.DEPTH_TEST);
-            //this.secCam.display();
-            this.gl.enable(this.gl.DEPTH_TEST);
-        }
-        // ---- END Background, camera and axis setup
     }
 
     toChessCoord(x, z) {
         var chessCoords = '';
         chessCoords += String.fromCharCode((7 - x) + 'a'.charCodeAt(0)) + (z + 1);
-        console.log(chessCoords);
+        //console.log(chessCoords);
         return chessCoords;
     }
 
@@ -673,7 +759,7 @@ class XMLscene extends CGFscene {
             coords.push([7 - (chessCoords.charCodeAt(0) - 'a'.charCodeAt(0)), parseInt(chessCoords[1]) - 1]);
             coords.push([7 - (chessCoords.charCodeAt(2) - 'a'.charCodeAt(0)), parseInt(chessCoords[3]) - 1]);
         }
-        console.log(coords);
+        //console.log(coords);
         return coords;
     }
 }
