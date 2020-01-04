@@ -36,7 +36,9 @@ class MyTCPHandler(http.server.SimpleHTTPRequestHandler):
         level = int(info[1].split('level:')[1])
         board = info[2]
 
-        answer = chess.mainSolver(1, board, player)
+        #print(f"Outside is {player} with {level} from {info[0]} and {info[1]}")
+
+        answer = chess.mainSolver(level, board, player)
 
         self.send_response(200)
         self.end_headers()

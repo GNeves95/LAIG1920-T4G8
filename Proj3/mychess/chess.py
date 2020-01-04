@@ -711,6 +711,7 @@ def minimax(depth, currBoard, player, alpha, beta):
         return [boardEval(currBoard.state),currBoard.move]
 
     #moveEval = [0,'']
+    #print(f"{player} at {depth} with {currBoard}")
 
     currMoves = getPossibleMoves(currBoard.state, player)
     if player:
@@ -722,7 +723,7 @@ def minimax(depth, currBoard, player, alpha, beta):
             bestMove = [nextMove[0],x] if nextMove[0] < bestMove[0] else bestMove
             beta = bestMove[0] if bestMove[0] < beta else beta
             #bestMove[1] = x
-            if beta <= alpha:
+            if beta <= alpha or bestMove[0] < -500:
                 return bestMove
         return bestMove
     else:
@@ -734,13 +735,15 @@ def minimax(depth, currBoard, player, alpha, beta):
             bestMove = [nextMove[0],x] if nextMove[0] > bestMove[0] else bestMove
             alpha = bestMove[0] if bestMove[0] > alpha else alpha
             #bestMove[1] = x
-            if beta <= alpha:
+            if beta <= alpha or bestMove[0] > 500:
                 return bestMove
         return bestMove
 
 
 def mainSolver(level, board, player):
     print(f'Solving')
+    level = int(level)
+    player = int(player)
     boardArray = convertBoard(board)
     moves = getPossibleMoves(boardArray, player)
     currBoard = GameState(boardArray, '', None)
@@ -757,7 +760,7 @@ def mainSolver(level, board, player):
         print()
         i -= 1
 
-    bestMove = minimax(level,currBoard,player, -99999, 99999)
+    bestMove = minimax(int(level),currBoard,player, -99999, 99999)
     print(f'The best move is {bestMove}')
 
     boardArray = processMove(boardArray, bestMove[1])

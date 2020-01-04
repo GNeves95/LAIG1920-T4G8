@@ -170,7 +170,7 @@ class XMLscene extends CGFscene {
 
         this.fromChessCoord(coord3);
 
-        this.players = ['h', 'p'];
+        this.players = ['p', 'p'];
 
         var string = "";
         for (var i = 0; i < 8 * 8; i++) {
@@ -193,7 +193,7 @@ class XMLscene extends CGFscene {
         this.moving = [false, false];
 
         //this.commChannel.makeRequest("player:" + 1 + "-" + "level:" + 1 + string);
-        this.sendBoard(1, 1);
+        this.sendBoard(0, 5);
         this.lastAnswer = '';
         this.gotAnswer = '';
         this.newAnswer = '';
