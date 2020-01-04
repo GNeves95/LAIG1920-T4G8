@@ -48,6 +48,8 @@ class XMLscene extends CGFscene {
         this.blackCaptured = [];
         this.whiteCaptured = [];
 
+        this.gameMoves = [];
+
         var pawnObj = new PawnObj();
         var bishopObj = new BishopObj();
         var rookObj = new RookObj();
@@ -226,15 +228,16 @@ class XMLscene extends CGFscene {
         var auxObj = this.getPieceAt(coords);
         if (auxObj) {
             if (auxObj.white) {
-                this.blackCaptured.push[auxObj];
+                this.blackCaptured.push([auxObj]);
                 auxObj.destx = (this.blackCaptured.length < 8) ? -3 : -4;
                 auxObj.destz = this.blackCaptured.length % 8;
             } else {
-                this.blackCaptured.push[auxObj];
-                auxObj.destx = (this.blackCaptured.length < 8) ? 10 : 11;
-                auxObj.destz = this.blackCaptured.length % 8;
+                this.whiteCaptured.push([auxObj]);
+                auxObj.destx = (this.whiteCaptured.length < 8) ? 10 : 11;
+                auxObj.destz = this.whiteCaptured.length % 8;
             }
         }
+        return auxObj;
     }
 
     logPicking() {
@@ -250,7 +253,16 @@ class XMLscene extends CGFscene {
                         if (customId > 100) {
                             this.clickedObj[0].destx = obj.x;
                             this.clickedObj[0].destz = obj.z;
-                            this.checkCollision([obj.x, obj.z]);
+                            var auxObj = this.checkCollision([obj.x, obj.z]);
+                            var origin = this.toChessCoord(this.clickedObj[0].x, this.clickedObj[0].z) + this.toChessCoord(obj.x, obj.z);
+                            if (auxObj) {
+                                var captured = this.toChessCoord(auxObj.x, auxObj.z) + this.toChessCoord(auxObj.destx, auxObj.destz);
+                                this.gameMoves.push(origin + '-' + captured);
+                            } else {
+                                this.gameMoves.push(origin);
+                            }
+
+                            console.log(this.gameMoves);
                             this.rotateCamera();
                             var auxElem = this.board2D[this.clickedObj[0].z * 8 + this.clickedObj[0].x];
                             this.board2D[this.clickedObj[0].z * 8 + this.clickedObj[0].x] = "  ";
@@ -666,22 +678,32 @@ class XMLscene extends CGFscene {
                         } else {
                             var dest = this.fromChessCoord(this.lastAnswer);
                             var toMove = this.getPieceAt(dest[0]);
-                            if (!this.moving[this.turn] && !toMove.clicked) {
-                                toMove.clicked = true;
-                            } else if (!this.moving[this.turn] && toMove.clicked && toMove.y >= 1) {
-                                toMove.destx = dest[1][0];
-                                toMove.destz = dest[1][1];
-                                //TODO
-                                this.checkCollision(dest[1]);
-                                var auxElem = this.board2D[dest[0][1] * 8 + dest[0][0]];
-                                this.board2D[dest[0][1] * 8 + dest[0][0]] = "  ";
-                                this.board2D[dest[1][1] * 8 + dest[1][0]] = auxElem;
-                                this.moving[this.turn] = true;
-                                this.processing[this.turn] = false;
-                                this.turn = 1 - this.turn;
-                                this.moving[this.turn] = false;
-                                this.sendBoard(this.turn, (toMove.white == true) ? 1 : 5);
-                                this.rotateCamera();
+                            if (toMove){
+                                if (!this.moving[this.turn] && !toMove.clicked) {
+                                    toMove.clicked = true;
+                                } else if (!this.moving[this.turn] && toMove.clicked && toMove.y >= 1) {
+                                    toMove.destx = dest[1][0];
+                                    toMove.destz = dest[1][1];
+                                    //TODO
+                                    var auxObj = this.checkCollision(dest[1]);
+                                    var origin = this.toChessCoord(toMove.x, toMove.z) + this.toChessCoord(toMove.destx, toMove.destz);
+                                    if (auxObj) {
+                                        var captured = this.toChessCoord(auxObj.x, auxObj.z) + this.toChessCoord(auxObj.destx, auxObj.destz);
+                                        this.gameMoves.push(origin + '-' + captured);
+                                    } else {
+                                        this.gameMoves.push(origin);
+                                    }
+                                    console.log(this.gameMoves);
+                                    var auxElem = this.board2D[dest[0][1] * 8 + dest[0][0]];
+                                    this.board2D[dest[0][1] * 8 + dest[0][0]] = "  ";
+                                    this.board2D[dest[1][1] * 8 + dest[1][0]] = auxElem;
+                                    this.moving[this.turn] = true;
+                                    this.processing[this.turn] = false;
+                                    this.turn = 1 - this.turn;
+                                    this.moving[this.turn] = false;
+                                    this.sendBoard(this.turn, (toMove.white == true) ? 1 : 5);
+                                    this.rotateCamera();
+                                }
                             }
                         }
                     }
