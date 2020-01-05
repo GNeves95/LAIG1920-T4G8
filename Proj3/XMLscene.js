@@ -71,14 +71,15 @@ class XMLscene extends CGFscene {
 
         this.gameMoves = [];
 
-        var pawnObj = new PawnObj();
-        var bishopObj = new BishopObj();
-        var rookObj = new RookObj();
-        var knightObj = new KnightObj();
-        var queenObj = new QueenObj();
-        var kingObj = new KingObj();
-        var pcObj = new PcObj();
-        var manObj = new ManObj();
+        this.pawnObj = new PawnObj();
+        this.bishopObj = new BishopObj();
+        this.rookObj = new RookObj();
+        this.knightObj = new KnightObj();
+        this.queenObj = new QueenObj();
+        this.kingObj = new KingObj();
+        this.pcObj = new PcObj();
+        this.manObj = new ManObj();
+
         //console.log(rookObj);
 
         this.newAnswer = "";
@@ -87,9 +88,9 @@ class XMLscene extends CGFscene {
 
         this.boardCoords = new MyRectangle(this, 'boardCoords', 0, 9, 0, 9);
 
-        this.pcPiece = new PcPiece(this, 'pc0', true, 0, 0, 0, pcObj);
+        this.pcPiece = new PcPiece(this, 'pc0', true, 0, 0, 0, this.pcObj);
 
-        this.manPiece = new ManPiece(this, 'man0', true, 0, 0, 0, manObj);
+        this.manPiece = new ManPiece(this, 'man0', true, 0, 0, 0, this.manObj);
 
         //console.log(this.manPiece);
 
@@ -108,31 +109,31 @@ class XMLscene extends CGFscene {
         for (var i = 0; i < 16; i++) {
             if (i < 8) {
                 if (i == 0 || i == 7) {
-                    var newRook = new ChessRook(this, "Rook" + i + "w", true, i, 0, 0, rookObj);
+                    var newRook = new ChessRook(this, "Rook" + i + "w", true, i, 0, 0, this.rookObj);
                     newRook.scale = [0.3, 0.3, 0.3];
                     newRook.rotate = [0, 0, 0];
                     this.objectsOnBoard.push(newRook);
                     this.board2D[i] = 'rw';
                 } else if (i == 2 || i == 5) {
-                    var newBishop = new ChessBishop(this, "Bishop" + i + "w", true, i, 0, 0, bishopObj);
+                    var newBishop = new ChessBishop(this, "Bishop" + i + "w", true, i, 0, 0, this.bishopObj);
                     newBishop.scale = [0.3, 0.3, 0.3];
                     newBishop.rotate = [0, -90, 0];
                     this.objectsOnBoard.push(newBishop);
                     this.board2D[i] = 'bw';
                 } else if (i == 1 || i == 6) {
-                    var newKnight = new ChessKnight(this, "Knight" + i + "w", true, i, 0, 0, knightObj);
+                    var newKnight = new ChessKnight(this, "Knight" + i + "w", true, i, 0, 0, this.knightObj);
                     newKnight.scale = [0.3, 0.3, 0.3];
                     newKnight.rotate = [0, 0, 0];
                     this.objectsOnBoard.push(newKnight);
                     this.board2D[i] = 'kw';
                 } else if (i == 4) {
-                    var newQueen = new ChessQueen(this, "Queen" + i + "w", true, i, 0, 0, queenObj);
+                    var newQueen = new ChessQueen(this, "Queen" + i + "w", true, i, 0, 0, this.queenObj);
                     newQueen.scale = [0.3, 0.3, 0.3];
                     newQueen.rotate = [0, 0, 0];
                     this.objectsOnBoard.push(newQueen);
                     this.board2D[i] = 'qw';
                 } else {
-                    var newKing = new ChessKing(this, "King" + i + "w", true, i, 0, 0, kingObj);
+                    var newKing = new ChessKing(this, "King" + i + "w", true, i, 0, 0, this.kingObj);
                     newKing.scale = [0.1, 0.1, 0.1];
                     newKing.rotate = [0, 0, 0];
                     this.objectsOnBoard.push(newKing);
@@ -140,7 +141,7 @@ class XMLscene extends CGFscene {
                     this.kingW = newKing;
                 }
             } else {
-                var newPawn = new ChessPawn(this, "Pawn" + i + "w", true, i - 8, 0, 1, pawnObj);
+                var newPawn = new ChessPawn(this, "Pawn" + i + "w", true, i - 8, 0, 1, this.pawnObj);
                 newPawn.scale = [0.3, 0.3, 0.3];
                 newPawn.rotate = [0, 0, 0];
                 this.objectsOnBoard.push(newPawn);
@@ -151,31 +152,31 @@ class XMLscene extends CGFscene {
         for (var i = 0; i < 16; i++) {
             if (i < 8) {
                 if (i == 0 || i == 7) {
-                    var newRook = new ChessRook(this, "Rook" + i + "b", false, i, 0, 7, rookObj);
+                    var newRook = new ChessRook(this, "Rook" + i + "b", false, i, 0, 7, this.rookObj);
                     newRook.scale = [0.3, 0.3, 0.3];
                     newRook.rotate = [0, 0, 0];
                     this.objectsOnBoard.push(newRook);
                     this.board2D[i + 56] = 'rb';
                 } else if (i == 2 || i == 5) {
-                    var newBishop = new ChessBishop(this, "Bishop" + i + "b", false, i, 0, 7, bishopObj);
+                    var newBishop = new ChessBishop(this, "Bishop" + i + "b", false, i, 0, 7, this.bishopObj);
                     newBishop.scale = [0.3, 0.3, 0.3];
                     newBishop.rotate = [0, 90, 0];
                     this.objectsOnBoard.push(newBishop);
                     this.board2D[i + 56] = 'bb';
                 } else if (i == 1 || i == 6) {
-                    var newKnight = new ChessKnight(this, "Knight" + i + "b", false, i, 0, 7, knightObj);
+                    var newKnight = new ChessKnight(this, "Knight" + i + "b", false, i, 0, 7, this.knightObj);
                     newKnight.scale = [0.3, 0.3, 0.3];
                     newKnight.rotate = [0, 180, 0];
                     this.objectsOnBoard.push(newKnight);
                     this.board2D[i + 56] = 'kb';
                 } else if (i == 4) {
-                    var newQueen = new ChessQueen(this, "Queen" + i + "b", false, i, 0, 7, queenObj);
+                    var newQueen = new ChessQueen(this, "Queen" + i + "b", false, i, 0, 7, this.queenObj);
                     newQueen.scale = [0.3, 0.3, 0.3];
                     newQueen.rotate = [0, 0, 0];
                     this.objectsOnBoard.push(newQueen);
                     this.board2D[i + 56] = 'qb';
                 } else {
-                    var newKing = new ChessKing(this, "King" + i + "b", false, i, 0, 7, kingObj);
+                    var newKing = new ChessKing(this, "King" + i + "b", false, i, 0, 7, this.kingObj);
                     newKing.scale = [0.1, 0.1, 0.1];
                     newKing.rotate = [0, 0, 0];
                     this.objectsOnBoard.push(newKing);
@@ -183,7 +184,7 @@ class XMLscene extends CGFscene {
                     this.kingB = newKing;
                 }
             } else {
-                var newPawn = new ChessPawn(this, "Pawn" + i + "b", false, i - 8, 0, 6, pawnObj);
+                var newPawn = new ChessPawn(this, "Pawn" + i + "b", false, i - 8, 0, 6, this.pawnObj);
                 newPawn.scale = [0.3, 0.3, 0.3];
                 newPawn.rotate = [0, 0, 0];
                 this.objectsOnBoard.push(newPawn);
@@ -219,13 +220,17 @@ class XMLscene extends CGFscene {
 
         this.turn = 0;
 
+        this.whiteWin = false;
+        this.blackWin = false;
+
+        this.gameOver = false;
+
         this.processing = [false, false];
         this.moving = [false, false];
 
         this.gameState = ['Menu', null];
 
         //this.commChannel.makeRequest("player:" + 1 + "-" + "level:" + 1 + string);
-        this.sendBoard(0, this.difficulty[0]);
         this.lastAnswer = '';
         this.gotAnswer = '';
         this.newAnswer = '';
@@ -233,6 +238,7 @@ class XMLscene extends CGFscene {
     }
 
     sendBoard(player, level) {
+        console.log("Sending" + player + level);
         var string = "";
         for (var i = 0; i < 8 * 8; i++) {
             string += (this.board2D[i]);
@@ -265,6 +271,15 @@ class XMLscene extends CGFscene {
                 auxObj.destz = this.whiteCaptured.length % 8;
             }
         }
+
+        if (this.kingW.destx > 8 || this.kingW.destx < 0) {
+            this.blackWin = true;
+            this.gameOver = true;
+        } else if (this.kingB.destx > 8 || this.kingB.destx < 0) {
+            this.whiteWin = true;
+            this.gameOver = true;
+        }
+
         return auxObj;
     }
 
@@ -279,7 +294,7 @@ class XMLscene extends CGFscene {
                         var customId = this.pickResults[i][1];
                         //console.log(customId);
                         //console.log(obj);
-                        if (customId == 200) { this.gameState[0] = 'Game'; add = false; }
+                        if (customId == 200) { this.gameState[0] = 'Game'; add = false; if (this.players[0] == 'p') this.sendBoard(0, this.difficulty[0]);}
                         else if (customId == 201) { this.gameState[0] = 'Options'; add = false; }
                         else if (customId == 203) { this.gameState[0] = 'Menu'; add = false; }
                         else if (customId == 210) { this.gameState[0] = 'Choose'; this.gameState[1] = 0; add = false; }
@@ -308,7 +323,8 @@ class XMLscene extends CGFscene {
                             this.board2D[obj.z * 8 + obj.x] = auxElem;
                             this.turn = 1 - this.turn;
                             this.moving[this.turn] = false;
-                            this.sendBoard(this.turn, this.difficulty[this.turn]);
+                            console.log(this.turn + " " )
+                            if (!this.gameOver && this.players[this.turn] == 'p') this.sendBoard(this.turn, this.difficulty[this.turn]);
                         }
                         if (add) {
                             obj.clicked = (!(obj.clicked)) || false;
@@ -632,44 +648,6 @@ class XMLscene extends CGFscene {
         else if (this.gameState[0] == 'Game')
             this.displayGame();
 
-        //this.displayMenu();
-        //this.optionsMenu();
-        //this.difficultyMenu();
-        //this.displayGame();
-
-        /*this.pushMatrix();
-        var transfMatrix = mat4.create();
-        transfMatrix = mat4.translate(transfMatrix, transfMatrix, [0, 0, 30]);
-        this.multMatrix(transfMatrix);
-        this.graph.materials['sky'].apply();
-        this.background.display();
-        this.popMatrix();
-
-
-        this.pushMatrix();
-        var transfMa = mat4.create();
-        transfMa = mat4.translate(transfMa, transfMa, [4, 0, 4]);
-        transfMa = mat4.scale(transfMa, transfMa, [0.05, 0.05, 0.05]);
-        transfMa = mat4.rotateY(transfMa, transfMa, DEGREE_TO_RAD * 180);
-        this.multMatrix(transfMa);
-        this.graph.materials['white'].apply();
-        this.manPiece.display();
-        this.popMatrix();
-
-        this.pushMatrix();
-        var transfMa = mat4.create();
-        transfMa = mat4.translate(transfMa, transfMa, [2, 0.5, 4]);
-        transfMa = mat4.scale(transfMa, transfMa, [0.5, 0.5, 0.5]);
-        transfMa = mat4.rotateY(transfMa, transfMa, DEGREE_TO_RAD * 90);
-        this.multMatrix(transfMa);
-        this.graph.materials['black'].apply();
-        //this.graph.textures['board'].bind();
-        this.pcPiece.display();
-        //this.graph.textures['board'].unbind();
-        this.popMatrix();*/
-
-        //this.displayGame();
-
         this.popMatrix();
 
         if (!isRTT) {
@@ -686,40 +664,40 @@ class XMLscene extends CGFscene {
             Mat = 'white';
         else
             Mat = 'black';
-        
-            this.pushMatrix();
-            this.registerForPick(220, this.backButton);
-            var transfMatrix = mat4.create();
-            transfMatrix = mat4.translate(transfMatrix, transfMatrix, [6, 0.5, 1]);
-            this.multMatrix(transfMatrix);
-            this.graph.materials['white'].apply();
-            this.whiteButton.display();
-            this.displayMAN(Mat);
-            this.clearPickRegistration();
-    
-            this.popMatrix();
-    
-    
-            this.pushMatrix();
-            this.registerForPick(221, this.backButton);
-            var transfMatrix = mat4.create();
-            transfMatrix = mat4.translate(transfMatrix, transfMatrix, [1, 0.5, 1]);
-            this.multMatrix(transfMatrix);
-            this.graph.materials['white'].apply();
-            this.blackButton.display();
-            this.displayPC(Mat);
-            this.clearPickRegistration();
-    
-            this.popMatrix();
-            this.pushMatrix();
-            var transfMatrix = mat4.create();
-            transfMatrix = mat4.translate(transfMatrix, transfMatrix, [4, 3.5, 4]);
-            this.multMatrix(transfMatrix);
-            this.graph.materials['white'].apply();
-            this.registerForPick(203, this.backButton);
-            this.backButton.display();
-            this.clearPickRegistration();
-            this.popMatrix();
+
+        this.pushMatrix();
+        this.registerForPick(220, this.backButton);
+        var transfMatrix = mat4.create();
+        transfMatrix = mat4.translate(transfMatrix, transfMatrix, [6, 0.5, 1]);
+        this.multMatrix(transfMatrix);
+        this.graph.materials['white'].apply();
+        this.whiteButton.display();
+        this.displayMAN(Mat);
+        this.clearPickRegistration();
+
+        this.popMatrix();
+
+
+        this.pushMatrix();
+        this.registerForPick(221, this.backButton);
+        var transfMatrix = mat4.create();
+        transfMatrix = mat4.translate(transfMatrix, transfMatrix, [1, 0.5, 1]);
+        this.multMatrix(transfMatrix);
+        this.graph.materials['white'].apply();
+        this.blackButton.display();
+        this.displayPC(Mat);
+        this.clearPickRegistration();
+
+        this.popMatrix();
+        this.pushMatrix();
+        var transfMatrix = mat4.create();
+        transfMatrix = mat4.translate(transfMatrix, transfMatrix, [4, 3.5, 4]);
+        this.multMatrix(transfMatrix);
+        this.graph.materials['white'].apply();
+        this.registerForPick(203, this.backButton);
+        this.backButton.display();
+        this.clearPickRegistration();
+        this.popMatrix();
     }
 
     difficultyMenu() {
@@ -868,6 +846,14 @@ class XMLscene extends CGFscene {
     }
 
     displayGame() {
+        if (this.kingW.destx > 8 || this.kingW.destx < 0) {
+            this.blackWin = true;
+            this.gameOver = true;
+        } else if (this.kingB.destx > 8 || this.kingB.destx < 0) {
+            this.whiteWin = true;
+            this.gameOver = true;
+        }
+
         this.pushMatrix();
         var transfMa = mat4.create();
         transfMa = mat4.translate(transfMa, transfMa, [8.5, -0.01, -0.5]);
@@ -954,7 +940,7 @@ class XMLscene extends CGFscene {
                             var dest = this.fromChessCoord(this.lastAnswer);
                             var toMove = this.getPieceAt(dest[0]);
                             if (toMove) {
-                                if (!this.moving[this.turn] && !toMove.clicked) {
+                                if (!this.moving[this.turn] && !toMove.clicked && !this.gameOver) {
                                     toMove.clicked = true;
                                 } else if (!this.moving[this.turn] && toMove.clicked && toMove.y >= 1) {
                                     toMove.destx = dest[1][0];
@@ -976,7 +962,7 @@ class XMLscene extends CGFscene {
                                     this.processing[this.turn] = false;
                                     this.turn = 1 - this.turn;
                                     this.moving[this.turn] = false;
-                                    if (this.players[this.turn] == 'p') this.sendBoard(this.turn, this.difficulty[this.turn]);
+                                    if (this.players[this.turn] == 'p' && !this.gameOver) this.sendBoard(this.turn, this.difficulty[this.turn]);
                                     this.rotateCamera();
                                 }
                             }
@@ -991,9 +977,9 @@ class XMLscene extends CGFscene {
 
                 this.pushMatrix();
                 if (this.clickedObj.length == 0) {
-                    if (((currObj.white && this.turn == 0) || (!currObj.white && this.turn == 1)) && currObj.x >= 0 && currObj.x <= 8 && this.players[this.turn] == 'h') this.registerForPick(i + 1, currObj);
+                    if (((currObj.white && this.turn == 0) || (!currObj.white && this.turn == 1)) && currObj.x >= 0 && currObj.x <= 8 && this.players[this.turn] == 'h' && !this.gameOver) this.registerForPick(i + 1, currObj);
                 }
-                else if (this.clickedObj[0].id == currObj.id)
+                else if (this.clickedObj[0].id == currObj.id && !this.gameOver)
                     this.registerForPick(i + 1, currObj);
                 var transfMatrix = mat4.create();
                 transfMatrix = mat4.translate(transfMatrix, transfMatrix, [currObj.x + 0.5, currObj.y, currObj.z + 0.5]);
@@ -1022,6 +1008,7 @@ class XMLscene extends CGFscene {
                     }
                 }
                 this.popMatrix();
+                if ((currObj.white && this.whiteWin) || (!currObj.white && this.blackWin)) currObj.y = Math.sin(this.last / 800);
                 currObj.display();
                 if (currObj.white) {
                     this.graph.materials["white"].apply();
@@ -1034,6 +1021,18 @@ class XMLscene extends CGFscene {
                     this.clearPickRegistration();
                 this.popMatrix();
             }
+        }
+        
+        if (this.gameOver) {
+            this.pushMatrix();
+            var transfMatrix = mat4.create();
+            transfMatrix = mat4.translate(transfMatrix, transfMatrix, [4, 3.5, 4]);
+            this.multMatrix(transfMatrix);
+            this.graph.materials['white'].apply();
+            this.registerForPick(203, this.backButton);
+            this.backButton.display();
+            this.clearPickRegistration();
+            this.popMatrix();
         }
     }
 
