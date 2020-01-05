@@ -110,7 +110,7 @@ class XMLscene extends CGFscene {
             if (i < 8) {
                 if (i == 0 || i == 7) {
                     var newRook = new ChessRook(this, "Rook" + i + "w", true, i, 0, 0, this.rookObj);
-                    newRook.scale = [0.3, 0.3, 0.3];
+                    newRook.scale = [0.15, 0.15, 0.15];
                     newRook.rotate = [0, 0, 0];
                     this.objectsOnBoard.push(newRook);
                     this.board2D[i] = 'rw';
@@ -153,7 +153,7 @@ class XMLscene extends CGFscene {
             if (i < 8) {
                 if (i == 0 || i == 7) {
                     var newRook = new ChessRook(this, "Rook" + i + "b", false, i, 0, 7, this.rookObj);
-                    newRook.scale = [0.3, 0.3, 0.3];
+                    newRook.scale = [0.15, 0.15, 0.15];
                     newRook.rotate = [0, 0, 0];
                     this.objectsOnBoard.push(newRook);
                     this.board2D[i + 56] = 'rb';

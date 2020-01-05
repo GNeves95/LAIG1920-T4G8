@@ -3,7 +3,8 @@ class RookObj extends ObjFile{
         super();
         var xmlhttp = new XMLHttpRequest();
         var body;
-        xmlhttp.open("GET", "chess_rook_complex.obj", false);
+        xmlhttp.open("GET", "lowpolyrooktest.obj", false);
+        //xmlhttp.open("GET", "chess_rook_complex.obj", false);
         xmlhttp.send();
         xmlhttp.onload = function () {
             if (xmlhttp.status != 200) { // analyze HTTP status of the response
