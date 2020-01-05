@@ -53,6 +53,7 @@ class XMLscene extends CGFscene {
         this.whiteButton = new MyButton(this, 'WhiteButton', true, 0, 0, 0, this.whiteTexture);
         this.easyButton = new MyButton(this, 'easyButton', true, 0, 0, 0, this.easyTexture);
         this.mediumButton = new MyButton(this, 'mediumButton', true, 0, 0, 0, this.mediumTexture);
+        this.hardButton = new MyButton(this, 'hardButton', true, 0, 0, 0, this.hardTexture);
         this.humanButton = new MyButton(this, 'humanButton', true, 0, 0, 0, this.humanTexture);
         this.aiButton = new MyButton(this, 'aiButton', true, 0, 0, 0, this.aiTexture);
 
