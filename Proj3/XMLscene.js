@@ -199,7 +199,7 @@ class XMLscene extends CGFscene {
 
         this.fromChessCoord(coord3);
 
-        this.players = ['h', 'p'];
+        this.players = ['p', 'p'];
 
         var string = "";
         for (var i = 0; i < 8 * 8; i++) {
@@ -605,106 +605,10 @@ class XMLscene extends CGFscene {
             i++;
         }
 
-        this.pushMatrix();
-        var transfMatrix = mat4.create();
-        transfMatrix = mat4.translate(transfMatrix, transfMatrix, [4, 0.5, 4]);
-        this.multMatrix(transfMatrix);
-        this.graph.materials['white'].apply();
-        this.optionsButton.display();
-        this.popMatrix();
-
-        this.pushMatrix();
-        var transfMatrix = mat4.create();
-        transfMatrix = mat4.translate(transfMatrix, transfMatrix, [4, 2, 4]);
-        this.multMatrix(transfMatrix);
-        this.graph.materials['white'].apply();
-        this.playButton.display();
-        this.popMatrix();
-
-        this.pushMatrix();
-        var transfMatrix = mat4.create();
-        transfMatrix = mat4.translate(transfMatrix, transfMatrix, [4, 3.5, 4]);
-        this.multMatrix(transfMatrix);
-        this.graph.materials['white'].apply();
-        this.backButton.display();
-        this.popMatrix();
-
-        this.pushMatrix();
-        var transfMatrix = mat4.create();
-        transfMatrix = mat4.translate(transfMatrix, transfMatrix, [4, 5, 4]);
-        this.multMatrix(transfMatrix);
-        this.graph.materials['white'].apply();
-        this.feupButton.display();
-        this.popMatrix();
-
-
-        this.pushMatrix();
-        var transfMatrix = mat4.create();
-        transfMatrix = mat4.translate(transfMatrix, transfMatrix, [6, 0.5, 1]);
-        this.multMatrix(transfMatrix);
-        this.graph.materials['white'].apply();
-        this.whiteButton.display();
-
-        this.pushMatrix();
-        var transfMa = mat4.create();
-        transfMa = mat4.translate(transfMa, transfMa, [-0.5, 0.5, 0]);
-        transfMa = mat4.scale(transfMa, transfMa, [0.05, 0.05, 0.05]);
-        transfMa = mat4.rotateY(transfMa, transfMa, DEGREE_TO_RAD * 180);
-        this.multMatrix(transfMa);
-        this.graph.materials['white'].apply();
-        this.manPiece.display();
-        this.popMatrix();
-
-        this.popMatrix();
-
-
-        this.pushMatrix();
-        var transfMatrix = mat4.create();
-        transfMatrix = mat4.translate(transfMatrix, transfMatrix, [1, 0.5, 1]);
-        this.multMatrix(transfMatrix);
-        this.graph.materials['white'].apply();
-        this.blackButton.display();
-
-        this.pushMatrix();
-        var transfMa = mat4.create();
-        transfMa = mat4.translate(transfMa, transfMa, [-0.5, 1.5, 0]);
-        transfMa = mat4.scale(transfMa, transfMa, [0.5, 0.5, 0.5]);
-        transfMa = mat4.rotateY(transfMa, transfMa, DEGREE_TO_RAD * 90);
-        this.multMatrix(transfMa);
-        this.graph.materials['black'].apply();
-        //this.graph.textures['board'].bind();
-        this.pcPiece.display();
-        //this.graph.textures['board'].unbind();
-        this.popMatrix();
-
-        this.popMatrix();
-
-
-        this.pushMatrix();
-        var transfMatrix = mat4.create();
-        transfMatrix = mat4.translate(transfMatrix, transfMatrix, [4, 3.5, 1]);
-        this.multMatrix(transfMatrix);
-        this.graph.materials['white'].apply();
-        this.easyButton.display();
-        this.popMatrix();
-
-
-        this.pushMatrix();
-        var transfMatrix = mat4.create();
-        transfMatrix = mat4.translate(transfMatrix, transfMatrix, [4, 2, 1]);
-        this.multMatrix(transfMatrix);
-        this.graph.materials['white'].apply();
-        this.mediumButton.display();
-        this.popMatrix();
-
-
-        this.pushMatrix();
-        var transfMatrix = mat4.create();
-        transfMatrix = mat4.translate(transfMatrix, transfMatrix, [4, 0.5, 1]);
-        this.multMatrix(transfMatrix);
-        this.graph.materials['white'].apply();
-        this.hardButton.display();
-        this.popMatrix();
+        //this.displayMenu();
+        //this.optionsMenu();
+        //this.difficultyMenu();
+        this.displayGame();
 
         /*this.pushMatrix();
         var transfMatrix = mat4.create();
@@ -747,6 +651,122 @@ class XMLscene extends CGFscene {
             this.gl.enable(this.gl.DEPTH_TEST);
         }
         // ---- END Background, camera and axis setup
+    }
+
+    difficultyMenu() {
+
+        this.pushMatrix();
+        var transfMatrix = mat4.create();
+        transfMatrix = mat4.translate(transfMatrix, transfMatrix, [4, 3.5, 1]);
+        this.multMatrix(transfMatrix);
+        this.graph.materials['white'].apply();
+        this.easyButton.display();
+        this.popMatrix();
+
+
+        this.pushMatrix();
+        var transfMatrix = mat4.create();
+        transfMatrix = mat4.translate(transfMatrix, transfMatrix, [4, 2, 1]);
+        this.multMatrix(transfMatrix);
+        this.graph.materials['white'].apply();
+        this.mediumButton.display();
+        this.popMatrix();
+
+
+        this.pushMatrix();
+        var transfMatrix = mat4.create();
+        transfMatrix = mat4.translate(transfMatrix, transfMatrix, [4, 0.5, 1]);
+        this.multMatrix(transfMatrix);
+        this.graph.materials['white'].apply();
+        this.hardButton.display();
+        this.popMatrix();
+
+        this.pushMatrix();
+        var transfMatrix = mat4.create();
+        transfMatrix = mat4.translate(transfMatrix, transfMatrix, [4, 3.5, 4]);
+        this.multMatrix(transfMatrix);
+        this.graph.materials['white'].apply();
+        this.backButton.display();
+        this.popMatrix();
+    }
+
+    optionsMenu() {
+        this.pushMatrix();
+        var transfMatrix = mat4.create();
+        transfMatrix = mat4.translate(transfMatrix, transfMatrix, [6, 0.5, 1]);
+        this.multMatrix(transfMatrix);
+        this.graph.materials['white'].apply();
+        this.whiteButton.display();
+
+        this.pushMatrix();
+        var transfMa = mat4.create();
+        transfMa = mat4.translate(transfMa, transfMa, [-0.5, 0.5, 0]);
+        transfMa = mat4.scale(transfMa, transfMa, [0.05, 0.05, 0.05]);
+        transfMa = mat4.rotateY(transfMa, transfMa, DEGREE_TO_RAD * 180);
+        this.multMatrix(transfMa);
+        this.graph.materials['white'].apply();
+        this.manPiece.display();
+        this.popMatrix();
+
+        this.popMatrix();
+
+
+        this.pushMatrix();
+        var transfMatrix = mat4.create();
+        transfMatrix = mat4.translate(transfMatrix, transfMatrix, [1, 0.5, 1]);
+        this.multMatrix(transfMatrix);
+        this.graph.materials['white'].apply();
+        this.blackButton.display();
+
+        this.pushMatrix();
+        var transfMa = mat4.create();
+        transfMa = mat4.translate(transfMa, transfMa, [-0.5, 1.5, 0]);
+        transfMa = mat4.scale(transfMa, transfMa, [0.5, 0.5, 0.5]);
+        transfMa = mat4.rotateY(transfMa, transfMa, DEGREE_TO_RAD * 90);
+        this.multMatrix(transfMa);
+        this.graph.materials['black'].apply();
+        //this.graph.textures['board'].bind();
+        this.pcPiece.display();
+        //this.graph.textures['board'].unbind();
+        this.popMatrix();
+
+        this.popMatrix();
+
+        this.pushMatrix();
+        var transfMatrix = mat4.create();
+        transfMatrix = mat4.translate(transfMatrix, transfMatrix, [4, 3.5, 4]);
+        this.multMatrix(transfMatrix);
+        this.graph.materials['white'].apply();
+        this.backButton.display();
+        this.popMatrix();
+
+    }
+
+    displayMenu() {
+        this.pushMatrix();
+        var transfMatrix = mat4.create();
+        transfMatrix = mat4.translate(transfMatrix, transfMatrix, [4, 0.5, 4]);
+        this.multMatrix(transfMatrix);
+        this.graph.materials['white'].apply();
+        this.optionsButton.display();
+        this.popMatrix();
+
+        this.pushMatrix();
+        var transfMatrix = mat4.create();
+        transfMatrix = mat4.translate(transfMatrix, transfMatrix, [4, 2, 4]);
+        this.multMatrix(transfMatrix);
+        this.graph.materials['white'].apply();
+        this.playButton.display();
+        this.popMatrix();
+
+        this.pushMatrix();
+        var transfMatrix = mat4.create();
+        transfMatrix = mat4.translate(transfMatrix, transfMatrix, [4, 5, 4]);
+        this.multMatrix(transfMatrix);
+        this.graph.materials['white'].apply();
+        this.feupButton.display();
+        this.popMatrix();
+
     }
 
     displayGame() {
@@ -917,10 +937,6 @@ class XMLscene extends CGFscene {
                 this.popMatrix();
             }
         }
-    }
-
-    displayMenu() {
-
     }
 
     toChessCoord(x, z) {
