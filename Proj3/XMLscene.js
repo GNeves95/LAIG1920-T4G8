@@ -88,7 +88,7 @@ class XMLscene extends CGFscene {
         this.boardCoords = new MyRectangle(this, 'boardCoords', 0, 9, 0, 9);
 
         this.pcPiece = new PcPiece(this, 'pc0', true, 0, 0, 0, pcObj);
-        
+
         this.manPiece = new ManPiece(this, 'man0', true, 0, 0, 0, manObj);
 
         //console.log(this.manPiece);
@@ -200,6 +200,7 @@ class XMLscene extends CGFscene {
         this.fromChessCoord(coord3);
 
         this.players = ['p', 'p'];
+        this.difficulty = [5, 5];
 
         var string = "";
         for (var i = 0; i < 8 * 8; i++) {
@@ -221,8 +222,10 @@ class XMLscene extends CGFscene {
         this.processing = [false, false];
         this.moving = [false, false];
 
+        this.gameState = ['Menu', null];
+
         //this.commChannel.makeRequest("player:" + 1 + "-" + "level:" + 1 + string);
-        this.sendBoard(0, 5);
+        this.sendBoard(0, this.difficulty[0]);
         this.lastAnswer = '';
         this.gotAnswer = '';
         this.newAnswer = '';
@@ -266,6 +269,7 @@ class XMLscene extends CGFscene {
     }
 
     logPicking() {
+        var add = true;
         if (this.pickMode == false) {
             if (this.pickResults != null && this.pickResults.length > 0) {
                 for (var i = 0; i < this.pickResults.length; i++) {
@@ -275,7 +279,17 @@ class XMLscene extends CGFscene {
                         var customId = this.pickResults[i][1];
                         //console.log(customId);
                         //console.log(obj);
-                        if (customId > 100) {
+                        if (customId == 200) { this.gameState[0] = 'Game'; add = false; }
+                        else if (customId == 201) { this.gameState[0] = 'Options'; add = false; }
+                        else if (customId == 203) { this.gameState[0] = 'Menu'; add = false; }
+                        else if (customId == 210) { this.gameState[0] = 'Choose'; this.gameState[1] = 0; add = false; }
+                        else if (customId == 211) { this.gameState[0] = 'Choose'; this.gameState[1] = 1; add = false; }
+                        else if (customId == 220) { this.gameState[0] = 'Menu'; this.players[this.gameState[1]] = 'h'; add = false; }
+                        else if (customId == 221) { this.gameState[0] = 'Difficulty'; this.players[this.gameState[1]] = 'p'; add = false; }
+                        else if (customId == 230) { this.gameState[0] = 'Menu'; this.difficulty[this.gameState[1]] = 1; add = false; }
+                        else if (customId == 231) { this.gameState[0] = 'Menu'; this.difficulty[this.gameState[1]] = 3; add = false; }
+                        else if (customId == 232) { this.gameState[0] = 'Menu'; this.difficulty[this.gameState[1]] = 5; add = false; }
+                        else if (customId > 100) {
                             this.clickedObj[0].destx = obj.x;
                             this.clickedObj[0].destz = obj.z;
                             var auxObj = this.checkCollision([obj.x, obj.z]);
@@ -294,13 +308,15 @@ class XMLscene extends CGFscene {
                             this.board2D[obj.z * 8 + obj.x] = auxElem;
                             this.turn = 1 - this.turn;
                             this.moving[this.turn] = false;
-                            this.sendBoard(this.turn, (this.clickedObj[0].white == true) ? 5 : 5);
+                            this.sendBoard(this.turn, this.difficulty[this.turn]);
                         }
-                        obj.clicked = (!(obj.clicked)) || false;
-                        if (obj.clicked)
-                            this.clickedObj.push(obj);
-                        else
-                            this.clickedObj = [];
+                        if (add) {
+                            obj.clicked = (!(obj.clicked)) || false;
+                            if (obj.clicked)
+                                this.clickedObj.push(obj);
+                            else
+                                this.clickedObj = [];
+                        }
                     }
                 }
                 this.pickResults.splice(0, this.pickResults.length);
@@ -579,7 +595,7 @@ class XMLscene extends CGFscene {
         if (this.camera.destPos[2] != this.camera.position[2]) {
             this.wait = true;
             this.camera.position[2] += (this.camera.destPos[2] - this.camera.position[2]) / (Math.abs(this.camera.destPos[2] - this.camera.position[2]) * 10);
-            if (Math.abs(this.camera.destPos[2] - this.camera.position[2]) < 0.1){
+            if (Math.abs(this.camera.destPos[2] - this.camera.position[2]) < 0.1) {
                 this.camera.position[2] = this.camera.destPos[2];
             }
         } else {
@@ -605,10 +621,21 @@ class XMLscene extends CGFscene {
             i++;
         }
 
+        if (this.gameState[0] == 'Menu')
+            this.displayMenu();
+        else if (this.gameState[0] == 'Options')
+            this.optionsMenu();
+        else if (this.gameState[0] == 'Choose')
+            this.choiceMenu();
+        else if (this.gameState[0] == 'Difficulty')
+            this.difficultyMenu();
+        else if (this.gameState[0] == 'Game')
+            this.displayGame();
+
         //this.displayMenu();
         //this.optionsMenu();
         //this.difficultyMenu();
-        this.displayGame();
+        //this.displayGame();
 
         /*this.pushMatrix();
         var transfMatrix = mat4.create();
@@ -653,32 +680,80 @@ class XMLscene extends CGFscene {
         // ---- END Background, camera and axis setup
     }
 
+    choiceMenu() {
+        var Mat = 'white';
+        if (this.gameState[1] == 0)
+            Mat = 'white';
+        else
+            Mat = 'black';
+        
+            this.pushMatrix();
+            this.registerForPick(220, this.backButton);
+            var transfMatrix = mat4.create();
+            transfMatrix = mat4.translate(transfMatrix, transfMatrix, [6, 0.5, 1]);
+            this.multMatrix(transfMatrix);
+            this.graph.materials['white'].apply();
+            this.whiteButton.display();
+            this.displayMAN(Mat);
+            this.clearPickRegistration();
+    
+            this.popMatrix();
+    
+    
+            this.pushMatrix();
+            this.registerForPick(221, this.backButton);
+            var transfMatrix = mat4.create();
+            transfMatrix = mat4.translate(transfMatrix, transfMatrix, [1, 0.5, 1]);
+            this.multMatrix(transfMatrix);
+            this.graph.materials['white'].apply();
+            this.blackButton.display();
+            this.displayPC(Mat);
+            this.clearPickRegistration();
+    
+            this.popMatrix();
+            this.pushMatrix();
+            var transfMatrix = mat4.create();
+            transfMatrix = mat4.translate(transfMatrix, transfMatrix, [4, 3.5, 4]);
+            this.multMatrix(transfMatrix);
+            this.graph.materials['white'].apply();
+            this.registerForPick(203, this.backButton);
+            this.backButton.display();
+            this.clearPickRegistration();
+            this.popMatrix();
+    }
+
     difficultyMenu() {
 
         this.pushMatrix();
+        this.registerForPick(230, this.backButton);
         var transfMatrix = mat4.create();
         transfMatrix = mat4.translate(transfMatrix, transfMatrix, [4, 3.5, 1]);
         this.multMatrix(transfMatrix);
         this.graph.materials['white'].apply();
         this.easyButton.display();
+        this.clearPickRegistration();
         this.popMatrix();
 
 
         this.pushMatrix();
+        this.registerForPick(231, this.backButton);
         var transfMatrix = mat4.create();
         transfMatrix = mat4.translate(transfMatrix, transfMatrix, [4, 2, 1]);
         this.multMatrix(transfMatrix);
         this.graph.materials['white'].apply();
         this.mediumButton.display();
+        this.clearPickRegistration();
         this.popMatrix();
 
 
         this.pushMatrix();
+        this.registerForPick(232, this.backButton);
         var transfMatrix = mat4.create();
         transfMatrix = mat4.translate(transfMatrix, transfMatrix, [4, 0.5, 1]);
         this.multMatrix(transfMatrix);
         this.graph.materials['white'].apply();
         this.hardButton.display();
+        this.clearPickRegistration();
         this.popMatrix();
 
         this.pushMatrix();
@@ -686,37 +761,13 @@ class XMLscene extends CGFscene {
         transfMatrix = mat4.translate(transfMatrix, transfMatrix, [4, 3.5, 4]);
         this.multMatrix(transfMatrix);
         this.graph.materials['white'].apply();
+        this.registerForPick(203, this.backButton);
         this.backButton.display();
+        this.clearPickRegistration();
         this.popMatrix();
     }
 
-    optionsMenu() {
-        this.pushMatrix();
-        var transfMatrix = mat4.create();
-        transfMatrix = mat4.translate(transfMatrix, transfMatrix, [6, 0.5, 1]);
-        this.multMatrix(transfMatrix);
-        this.graph.materials['white'].apply();
-        this.whiteButton.display();
-
-        this.pushMatrix();
-        var transfMa = mat4.create();
-        transfMa = mat4.translate(transfMa, transfMa, [-0.5, 0.5, 0]);
-        transfMa = mat4.scale(transfMa, transfMa, [0.05, 0.05, 0.05]);
-        transfMa = mat4.rotateY(transfMa, transfMa, DEGREE_TO_RAD * 180);
-        this.multMatrix(transfMa);
-        this.graph.materials['white'].apply();
-        this.manPiece.display();
-        this.popMatrix();
-
-        this.popMatrix();
-
-
-        this.pushMatrix();
-        var transfMatrix = mat4.create();
-        transfMatrix = mat4.translate(transfMatrix, transfMatrix, [1, 0.5, 1]);
-        this.multMatrix(transfMatrix);
-        this.graph.materials['white'].apply();
-        this.blackButton.display();
+    displayPC(material) {
 
         this.pushMatrix();
         var transfMa = mat4.create();
@@ -724,11 +775,52 @@ class XMLscene extends CGFscene {
         transfMa = mat4.scale(transfMa, transfMa, [0.5, 0.5, 0.5]);
         transfMa = mat4.rotateY(transfMa, transfMa, DEGREE_TO_RAD * 90);
         this.multMatrix(transfMa);
-        this.graph.materials['black'].apply();
+        this.graph.materials[material].apply();
         //this.graph.textures['board'].bind();
         this.pcPiece.display();
         //this.graph.textures['board'].unbind();
         this.popMatrix();
+    }
+
+    displayMAN(material) {
+        this.pushMatrix();
+        var transfMa = mat4.create();
+        transfMa = mat4.translate(transfMa, transfMa, [-0.5, 0.5, 0]);
+        transfMa = mat4.scale(transfMa, transfMa, [0.05, 0.05, 0.05]);
+        transfMa = mat4.rotateY(transfMa, transfMa, DEGREE_TO_RAD * 180);
+        this.multMatrix(transfMa);
+        this.graph.materials[material].apply();
+        this.manPiece.display();
+        this.popMatrix();
+    }
+
+    optionsMenu() {
+        this.pushMatrix();
+        this.registerForPick(210, this.backButton);
+        var transfMatrix = mat4.create();
+        transfMatrix = mat4.translate(transfMatrix, transfMatrix, [6, 0.5, 1]);
+        this.multMatrix(transfMatrix);
+        this.graph.materials['white'].apply();
+        this.whiteButton.display();
+
+        if (this.players[0] == 'h') this.displayMAN('white');
+        else if (this.players[0] == 'p') this.displayPC('white');
+        this.clearPickRegistration();
+
+        this.popMatrix();
+
+
+        this.pushMatrix();
+        this.registerForPick(211, this.backButton);
+        var transfMatrix = mat4.create();
+        transfMatrix = mat4.translate(transfMatrix, transfMatrix, [1, 0.5, 1]);
+        this.multMatrix(transfMatrix);
+        this.graph.materials['white'].apply();
+        this.blackButton.display();
+
+        if (this.players[1] == 'h') this.displayMAN('black');
+        else if (this.players[1] == 'p') this.displayPC('black');
+        this.clearPickRegistration();
 
         this.popMatrix();
 
@@ -737,7 +829,9 @@ class XMLscene extends CGFscene {
         transfMatrix = mat4.translate(transfMatrix, transfMatrix, [4, 3.5, 4]);
         this.multMatrix(transfMatrix);
         this.graph.materials['white'].apply();
+        this.registerForPick(203, this.backButton);
         this.backButton.display();
+        this.clearPickRegistration();
         this.popMatrix();
 
     }
@@ -748,7 +842,9 @@ class XMLscene extends CGFscene {
         transfMatrix = mat4.translate(transfMatrix, transfMatrix, [4, 0.5, 4]);
         this.multMatrix(transfMatrix);
         this.graph.materials['white'].apply();
+        this.registerForPick(201, this.optionsMenu);
         this.optionsButton.display();
+        this.clearPickRegistration();
         this.popMatrix();
 
         this.pushMatrix();
@@ -756,7 +852,9 @@ class XMLscene extends CGFscene {
         transfMatrix = mat4.translate(transfMatrix, transfMatrix, [4, 2, 4]);
         this.multMatrix(transfMatrix);
         this.graph.materials['white'].apply();
+        this.registerForPick(200, this.playButton);
         this.playButton.display();
+        this.clearPickRegistration();
         this.popMatrix();
 
         this.pushMatrix();
@@ -788,7 +886,7 @@ class XMLscene extends CGFscene {
             // Draw axis
             this.setDefaultAppearance();
 
-            if (this.newAnswer != ""){
+            if (this.newAnswer != "") {
                 console.log(this.newAnswer);
                 this.gotAnswer = this.newAnswer;
                 this.newAnswer = "";
@@ -855,7 +953,7 @@ class XMLscene extends CGFscene {
                         } else {
                             var dest = this.fromChessCoord(this.lastAnswer);
                             var toMove = this.getPieceAt(dest[0]);
-                            if (toMove){
+                            if (toMove) {
                                 if (!this.moving[this.turn] && !toMove.clicked) {
                                     toMove.clicked = true;
                                 } else if (!this.moving[this.turn] && toMove.clicked && toMove.y >= 1) {
@@ -878,7 +976,7 @@ class XMLscene extends CGFscene {
                                     this.processing[this.turn] = false;
                                     this.turn = 1 - this.turn;
                                     this.moving[this.turn] = false;
-                                    if (this.players[this.turn] == 'p') this.sendBoard(this.turn, (toMove.white == true) ? 5 : 5);
+                                    if (this.players[this.turn] == 'p') this.sendBoard(this.turn, this.difficulty[this.turn]);
                                     this.rotateCamera();
                                 }
                             }
