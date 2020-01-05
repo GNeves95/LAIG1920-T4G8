@@ -4,8 +4,8 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from json import dumps
 import socketserver
 import http.server
-import socketio
-import websockets
+#import socketio
+#import websockets
 import threading
 from io import BytesIO
 from mychess import chess
