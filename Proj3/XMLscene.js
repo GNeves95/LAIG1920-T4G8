@@ -64,13 +64,6 @@ class XMLscene extends CGFscene {
 
         this.setUpdatePeriod(100);
 
-        this.objectsOnBoard = [];
-
-        this.blackCaptured = [];
-        this.whiteCaptured = [];
-
-        this.gameMoves = [];
-
         this.pawnObj = new PawnObj();
         this.bishopObj = new BishopObj();
         this.rookObj = new RookObj();
@@ -82,8 +75,6 @@ class XMLscene extends CGFscene {
 
         //console.log(rookObj);
 
-        this.newAnswer = "";
-
         this.background = new MyRectangle(this, "bg", 100, -100, -100, 100);
 
         this.boardCoords = new MyRectangle(this, 'boardCoords', 0, 9, 0, 9);
@@ -93,6 +84,47 @@ class XMLscene extends CGFscene {
         this.manPiece = new ManPiece(this, 'man0', true, 0, 0, 0, this.manObj);
 
         //console.log(this.manPiece);
+
+        var coord1 = this.toChessCoord(0, 0);
+        var coord2 = this.toChessCoord(3, 5);
+        var coord3 = coord1 + coord2;
+
+        console.log(coord3);
+
+        this.fromChessCoord(coord3);
+
+        this.players = ['p', 'p'];
+        this.difficulty = [5, 5];
+
+        /*var string = "";
+        for (var i = 0; i < 8 * 8; i++) {
+            //if ((i % 8) == 0) { console.log(string); string = ""; }
+            string += (this.board2D[i]);
+            string += ("|");
+        }
+        console.log(string);*/
+
+
+        this.setPickEnabled(true);
+
+        this.clickedObj = [];
+
+        this.commChannel = new Comms(this);
+
+
+        this.gameState = ['Menu', null];
+    }
+
+    newGame() {
+
+        this.objectsOnBoard = [];
+
+        this.blackCaptured = [];
+        this.whiteCaptured = [];
+
+        this.gameMoves = [];
+
+        this.newAnswer = "";
 
         this.chessBoard = [];
         this.board2D = [];
@@ -192,32 +224,6 @@ class XMLscene extends CGFscene {
             }
         }
 
-        var coord1 = this.toChessCoord(0, 0);
-        var coord2 = this.toChessCoord(3, 5);
-        var coord3 = coord1 + coord2;
-
-        console.log(coord3);
-
-        this.fromChessCoord(coord3);
-
-        this.players = ['p', 'p'];
-        this.difficulty = [5, 5];
-
-        var string = "";
-        for (var i = 0; i < 8 * 8; i++) {
-            //if ((i % 8) == 0) { console.log(string); string = ""; }
-            string += (this.board2D[i]);
-            string += ("|");
-        }
-        console.log(string);
-
-
-        this.setPickEnabled(true);
-
-        this.clickedObj = [];
-
-        this.commChannel = new Comms(this);
-
         this.turn = 0;
 
         this.whiteWin = false;
@@ -228,13 +234,11 @@ class XMLscene extends CGFscene {
         this.processing = [false, false];
         this.moving = [false, false];
 
-        this.gameState = ['Menu', null];
-
-        //this.commChannel.makeRequest("player:" + 1 + "-" + "level:" + 1 + string);
         this.lastAnswer = '';
         this.gotAnswer = '';
         this.newAnswer = '';
         this.wait = false;
+
     }
 
     sendBoard(player, level) {
@@ -294,7 +298,7 @@ class XMLscene extends CGFscene {
                         var customId = this.pickResults[i][1];
                         //console.log(customId);
                         //console.log(obj);
-                        if (customId == 200) { this.gameState[0] = 'Game'; add = false; if (this.players[0] == 'p') this.sendBoard(0, this.difficulty[0]);}
+                        if (customId == 200) { this.gameState[0] = 'Game'; add = false; this.newGame(); if (this.players[0] == 'p') this.sendBoard(0, this.difficulty[0]);}
                         else if (customId == 201) { this.gameState[0] = 'Options'; add = false; }
                         else if (customId == 203) { this.gameState[0] = 'Menu'; add = false; }
                         else if (customId == 210) { this.gameState[0] = 'Choose'; this.gameState[1] = 0; add = false; }
