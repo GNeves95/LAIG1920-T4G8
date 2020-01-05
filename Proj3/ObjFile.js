@@ -146,6 +146,7 @@ class ObjFile {
                     var facePoints = faces[4].split('/');
 
                     if (!isNaN(facePoints[0])) {
+                        //console.log(facePoints[0]);
                         this.vertices.push(...auxVert[Math.abs(parseInt(facePoints[0])) - 1]);
                     }
 
