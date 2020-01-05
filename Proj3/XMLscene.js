@@ -42,6 +42,8 @@ class XMLscene extends CGFscene {
         this.mediumTexture = new CGFtexture(this, 'textures/medium.png');//
         this.hardTexture = new CGFtexture(this, 'textures/hard.png');//
         this.optionsTexture = new CGFtexture(this, 'textures/options.png');//
+        this.humanTexture = new CGFtexture(this, 'textures/human.png')
+        this.aiTexture = new CGFtexture(this, 'textures/ai.png')
 
         this.optionsButton = new MyButton(this, 'OptionsButton', true, 0, 0, 0, this.optionsTexture);
         this.playButton = new MyButton(this, 'PlayButton', true, 0, 0, 0, this.playTexture);
@@ -51,7 +53,8 @@ class XMLscene extends CGFscene {
         this.whiteButton = new MyButton(this, 'WhiteButton', true, 0, 0, 0, this.whiteTexture);
         this.easyButton = new MyButton(this, 'easyButton', true, 0, 0, 0, this.easyTexture);
         this.mediumButton = new MyButton(this, 'mediumButton', true, 0, 0, 0, this.mediumTexture);
-        this.hardButton = new MyButton(this, 'hardButton', true, 0, 0, 0, this.hardTexture);
+        this.humanButton = new MyButton(this, 'humanButton', true, 0, 0, 0, this.humanTexture);
+        this.aiButton = new MyButton(this, 'aiButton', true, 0, 0, 0, this.aiTexture);
 
         this.gl.clearDepth(100.0);
         this.gl.enable(this.gl.DEPTH_TEST);
@@ -675,7 +678,7 @@ class XMLscene extends CGFscene {
         transfMatrix = mat4.translate(transfMatrix, transfMatrix, [6, 0.5, 1]);
         this.multMatrix(transfMatrix);
         this.graph.materials['white'].apply();
-        this.whiteButton.display();
+        this.humanButton.display();
         this.displayMAN(Mat);
         this.clearPickRegistration();
 
@@ -688,7 +691,7 @@ class XMLscene extends CGFscene {
         transfMatrix = mat4.translate(transfMatrix, transfMatrix, [1, 0.5, 1]);
         this.multMatrix(transfMatrix);
         this.graph.materials['white'].apply();
-        this.blackButton.display();
+        this.aiButton.display();
         this.displayPC(Mat);
         this.clearPickRegistration();
 
